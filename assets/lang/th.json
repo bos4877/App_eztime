@@ -1,0 +1,81 @@
+{
+  "homepage": {
+    "title": "หน้าหลัก",
+    "username": "ชื่อผู้ใช้งาน",
+    "Check in-Check out": "บันทึกเวลา เข้า - ออก งาน",
+    "Check in": "เข้างาน",
+    "Check out": "ออกงาน",
+    "More": "เพิ่มเติม...",
+    "Request leave": "ขออนุมัติลา",
+    "Get approval, Ot": "ขออนุมัติโอที",
+    "Watch the Ot log": "ดูบันทึกโอที",
+    "Improve Uptime": "ปรับปรุงเวลาทำงาน(ลืมแสกน)"
+  },
+  "Employee Id": {
+    "employee Id": "รหัสพนักงาน : ",
+    "Name": "ชื่อ : "
+  },
+  "Drawer": {
+    "Edit": "จัดการข้อมูลพนักงาน",
+    "Request leave": "ขออนุมัติลา",
+    "Get approval, Ot": "ขออนุมัติโอที",
+    "Summarize": "สรปุข้อมูล เข้า-ออกงาน",
+    "salary summary": "สรุปเงินเดือน",
+    "setting": "ตั้งค่า",
+    "Logout": "ออกจากระบบ"
+  },
+  "dialog": {
+    "Allow access": "อนุญาตการเข้าถึง"
+  },
+  "Request leave": {
+    "title": "ขออนุมัติลา",
+    "Save": "บันทึก",
+    "select": "เลือก",
+    "list": "รายการที่รอ",
+    "Choose a time period": "เลือกช่วงเวลา",
+    "Pending Items": "รายการที่รออนุมัติ"
+  },
+  "Watch the Ot log": {
+    "title": "ดูบันทึกโอที",
+    "Choose a time period": "เลือกช่วงเวลา"
+  },
+  "Get approval, Ot": {
+    "title": "ขออนุมัติโอที",
+    "Save": "บันทึก",
+    "Choose start time": "เลือกช่วงเวลาเริ่มต้น",
+    "Choose the end period": "เลือกช่วงเวลาสิ้นสุด"
+  },
+  "Improve Uptime": {
+    "title": "ปรับปรุงเวลาทำงาน(ลืมแสกน)",
+    "Date": "วันที่",
+    "Status": "สถานะ",
+    "working time": "เวลาการทำงาน",
+    "Choose a time period": "เลือกช่วงเวลา"
+  },
+  "setting": {
+    "title": "ตั้งค่า",
+    "changeLang": "เปลี่ยนภาษา",
+    "ChangePassword": "ตั้งค่ารหัสผ่าน",
+    "Notification": "ตั้งค่าการเเจ้งเตือน",
+    "on": "เปิด",
+    "off": "ปิด"
+  },
+  "changePass": {
+    "title": "เปลี่ยนรหัสผ่าน",
+    "setPassword": "เปลี่ยนรหัสผ่าน",
+    "Password": "รหัสผ่านเดิม",
+    "NewPassword": "รหัสผ่านใหม่",
+    "ConfirmPassword": "ยืนยันรหัสผ่านใหม่"
+  },
+  "buttons": {
+    "Save": "บันทึก"
+  },
+  "Notification": {
+    "title": "การเเจ้งเตือน"
+  },
+  "Set_work": {
+    "title":"work time",
+    "position":"ตำแหน่งปัจจุบัน",
+    "image":"รูปภาพ"
+  }
+}

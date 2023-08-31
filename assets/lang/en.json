@@ -1,0 +1,81 @@
+{
+  "homepage": {
+    "changeLang": "changelanguage",
+    "title": "HomePage",
+    "username": "username",
+    "Check in-Check out": "check in-check out",
+    "Check in": "check in",
+    "Check out": "check out",
+    "More": "More...",
+    "Request leave": "Request leave",
+    "Get approval, Ot": "Get approval, Ot.",
+    "Watch the Ot log": "Watch the Ot log.",
+    "Improve Uptime": "Improve Uptime"
+  },
+  "Request leave": {
+    "title": "Request leave",
+    "Save": "SAVE",
+    "select": "select",
+    "list": "waiting list",
+    "Choose a time period": "Choose a time period",
+    "Pending Items": "Pending Items"
+  },
+  "Get approval, Ot": {
+    "title": "Get approval, Ot",
+    "Save": "SAVE",
+    "Choose start time": "Choose start time",
+    "Choose the end period": "Choose the end period"
+  },
+  "Watch the Ot log": {
+    "title": "Watch the Ot log",
+    "Choose a time period":"Choose a time period"
+  },
+  "Improve Uptime": {
+    "title":"Improve Uptime",
+    "Date":"Date :",
+    "Status":"Status :",
+    "working time":"working time :",
+    "Choose a time period":"Choose a time period"
+  },
+  "Employee Id": {
+    "employee Id": "Employee Id : ",
+    "Name": "Name : "
+  },
+  "Drawer": {
+    "Edit": "manage employee information",
+    "Request leave": "Request leave",
+    "Get approval, Ot": "Get approval, Ot",
+    "Summarize": "Summarize",
+    "salary summary": "salary",
+    "setting": "setting",
+    "Logout": "Logout"
+  },
+  "setting": {
+    "title": "setting",
+    "changeLang": "Changelanguage",
+    "ChangePassword": "ChangePassword",
+    "Notification":"Notification",
+    "on": "on",
+    "off": "off"
+  },
+  "changePass": {
+    "title": "ChangePassword",
+    "setPassword": "ChangePassword",
+    "Password": "Password",
+    "NewPassword": "NewPassword",
+    "ConfirmPassword": "ConfirmPassword"
+  },
+  "buttons": {
+    "Save": "SAVE"
+  },
+  "Notification": {
+    "title": "Notification",
+    "on": "on",
+    "off": "off"
+  },
+  "Set_work": {
+    "title":"work time",
+    "position":"current position",
+    "image":"image"
+  }
+}
