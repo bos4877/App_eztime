@@ -1,16 +1,22 @@
+// ignore_for_file: unused_import// import 'package:buddhist_datetime_dateformat_sns/buddhist_datetime_dateformat_sns.dart';, unused_import, unused_field
+
 import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:buddhist_datetime_dateformat_sns/buddhist_datetime_dateformat_sns.dart';
 import 'package:dio/dio.dart';
-import 'package:eztime_app/Components/Buttons/Button.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/TextStyle/StyleText.dart';
+import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:eztime_app/Test.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_android/path_provider_android.dart';
 import 'package:permission_handler/permission_handler.dart%20';
-
+import 'package:http/http.dart' as http;
 
 class salary_calculation extends StatefulWidget {
   const salary_calculation({super.key});
@@ -20,182 +26,209 @@ class salary_calculation extends StatefulWidget {
 }
 
 class _salary_calculationState extends State<salary_calculation> {
-  
   final PathProviderAndroid provider = PathProviderAndroid();
+  bool load = false;
   int? _selectedMonth;
   List<String> _months = DateFormat.MMMM().dateSymbols.MONTHS.toList();
   int _selectedYear = DateTime.now().year;
-   Future<String?>? _appDocumentsDirectory;
+  Future<String?>? _appDocumentsDirectory;
   var mounText;
-    var   url = 'https://www.orimi.com/pdf-test.pdf';
   var filename = 'pdf-test.pdf';
+  var url = 'https://www.orimi.com/pdf-test.pdf';
   
-  Future download(String url, String filename) async {
-    ///storage/emulated/0/Download/
-  var directory =  provider.getApplicationDocumentsPath();
-    var savePath = '$directory/$filename';
-    var dio = Dio();
-    dio.interceptors.add(LogInterceptor());
-    try {
-      var response = await dio.get(
-        url,
-        onReceiveProgress: showDownloadProgress,
-        //Received data with List<int>
-        options: Options(
-          responseType: ResponseType.bytes,
-          followRedirects: false,
-          receiveTimeout: Duration(days: DateTime.now().day),
-        ),
-      );
-      if (response.statusCode == 200) {
-        // ตอบกลับเรียบร้อย
-        var file = File(savePath);
-        var raf = file.openSync(mode: FileMode.write);
-        raf.writeFromSync(response.data);
-        await raf.close();
-        setState(() {});
-      } else {
-        // จัดการกับการตอบกลับไม่สำเร็จ
-        print('การตอบกลับไม่สำเร็จ: ${response.statusCode}');
-      }
-    } catch (e) {
-      debugPrint('Catch: ${e}');
-    }
+  Future<void> downloadAndSavePdf(String pdfUrl) async {
+  final response = await http.get(Uri.parse(pdfUrl));
+
+  if (response.statusCode == 200) {
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+    File file = File('$path/$filename');
+    print('object:${response.bodyBytes}');
+    await file.writeAsBytes(response.bodyBytes);
+
+    // Now, the PDF file is downloaded and saved as 'my_pdf.pdf' in the app's documents directory.
   }
+}
+void downloadPdf(String url) {
+  String pdfUrl = url;
+  downloadAndSavePdf(pdfUrl);
+}
+
 
   void showDownloadProgress(received, total) {
     if (total != -1) {
       debugPrint((received / total * 100).toStringAsFixed(0) + '%');
     }
   }
+
   @override
   void initState() {
+    InternetConnectionChecker().checker();
     _selectedMonth = DateTime.now().month;
     mounText = _months[_selectedMonth! - 1];
-    
     // TODO: implement initState
     super.initState();
   }
 
+  _onRefresh() {}
+
   @override
   Widget build(BuildContext context) {
+    url;
+    filename;
     return Scaffold(
       appBar: AppBar(
-        title: Text('รายการสรุปเงินเดือน'),
+        title: Text('salary_calculation.title').tr(),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Card(
-              child: Column(
-                children: [
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('เลือกเดือน',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold)),
-                          _monthsDropDown()
-                        ],
-                      ),
-                      Column(
+      body: RefreshIndicator(
+        onRefresh: () => _onRefresh(),
+        child: Center(
+          child: Column(
+            children: [
+              Card(
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'เลือกปี',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
-                            ),
-                            _YearDropDown(),
-                          ]),
-                    ],
-                  ),
-                ],
+                            Text('salary_calculation.SelectMount',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold))
+                                .tr(),
+                            _monthsDropDown()
+                          ],
+                        ),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'salary_calculation.SelectYear',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
+                              ).tr(),
+                              _YearDropDown(),
+                            ]),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Card(
-              child: Container(
-                  width: double.infinity,
+              Card(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        width: 250,
-                        child: Material(
-                          elevation: 3,
-                          child: Padding(
-                            padding:  EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Center(
-                                  child: Text(
-                                    'เดือน $mounText  ปี ${_selectedYear}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                SizedBox(height: 5,),
-                                Text('เงินเดือน :',style: TextStyles.setting_Style,),
-                                Text('เบี้ยขยัน :',style: TextStyles.setting_Style,),
-                                Text('ขาดงาน :',style: TextStyles.setting_Style,),
-                                Text('ประกันสังคม :',style: TextStyles.setting_Style,),
-                                Text('เงินเดือนที่ได้รับ :',style: TextStyles.setting_Style,),
-                                Center(
-                                  child: ElevatedButton(
-                                      onPressed: () async {
-                                        await Permission.storage.request();
-                                        PermissionStatus _Statust =
-                                            await Permission.storage.status;
-                                        if (_Statust.isDenied) {
-                                          AwesomeDialog(
-                                              context: context,
-                                              animType: AnimType.scale,
-                                              dialogType: DialogType.warning,
-                                              title: 'อนุญาตการเข้าถึง',
-                                              titleTextStyle: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18),
-                                              desc:
-                                                  'กรุณาอนุญาตเข้าถึงพื้นที่เก็บข้อมูล',
-                                              btnOkText: 'เปิดตั้งค่า',
-                                              btnOkOnPress: () {
-                                                openAppSettings();
-                                              },
-                                              btnCancelOnPress: () {
-                                                Navigator.of(context).canPop();
-                                              })
-                                            ..show();
-                                        } else {
-                                         download(url, filename);
-                                        }
-                                      },
-                                      child: Text('สลิปเงินเดือน',style: TextStyles.setting_Style,)),
-                                )
-                              ],
-                            ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'salary_calculation.Mount',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ).tr(),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                '${mounText}',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ).tr(),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                'salary_calculation.Year',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ).tr(),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                '${_selectedYear}',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ).tr(),
+                            ],
                           ),
                         ),
-                      ),
-                      // Container(
-                      //   child: PDFView(
-                      //     filePath: pdfUrl,
-                      //   ),
-                      // ),
-                      SizedBox(
-                        height: 10,
-                      )
-                    ],
-                  )),
-            )
-          ],
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'salary_calculation.Salary',
+                          style: TextStyles.setting_Style,
+                        ).tr(),
+                        Text(
+                          'salary_calculation.Hardship Allowance',
+                          style: TextStyles.setting_Style,
+                        ).tr(),
+                        Text(
+                          'salary_calculation.Absenteeism',
+                          style: TextStyles.setting_Style,
+                        ).tr(),
+                        Text(
+                          'salary_calculation.Social_Security',
+                          style: TextStyles.setting_Style,
+                        ).tr(),
+                        Text(
+                          'salary_calculation.Received_Salary',
+                          style: TextStyles.setting_Style,
+                        ).tr(),
+                        Center(
+                          child: ElevatedButton(
+                              onPressed: () async {
+                                PermissionStatus _Statust =
+                                    await Permission.storage.status;
+                                if (_Statust.isDenied) {
+                                  AwesomeDialog(
+                                      context: context,
+                                      animType: AnimType.scale,
+                                      dialogType: DialogType.warning,
+                                      title: 'อนุญาตการเข้าถึง',
+                                      titleTextStyle: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                      desc:
+                                          'กรุณาอนุญาตเข้าถึงพื้นที่เก็บข้อมูล',
+                                      btnOkText: 'เปิดตั้งค่า',
+                                      btnOkOnPress: () {
+                                        openAppSettings();
+                                      },
+                                      btnCancelOnPress: () {
+                                        Navigator.of(context).canPop();
+                                      })
+                                    ..show();
+                                } else {
+                                 downloadPdf(url);
+                                }
+                              },
+                              child: Text(
+                                'salary_calculation.Salary slip',
+                                style: TextStyles.setting_Style,
+                              ).tr()),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  )
+                ],
+              ))
+            ],
+          ),
         ),
       ),
     );

@@ -10,7 +10,21 @@
     "Request leave": "Request leave",
     "Get approval, Ot": "Get approval, Ot.",
     "Watch the Ot log": "Watch the Ot log.",
-    "Improve Uptime": "Improve Uptime"
+    "Improve Uptime": "Improve Uptime",
+    "news information": "news information",
+    "loginSuccess": "LoginSuccess",
+    "loginfailed": "username and password are incorrect",
+    "logout":"LogoutSuccess",
+    "logoutfailed": "Unable to connect",
+    "catch":"Unable to connect"
+  },
+  "Login":{
+"title":"Company",
+"name":"Company Name : ",
+"next":"Next",
+"login":"Login",
+"username":"username",
+"password":"password"
   },
   "Request leave": {
     "title": "Request leave",
@@ -18,7 +32,9 @@
     "select": "select",
     "list": "waiting list",
     "Choose a time period": "Choose a time period",
-    "Pending Items": "Pending Items"
+    "Pending Items": "Pending Items",
+    "Details": "Details",
+    "AddImage": "AddImage"
   },
   "Get approval, Ot": {
     "title": "Get approval, Ot",
@@ -28,21 +44,21 @@
   },
   "Watch the Ot log": {
     "title": "Watch the Ot log",
-    "Choose a time period":"Choose a time period"
+    "Choose a time period": "Choose a time period"
   },
   "Improve Uptime": {
-    "title":"Improve Uptime",
-    "Date":"Date :",
-    "Status":"Status :",
-    "working time":"working time :",
-    "Choose a time period":"Choose a time period"
+    "title": "Improve Uptime",
+    "Date": "Date :",
+    "Status": "Status :",
+    "working time": "working time :",
+    "Choose a time period": "Choose a time period"
   },
   "Employee Id": {
     "employee Id": "Employee Id : ",
     "Name": "Name : "
   },
   "Drawer": {
-    "Edit": "manage employee information",
+    "Edit": "Employee",
     "Request leave": "Request leave",
     "Get approval, Ot": "Get approval, Ot",
     "Summarize": "Summarize",
@@ -53,8 +69,9 @@
   "setting": {
     "title": "setting",
     "changeLang": "Changelanguage",
+    "SecuritySettings": "Security Settings",
     "ChangePassword": "ChangePassword",
-    "Notification":"Notification",
+    "Notification": "Notification",
     "on": "on",
     "off": "off"
   },
@@ -73,9 +90,37 @@
     "on": "on",
     "off": "off"
   },
+  "Notification_Detail": {
+    "title": "Notification Detail"
+  },
   "Set_work": {
-    "title":"work time",
-    "position":"current position",
-    "image":"image"
+    "title": "work time",
+    "position": "current position",
+    "image": "image"
+  },
+  "Information": {
+    "title": "Information"
+  },
+  "salary_calculation": {
+    "title": "Salary Summary",
+    "SelectMount": "Select Month",
+    "SelectYear": "Select Year",
+    "Mount": "Mount",
+    "Year": "Year",
+    "Salary": "Salary :",
+    "Hardship Allowance": "Hardship Allowance :",
+    "Absenteeism": "Absenteeism :",
+    "Social_Security": "Social Security :",
+    "Received_Salary": "Received Salary:",
+    "Salary slip": "Salary slip"
+  },
+  "DiaLog":{
+    "titleinternet":"Notifications",
+    "internet":"Please connect to the internet",
+    "Allowaccess":"Please Allow access",
+    "location":"Allow access to your location",
+    "opensetting":"Open setting",
+    "cancle":"Cancle",
+    "connect":"Connected"
   }
 }

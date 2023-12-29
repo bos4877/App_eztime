@@ -9,8 +9,23 @@
     "Request leave": "ขออนุมัติลา",
     "Get approval, Ot": "ขออนุมัติโอที",
     "Watch the Ot log": "ดูบันทึกโอที",
-    "Improve Uptime": "ปรับปรุงเวลาทำงาน(ลืมแสกน)"
+    "Improve Uptime": "ปรับปรุงเวลาทำงาน(ลืมแสกน)",
+    "news information":"ข้อมูลข่าวสาร",
+    "loginSuccess": "เข้าสู่ระบบสำเร็จ",
+    "loginfailed": "ชื่อผู้ใช้งานเเละรหัสผ่านไม่ถูกต้อง",
+    "logout":"ออกจากระบบสำเร็จ",
+    "logoutfailed": "ออกจากระบบไม่สำเร็จ : ไม่สามารถเชื่อมต่อได้",
+    "catch":"ไม่สามารถเชื่อมต่อได้",
+    "":""
   },
+  "Login":{
+    "title":"บริษัท",
+    "name":"บริษัท : ",
+    "next":"ถัดไป",
+    "login":"เข้าสู่ระบบ",
+    "username":"ชื่อผู้ใช้",
+    "password":"รหัสผ่าน"
+      },
   "Employee Id": {
     "employee Id": "รหัสพนักงาน : ",
     "Name": "ชื่อ : "
@@ -24,16 +39,24 @@
     "setting": "ตั้งค่า",
     "Logout": "ออกจากระบบ"
   },
-  "dialog": {
-    "Allow access": "อนุญาตการเข้าถึง"
+  "DiaLog":{
+    "titleinternet":"เเจ้งเตือน",
+    "internet":"เชื่อมต่ออินเตอร์เน็ต",
+    "Allowaccess":"อนุญาตการเข้าถึง",
+    "location":"อนุญาตการเข้าถึงตำแหน่ง",
+    "opensetting":"เปิดตั้งค่า",
+    "cancle":"ยกเลิก",
+    "connect":"เชื่อมต่อ"
   },
   "Request leave": {
     "title": "ขออนุมัติลา",
     "Save": "บันทึก",
-    "select": "เลือก",
+    "select": "เลือกหัวข้อการลา",
     "list": "รายการที่รอ",
     "Choose a time period": "เลือกช่วงเวลา",
-    "Pending Items": "รายการที่รออนุมัติ"
+    "Pending Items": "รายการที่รออนุมัติ",
+    "Details":"รายละเอียด",
+    "AddImage":"เพิ่มรูปภาพ"
   },
   "Watch the Ot log": {
     "title": "ดูบันทึกโอที",
@@ -55,6 +78,7 @@
   "setting": {
     "title": "ตั้งค่า",
     "changeLang": "เปลี่ยนภาษา",
+    "SecuritySettings":"ตั้งค่าความปลอดภัย",
     "ChangePassword": "ตั้งค่ารหัสผ่าน",
     "Notification": "ตั้งค่าการเเจ้งเตือน",
     "on": "เปิด",
@@ -73,9 +97,29 @@
   "Notification": {
     "title": "การเเจ้งเตือน"
   },
+  "Notification_Detail": {
+    "title": "รายละเอียดการเเจ้งเตือน"
+  },
   "Set_work": {
     "title":"work time",
     "position":"ตำแหน่งปัจจุบัน",
     "image":"รูปภาพ"
+  },
+  "Information":{
+    "title":"ข้อมูลข่าวสาร"
+  },
+  "salary_calculation":{
+    "title":"สรุปเงินเดือน",
+    "SelectMount":"เลือกเดือน",
+    "Mount":"เดือน",
+    "Year":"ปี",
+    "SelectYear":"เลือกปี",
+    "Salary":"เงินเดือน :",
+    "Hardship Allowance":"เบี้ยขยัน :",
+    "Absenteeism":"ขาดงาน :",
+    "Social_Security":"ประกันสังคม :",
+    "Received_Salary":"เงินเดือนที่ได้รับ :",
+    "Salary slip":"สลิปเงินเดือน"
+    
   }
 }

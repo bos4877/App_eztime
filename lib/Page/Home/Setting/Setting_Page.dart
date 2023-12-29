@@ -1,11 +1,12 @@
-// ignore_for_file: unused_element, unused_local_variable
+// ignore_for_file: unused_element, unused_local_variable, unused_import, body_might_complete_normally_nullable
 import 'dart:developer';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:eztime_app/Components/TextStyle/StyleText.dart';
-import 'package:eztime_app/Components/load/loaddialog.dart';
+import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
 import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
 import 'package:eztime_app/Page/Home/HomePage.dart';
+import 'package:eztime_app/Page/Home/Setting/Security/security.dart';
 import 'package:eztime_app/Page/Home/Setting/reset_password.dart';
 import 'package:eztime_app/main.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class setting_page extends StatefulWidget {
 
 class _setting_pageState extends State<setting_page> {
   bool isSwitched = false;
+  bool agree = false;
   bool load = false;
   String? _selectedName; // ค่าที่ถูกเลือกจาก Dropdown
   var lang;
@@ -125,6 +127,32 @@ class _setting_pageState extends State<setting_page> {
                     width: double.infinity,
                     child: Card(
                       child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Security_Page(),
+                          ));
+                        },
+                        icon: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'setting.SecuritySettings',
+                              style: TextStyles.setting_Style,
+                            ).tr(),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.grey,
+                              size: 17,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    child: Card(
+                      child: IconButton(
                         onPressed: () {},
                         icon: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -141,7 +169,7 @@ class _setting_pageState extends State<setting_page> {
                   ),
                   Card(
                     child: Padding(
-                      padding:  EdgeInsets.only(left: 10, right: 10),
+                      padding: EdgeInsets.only(left: 10, right: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -171,7 +199,9 @@ class _setting_pageState extends State<setting_page> {
                                     width: 50,
                                   ),
                                   Text(
-                                    isSwitched ? 'setting.on'.tr() : 'setting.off'.tr(),
+                                    isSwitched
+                                        ? 'setting.on'.tr()
+                                        : 'setting.off'.tr(),
                                     style: TextStyle(
                                         fontSize: 11, color: Colors.grey),
                                   ),
@@ -203,6 +233,8 @@ class _setting_pageState extends State<setting_page> {
                       ),
                     ),
                   ),
+                  
+                  
                 ],
               ),
             ),
@@ -288,6 +320,72 @@ class CustomCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MySwitch extends StatelessWidget {
+  final String title;
+  final Icon icon;
+  final String content;
+  final transform_value;
+  final Function(bool)? onChanged;
+  const MySwitch(
+      {super.key,
+      required this.title,
+      required this.content,
+      required this.icon,
+      this.transform_value,
+      this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: [
+                   icon,
+                    SizedBox(width: 5),
+                    Text(
+                      title,
+                      style: TextStyle(fontSize: 13),
+                    ).tr(),
+                  ],
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 50,
+                    ),
+                    Text(
+                      content,
+                      style: TextStyle(fontSize: 11, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Transform.scale(
+              scale: 0.75,
+              child: Switch(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  value: transform_value,
+                  onChanged: onChanged
+                  ),
             ),
           ],
         ),

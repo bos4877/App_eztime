@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "SM G960N",
+            "name": "SM A115F",
             "type": "dart",
             "request": "launch",
             "program": "lib/main.dart",
-            "deviceId": "emulator-5554"
+            "deviceId": "R9JR40D1VXJ"
         },
         {
-            "name": "Redmi Note7",
+            "name": "SM N960N",
             "type": "dart",
             "request": "launch",
             "program": "lib/main.dart",
-            "deviceId": "de45a7f"
+            "deviceId": "emulator-5556"
         },
         {
             "name": "eztime_app",
@@ -40,8 +40,8 @@
         {
             "name": "Run All Devices",
             "configurations": [
-                "Redmi Note7",
-                "SM G960N",
+                "SM A115F",
+                "SM N960N",
             ]
         }
     ]

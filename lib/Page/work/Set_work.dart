@@ -1,14 +1,15 @@
-// ignore_for_file: prefer_const_constructors, prefer_collection_literals, avoid_unnecessary_containers, use_build_context_synchronously, avoid_single_cascade_in_expression_statements, sized_box_for_whitespace, camel_case_types, prefer_typing_uninitialized_variables, prefer_const_literals_to_create_immutables, unused_local_variable, unnecessary_null_comparison
+// ignore_for_file: prefer_const_constructors, prefer_collection_literals, avoid_unnecessary_containers, use_build_context_synchronously, avoid_single_cascade_in_expression_statements, sized_box_for_whitespace, camel_case_types, prefer_typing_uninitialized_variables, prefer_const_literals_to_create_immutables, unused_local_variable, unnecessary_null_comparison, unused_import, unnecessary_import
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:buddhist_datetime_dateformat_sns/buddhist_datetime_dateformat_sns.dart';
+// import 'package:buddhist_datetime_dateformat_sns/buddhist_datetime_dateformat_sns.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/Buttons/Button.dart';
-import 'package:eztime_app/Components/load/loaddialog.dart';
-import 'package:eztime_app/Page/HomePage/controllers/HomePage_controller.dart';
+import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
+import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
+import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
+// import 'package:eztime_app/Page/HomePage/controllers/HomePage_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,6 @@ class _Set_workState extends State<Set_work> {
   GoogleMapController? mapController;
   bool? serviceEnabled;
   Completer<GoogleMapController> _controller = Completer();
-
   var latitude;
   var longitude;
   bool loading = false;
@@ -55,10 +55,9 @@ class _Set_workState extends State<Set_work> {
       latitude: 13.6953089, // ละติจูดสถานที่ทำงาน
       longitude: 100.6417445,
       accuracy: radius, altitude: radius, heading: radius, speed: radius,
-      speedAccuracy: radius, timestamp: null, // ลองจิจูดสถานที่ทำงาน
+      speedAccuracy: radius, timestamp: null, altitudeAccuracy: latitude,
+      headingAccuracy: longitude, // ลองจิจูดสถานที่ทำงาน
     );
-
-    // final currentLocation = await getLocation();
 
     final distance = Geolocator.distanceBetween(
       latitude,
@@ -75,7 +74,7 @@ class _Set_workState extends State<Set_work> {
         title: 'ดีใจหำ',
         desc: 'มีการเข้างาน',
         btnOkOnPress: () {
-          openAppSettings();
+          // openAppSettings();
 
           Navigator.of(context, rootNavigator: true).pop();
         },
@@ -89,7 +88,7 @@ class _Set_workState extends State<Set_work> {
         title: 'พบข้อผิดพลาด',
         desc: 'ไม่ได้อยู่ในรัศมีการเข้างาน',
         btnOkOnPress: () {
-          openAppSettings();
+          // openAppSettings();
 
           Navigator.of(context, rootNavigator: true).pop();
         },
@@ -120,7 +119,7 @@ class _Set_workState extends State<Set_work> {
     });
 
     Position position = await getLocation();
-    await geolocator.LocationSettings();
+    geolocator.LocationSettings();
     if (position.latitude == null || position.longitude == null) {
     } else {
       setState(() {
@@ -137,60 +136,49 @@ class _Set_workState extends State<Set_work> {
 
   @override
   void initState() {
+    InternetConnectionChecker().checker();
     getLocationAndCheckIn();
     getLocation();
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    DateTime _date = DateTime.now();
-    DateTime _time = DateTime.now();
-    var _dateformatter =
-        DateFormat.yMMMMEEEEd().formatInBuddhistCalendarThai(_date);
-    String _timeformat = DateFormat.Hms('th_TH').format(_time);
+    DateTime _date_time = DateTime.now();
+    var _dateformatter = DateFormat.MMMMEEEEd('th').format(_date_time);
+    String _timeformat = DateFormat.Hms('th').format(_date_time);
+    var _Year = _date_time.year + 543;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Set_work.title').tr(),
-      ),
-      bottomNavigationBar: 
-            Container(
-              color: Colors.white,
-              width: 50,
-              height: 40,
-              child: Buttons(title: 'buttons.Save'.tr(), press: () {})),
-      body: Stack(
-        children: [
-          latitude == null && longitude == null
-              ? Center(child: Loading())
-              : ListView(
-                  padding: EdgeInsets.all(8.0),
-                  children: [
-                    SizedBox(height: 20),
-                    // _buildAvatar(avatars[4]),
-                    SizedBox(height: 10.0),
-                    Text(
-                      "ชื่อผู้ใช้งาน",
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 10.0),
-                    Card(
-                      color: Colors.white,
-                      elevation: 3,
-                      margin: EdgeInsets.symmetric(
-                        vertical: 6.0,
-                        horizontal: 30.0,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Column(
-                          children: [
-                            DigitalClock(
+        appBar: AppBar(
+          title: Text('Set_work.title').tr(),
+        ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.3,
+                    vertical: MediaQuery.of(context).size.height * 0.01),
+          child: Buttons(title: 'buttons.Save'.tr(), press: () {}),
+        ),
+        body: latitude == null && longitude == null
+            ? Center(child: Loading())
+            : SingleChildScrollView(
+                child: Container(
+                  color: Colors.amber,
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // _buildAvatar(avatars[4]),
+                          SizedBox(height: 10.0),
+                          Text(
+                            "ชื่อผู้ใช้งาน",
+                            style: TextStyle(color: Colors.black),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 10.0),
+                          Container(
+                            width: 200,
+                            height: 100,
+                            child: DigitalClock(
                               hourMinuteDigitTextStyle: Theme.of(context)
                                   .textTheme
                                   .headline4!
@@ -208,149 +196,70 @@ class _Set_workState extends State<Set_work> {
                                         color: Colors.black, fontSize: 30),
                               ),
                             ),
-                            SizedBox(height: 5.0),
-                            Text(
-                              "$_dateformatter",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Card(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on_outlined,
-                                  color: Colors.blue,
-                                  size: 20,
+                          ),
+                          Text(
+                            "$_dateformatter พ.ศ. $_Year",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                                color: Colors.blue,
+                                size: 20,
+                              ),
+                              Text(
+                                'Set_work.position',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                // SizedBox(
-                                //   height: 5,
-                                // ),
-                                Text(
-                                  'Set_work.position',
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ).tr(),
-                              ],
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              width: 300,
-                              height: 200,
-                              child: Center(
-                                child: latitude == null
-                                    ? CircularProgressIndicator()
-                                    : Expanded(
-                                        child: GoogleMap(
-                                          gestureRecognizers: {
-                                            //? เลื่อนแผนที่ใน ListView ไม่ให้หน้าจอเลื่อน
-                                            Factory<EagerGestureRecognizer>(
-                                                () => EagerGestureRecognizer())
-                                          },
-                                          myLocationEnabled: true,
-                                          mapType: MapType.normal,
-                                          initialCameraPosition: CameraPosition(
-                                            target: LatLng(latitude, longitude),
-                                            zoom: 15,
-                                          ),
-                                          circles: Set<Circle>.of([
-                                            Circle(
-                                              circleId: CircleId("1"),
-                                              center: LatLng(13.6953089,
-                                                  100.6417445), // ตำแหน่งศูนย์กลางวงกลม (ละติจูด, ลองจิจูด)
-                                              radius:
-                                                  radius, // รัศมีของวงกลมในหน่วยเมตร
-                                              fillColor: Colors.blue
-                                                  .withOpacity(
-                                                      0.3), // สีเต็มของวงกลม
-                                              strokeColor:
-                                                  Colors.blue, // สีเส้นของวงกลม
-                                              strokeWidth:
-                                                  2, // ความกว้างของเส้นของวงกลม
-                                            )
-                                          ]), // เพิ่มเข้าไปใน circles
-                                          onMapCreated:
-                                              (GoogleMapController controller) {
-                                            _controller.complete(controller);
-                                          },
-                                        ),
+                              ).tr(),
+                            ],
+                          ),
+                          SizedBox(height: 15),
+                          latitude == null
+                              ? Loading()
+                              : Container(
+                                  width: double.infinity,
+                                  height: 350,
+                                  child: Center(
+                                    child: GoogleMap(
+                                      gestureRecognizers: {
+                                        //? เลื่อนแผนที่ใน ListView ไม่ให้หน้าจอเลื่อน
+                                        Factory<EagerGestureRecognizer>(
+                                            () => EagerGestureRecognizer())
+                                      },
+                                      myLocationEnabled: true,
+                                      mapType: MapType.normal,
+                                      initialCameraPosition: CameraPosition(
+                                        target: LatLng(latitude, longitude),
+                                        zoom: 15,
                                       ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    Card(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.image_outlined,
-                                  color: Colors.blue,
-                                  size: 20,
+                                      circles: Set<Circle>.of([
+                                        Circle(
+                                          circleId: CircleId("1"),
+                                          center: LatLng(13.6953089,
+                                              100.6417445), // ตำแหน่งศูนย์กลางวงกลม (ละติจูด, ลองจิจูด)
+                                          radius:
+                                              radius, // รัศมีของวงกลมในหน่วยเมตร
+                                          fillColor: Colors.blue.withOpacity(
+                                              0.3), // สีเต็มของวงกลม
+                                          strokeColor:
+                                              Colors.blue, // สีเส้นของวงกลม
+                                          strokeWidth:
+                                              2, // ความกว้างของเส้นของวงกลม
+                                        )
+                                      ]), // เพิ่มเข้าไปใน circles
+                                      onMapCreated:
+                                          (GoogleMapController controller) {
+                                        _controller.complete(controller);
+                                      },
+                                    ),
+                                  ),
                                 ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  'Set_work.image',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold),
-                                ).tr(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              width: 300,
-                              height: 280,
-                              // Set the desired height // Set the desired height
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: decodeBase64Image('${widget.image}'),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-          // : loading
-          //     ? CircularProgressIndicator()
-          //     : Center()
-        ],
-      ),
-    );
+                        ])),
+              ));
   }
 }

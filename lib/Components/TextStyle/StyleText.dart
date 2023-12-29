@@ -40,18 +40,18 @@ class TextStyles {
     
   );
     static TextStyle pro_file_textStyle = TextStyle(
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: FontWeight.bold
     // เพิ่มรูปแบบสไตล์เพิ่มเติมตามที่คุณต้องการ
   );
     static TextStyle pro_file_Style = TextStyle(
-    fontSize: 10,
+    fontSize: 14,
     // fontWeight: FontWeight.bold
     color: Colors.grey
     // เพิ่มรูปแบบสไตล์เพิ่มเติมตามที่คุณต้องการ
   );
   static TextStyle setting_Style = TextStyle(
-    fontSize: 13,
+    fontSize: 16,
     // fontWeight: FontWeight.bold
     // color: Colors.grey
     // เพิ่มรูปแบบสไตล์เพิ่มเติมตามที่คุณต้องการ
@@ -73,6 +73,20 @@ class TextStyles {
     // fontWeight: FontWeight.bold
     // color: Colors.grey
     // เพิ่มรูปแบบสไตล์เพิ่มเติมตามที่คุณต้องการ
+  );
+     static TextStyle SanckbarStyle = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.normal,
+    color: Colors.white,
+
+    // fontWeight: FontWeight.bold
+    // color: Colors.grey
+    // เพิ่มรูปแบบสไตล์เพิ่มเติมตามที่คุณต้องการ
+  );
+       static TextStyle PinCodeStyle = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.normal,
+    color: Colors.black,
   );
 
 }

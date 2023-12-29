@@ -1,9 +1,10 @@
-// ignore_for_file: prefer_const_constructors, prefer_typing_uninitialized_variables, camel_case_types, unused_import
+// ignore_for_file: prefer_const_constructors, prefer_typing_uninitialized_variables, camel_case_types, unused_import, unused_field
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:eztime_app/Components/TextStyle/StyleText.dart';
+import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -89,6 +90,7 @@ class _View_OT_logsState extends State<View_OT_logs> {
 
   @override
   void initState() {
+      InternetConnectionChecker().checker();
     super.initState();
   }
 

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unused_local_variable
 
 import 'package:flutter/material.dart';
 
@@ -17,8 +17,6 @@ class Background extends StatelessWidget {
 
     return Center(
       child: Container(
-          // width: double.infinity,
-          // height: size.height,
           decoration: BoxDecoration(
             color: Colors.white,
             image: DecorationImage(

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "608496849243",
+    "project_id": "hipeztime",
+    "storage_bucket": "hipeztime.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608496849243:android:45031a99b5b18c9f1a8a7e",
+        "android_client_info": {
+          "package_name": "com.example.eztime_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKG50HwY3oUCXSjbQ-BpO7VI4nMI4v4CQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

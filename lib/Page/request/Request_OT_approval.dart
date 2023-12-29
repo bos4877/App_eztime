@@ -1,9 +1,10 @@
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: unnecessary_null_comparison, unused_import, unused_local_variable, unused_field
 import 'dart:developer';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/Buttons/Button.dart';
+import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
+import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -24,15 +25,42 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
   ///--------------------------------------------------------------------------------------------------------------------------
   bool readOnly = true;
   bool showResetIcon = true;
-  // DateTime? _dates;
-  TimeOfDay? _time;
+  var _Fisttime;
+  var _Endtime;
   List _datadate = [];
   var resule1;
-  // String _dateTextFil2 ='17.30';
+  var _fordate;
+  var _for1date;
 
   @override
   void initState() {
+      InternetConnectionChecker().checker();
     super.initState();
+  }
+
+  Future _Stime(BuildContext context) async {
+    _Fisttime = showTimePicker(
+      context: context,
+      initialTime:
+          TimeOfDay.fromDateTime(DateTime.parse('2023-08-23 08:00:00.000')),
+    );
+    if (_Fisttime != null) {
+      return _Fisttime;
+    } else {
+      print('No Selected');
+    }
+  }
+    Future _Etime(BuildContext context) async {
+    _Endtime = showTimePicker(
+      context: context,
+      initialTime:
+          TimeOfDay.fromDateTime(DateTime.parse('2023-08-23 17:30:00.000')),
+    );
+    if (_Endtime != null) {
+      return _Endtime;
+    } else {
+      print('No Selected');
+    }
   }
 
   Future _dateFil1() async {
@@ -54,35 +82,30 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
       dialogSize: Size(325, 400),
       // value: _date,
       borderRadius: BorderRadius.circular(15),
-    ).then((_date) async {
-      if (_date != null) {
-        resule1 = _date;
-        var _dates = DateTime.now();
-        if (_date.isEmpty) {
-          resule1 = _dates;
+    ).then((resule1) {
+      if (resule1 != null) {
+        // var _dates = DateTime.now();
+        if (resule1.isNotEmpty) {
           print(resule1);
-        _time = await showTimePicker(
-          context: context,
-          initialTime:
-              TimeOfDay.fromDateTime(DateTime.parse('2023-08-23 17:30:00.000')),
-        );
-        var _formatedate = resule1.toString();
-        var _fordate =_formatedate.split('[').last.split(']').first.split(' ').first;
-        var _formatetime = _time.toString();
-        var _foetime = _formatetime.split('(').last.split(')').first;
-        _datadate = ['${_date}', '${_time}'];
-        print(_datadate);
-        if (_time == null || _date == null) {
-          setState(() {
-            _dateFil1controlor.clear();
-            _cleariconfile1 = false;
-          });
-        } else {
-          setState(() {
-            _dateFil1controlor.text = '${_fordate} ${_foetime}';
-            _cleariconfile1 = true;
-          });
-        }
+
+          var _formatedate = resule1.toString();
+          _fordate =
+              _formatedate.split('[').last.split(']').first.split(' ').first;
+          // var _formatetime = _Fisttime.toString();
+          // var _foetime = _formatetime.split('(').last.split(')').first;
+          // _datadate = ['${_fordate}', '${_Fisttime}'];
+          print(_datadate);
+          if (_Fisttime == null || _fordate == null) {
+            setState(() {
+              _dateFil1controlor.clear();
+              _cleariconfile1 = false;
+            });
+          } else {
+            setState(() {
+              // _dateFil1controlor.text = '${_fordate} ${_foetime}';
+              _cleariconfile1 = true;
+            });
+          }
         }
         // return DateTimeField.combine(date, time);
       } else {
@@ -93,26 +116,37 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
   }
 
   Future _dateFil2() async {
-    var resule2 = await showDatePicker(
+    var resule2 = await showCalendarDatePicker2Dialog(
       context: context,
-      firstDate: DateTime.now(),
-      initialDate: DateTime.now(),
-      lastDate: DateTime(2100),
-    ).then((_date) async {
+      config: CalendarDatePicker2WithActionButtonsConfig(
+        weekdayLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        weekdayLabelTextStyle:
+            TextStyle(color: Colors.grey.shade600, fontSize: 14),
+        firstDayOfWeek: 0,
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now(),
+        calendarType: CalendarDatePicker2Type.range,
+        selectedDayTextStyle:
+            TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+        selectedDayHighlightColor: Colors.blue,
+        centerAlignModePicker: true,
+      ),
+      dialogSize: Size(325, 400),
+      // value: _date,
+      borderRadius: BorderRadius.circular(15),
+    ).then((_date) {
       if (_date != null) {
-        _time = await showTimePicker(
+        _Endtime = showTimePicker(
           context: context,
           initialTime:
-              TimeOfDay.fromDateTime(DateTime.parse('2023-08-23 00:00:00.000')),
+              TimeOfDay.fromDateTime(DateTime.parse('2023-08-23 17:30:00.000')),
         );
         var _formatedate = _date.toString();
-        var _for1date = _formatedate.split(' ').first;
-        var _formatetime = _time.toString();
+        _for1date = _formatedate.split(' ').first;
+        var _formatetime = _Endtime.toString();
         var _for1time = _formatetime.split('(').last.split(')').first;
 
-        _datadate = ['${_for1date}', '${_for1time}'];
-
-        if (_time == null || _date == null) {
+        if (_Endtime == null || _date == null) {
           setState(() {
             _dateFil2controlor.clear();
             _cleariconfile2 = false;
@@ -137,20 +171,20 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Get approval, Ot.title').tr()),
-      bottomNavigationBar:
-         _dateFil1controlor.text != null? null:
-          Container(
-        padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.35,
-            vertical: MediaQuery.of(context).size.height * 0.05),
-        child: Buttons(
-            title: 'Get approval, Ot.Save'.tr(),
-            press: () {
-              setState(() {
-                _text_open_buttons = false;
-              });
-            }),
-      ),
+      bottomNavigationBar: _dateFil1controlor.text != null
+          ? null
+          : Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.35,
+                  vertical: MediaQuery.of(context).size.height * 0.05),
+              child: Buttons(
+                  title: 'Get approval, Ot.Save'.tr(),
+                  press: () {
+                    setState(() {
+                      _text_open_buttons = false;
+                    });
+                  }),
+            ),
       body: Container(
         child: Padding(
           padding: EdgeInsets.all(8),
@@ -165,8 +199,27 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
                 elevation: 3,
                 borderRadius: BorderRadius.circular(8),
                 child: TextFormField(
-                  onTap: () {
-                    _dateFil1();
+                  onTap: () async {
+                    await _dateFil1();
+                    final TimeOfDay? pickedTime = await _Stime(context);
+                    TimeOfDay endtime = TimeOfDay.fromDateTime(
+                        DateTime.parse('2023-08-23 17:30:00.000'));
+                    if (pickedTime == '') {
+                      setState(() {
+                        _dateFil1controlor.clear();
+                      });
+                    } else {
+                      setState(() {
+                        if (pickedTime == null) {
+                          setState(() {
+                            _dateFil1controlor.text = '';
+                          });
+                        } else {
+                          _dateFil1controlor.text =
+                              '${_fordate} ${pickedTime.format(context)}';
+                        }
+                      });
+                    }
                   },
                   controller: _dateFil1controlor,
                   readOnly: true,
@@ -208,8 +261,12 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
                       borderRadius: BorderRadius.circular(8),
                       ///////////////////////////////////////////////////////////
                       child: TextFormField(
-                        onTap: () {
-                          _dateFil2();
+                        onTap: () async {
+                          await _dateFil2();
+                        final  TimeOfDay _timeofday = await _Etime(context);
+                          if (_timeofday != null) {
+                      _dateFil2controlor.text = '${_Endtime} ${_timeofday.format(context)}';
+                          }
                         },
                         controller: _dateFil2controlor,
                         readOnly: true,
@@ -244,7 +301,6 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
                           ),
                         ),
                       ),
-                      //////////////////////
                     )
                   : Container(),
               Container(
@@ -258,10 +314,7 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
                     Text('Request leave.Pending Items').tr(),
                     SizedBox(height: 5),
                     Card(
-                      child: Column(
-                         children: [
-                          
-                         ]),
+                      child: Column(children: []),
                     ),
                   ],
                 ),

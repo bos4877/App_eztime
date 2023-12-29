@@ -1,4 +1,13 @@
+// ignore_for_file: unused_import
+import 'package:easy_localization/easy_localization.dart';
+import 'package:eztime_app/Components/TextStyle/StyleText.dart';
+import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
+import 'package:eztime_app/Page/request/Request_OT_approval.dart';
+import 'package:eztime_app/Page/request/Request_leave.dart';
+import 'package:eztime_app/Page/request/View_OT_logs.dart';
+import 'package:eztime_app/Page/request/improve_uptime.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class promble_page extends StatefulWidget {
   const promble_page({super.key});
@@ -8,74 +17,100 @@ class promble_page extends StatefulWidget {
 }
 
 class _promble_pageState extends State<promble_page> {
-  List data = [
-    'date: 3,adasd:3,asdsdd:6',
-    'ข้อมูล2',
-    'ข้อมูล3',
-    'ข้อมูล4',
-    'ข้อมูล5'
+  bool load = false;
+  List<String> dataList = [
+    'ข้อมูลที่ 1',
+    'ข้อมูลที่ 2',
+    'ข้อมูลที่ 3',
+    'ข้อมูลที่ 4',
+    'ข้อมูลที่ 5',
+    'ข้อมูลที่ 6',
+    'ข้อมูลที่ 7',
+    'ข้อมูลที่ 8',
+    'ข้อมูลที่ 9',
+    'ข้อมูลที่ 10',
   ];
+  _onRefresh() async {
+    setState(() {load = true;});
+    await Future.delayed(Duration(milliseconds: 800));
+    setState(() {load = false;});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ข้อมูลข่าวสาร'),
+        title: Text('Information.title').tr(),
         automaticallyImplyLeading: false,
       ),
-      body: Center(
-        child: Container(
-          width: 320,
-          height: 250,
-          child: Material(
-            
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: BorderSide(color: Colors.blue)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
+      body: RefreshIndicator(
+        onRefresh: () => _onRefresh(),
+        child:load ? Loading() : ListView.builder(
+          itemCount: dataList.length,
+          itemBuilder: (context, index) => Column(
+            children: [
+              // SizedBox(height: 5,),
+              Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: Material(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: BorderSide(color: Colors.blue)),
+                  child: ExpansionTile(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    backgroundColor: Colors.white,
+                    title: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons_Svg/newspaper.svg',
+                          // color: Colors.blue,
+                          width: 30,
+                          height: 30,
+                        ),
+                        // Image.asset('assets/icons/align-left-svgrepo.svg'),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          dataList[index],
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ).tr(),
+                      ],
+                    ),
+                    onExpansionChanged: (expanded) {
+                      setState(() {
+                        expanded = false;
+                      });
+                    },
                     children: [
-                      Text(
-                        'หัวข้อข่าวสาร',
-                        style:
-                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      Divider(
-                        color: Colors.blue,
-                      ),
-                      Text(
-                        'ข้อมูลเกี่ยวกับรายงาน',
-                        style: TextStyle(fontSize: 14),
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Divider(
+                                color: Colors.grey.shade300,
+                                thickness: 1,
+                                indent: 5,
+                                endIndent: 5),
+                            Text('ข้อมูลข่าวสาร'),
+                            Text(
+                                '..........................................................................................................................................')
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-                Column(
-                  children: [
-                    Divider(color: Colors.grey, height: 0,endIndent: 8,indent: 8),
-                    Center(
-                      child: IconButton(
-                        onPressed: () {
-                          print('Delete Success!!');
-                        },
-                        icon: Icon(
-                          Icons.delete_forever,
-                          color: Colors.red,
-                          size: 20,
-                        ),
-                        alignment: Alignment.center,
-                        splashRadius: 20,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,5 +1,9 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.dart';
+import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:flutter/material.dart';
 
 class improve_uptime extends StatefulWidget {
@@ -12,8 +16,13 @@ class improve_uptime extends StatefulWidget {
 class _improve_uptimeState extends State<improve_uptime> {
   var _time;
   var _date;
-   List<DateTime?> _dates = [];
+  List<DateTime?> _dates = [];
+  var _getToken;
   TextEditingController _controller = TextEditingController();
+
+_refreshlogin()async{
+       _getToken = await LoginApiService().fetchData();
+}
 
   Future date() async {
     var result = await showCalendarDatePicker2Dialog(
@@ -49,16 +58,25 @@ class _improve_uptimeState extends State<improve_uptime> {
         if (_time != null) {
           setState(() {
             _date = result;
-        var _dataformat = DateFormat.yMMMEd().format(_date).split(' ').first;
+            print(_date);
+            // var _dataformat = DateFormat.yMMMMd().format(_date[0]);
 
-          _controller.text = "${_dataformat} ${_time}";
+            // _controller.text = '${_dataformat} ${_time.hour}:${_time.minute}';
           });
-        
+        } else {
+          print('Error1233545');
         }
       } else {
         print('Error');
       }
     });
+  }
+  @override
+  void initState() {
+    _refreshlogin();
+      InternetConnectionChecker().checker();
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -82,14 +100,25 @@ class _improve_uptimeState extends State<improve_uptime> {
                 SizedBox(
                   height: 10,
                 ),
-                Text('วันที่'),
+                Text('รหัสพนักงาน ชื่อ-สกุล'),
                 Material(
                   color: Colors.white,
                   elevation: 3,
                   borderRadius: BorderRadius.circular(8),
                   child: TextFormField(
-                    onTap: () {
-                      date();
+                    onTap: () async {
+                      await date();
+                      TimeOfDay timeOfDay = await _time;
+                      
+                      setState(() {
+                        var _datectlFm = DateFormat('dd-MM-y')
+                            .format(_date[0])
+                            .split('[')
+                            .last
+                            .split('00')
+                            .first;
+                        _controller.text = '${_datectlFm} ${timeOfDay.format(context)}';
+                      });
                     },
                     controller: _controller,
                     readOnly: true,
