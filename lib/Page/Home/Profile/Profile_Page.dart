@@ -2,13 +2,13 @@
 import 'dart:developer';
 
 import 'package:eztime_app/Components/APIServices/ProFileServices/ProfileService.dart';
-import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
+import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
 import 'package:eztime_app/Components/TextStyle/StyleText.dart';
 import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
-import 'package:eztime_app/Model/Profile/Profile_Model.dart';
+import 'package:eztime_app/Model/Get_Model/get_Profile/Profile_Model.dart';
 import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
 import 'package:eztime_app/Page/Home/HomePage.dart';
 import 'package:eztime_app/Page/Home/Profile/Edit_Profile.dart';
@@ -44,19 +44,24 @@ class _Profile_PageState extends State<Profile_Page> {
       var token = prefs.getString('_acessToken');
       var response = await service.getprofile(token);
       setState(() {
+        log(response.toString());
         if (response == null) {
-          // Dialog_Tang().dialog(context,);
+          Dialog_Tang().infodialog(context);
+          log('faile');
           setState(() {
             load = false;
           });
         } else {
           _profilelist = [response];
+          log('success');
           setState(() {
             load = false;
           });
         }
       });
     } catch (e) {
+      load = false;
+      log(e.toString());
       // Dialog_Tang().dialog(context);
     }
   }
@@ -71,7 +76,9 @@ class _Profile_PageState extends State<Profile_Page> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    
+    return load ? Loading() :  Scaffold(
+      
       appBar: AppBar(
         title: Text('ข้อมูลพนักงาน'),
         leading: IconButton(
@@ -94,6 +101,7 @@ class _Profile_PageState extends State<Profile_Page> {
             )
           : Container(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      
       body: Column(
         children: [
           ProfileHeader(
@@ -149,9 +157,6 @@ class _Profile_PageState extends State<Profile_Page> {
           Expanded(child: UserInfo()),
         ],
       ),
-
-      //   ),
-      // ),
     );
   }
 
@@ -195,7 +200,7 @@ class _Profile_PageState extends State<Profile_Page> {
                         section: 'แผนก', data: '${_profilelist[0].department}'),
                     colum_tang(
                         section: 'ตำแหน่ง',
-                        data: '${_profilelist[0].position}'),
+                        data: '${_profilelist[0].department}'),
                     colum_tang(
                         section: 'ประเภทพนักงาน',
                         data: '${_profilelist[0].employeeType}'),
@@ -394,9 +399,13 @@ class _Profile_PageState extends State<Profile_Page> {
               ),
             ),
           ],
+          
         ),
+        
       ),
+      
     );
+    
   }
 }
 
@@ -459,9 +468,9 @@ class colum_tang extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return  Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children:[
         Text(
           section,
           style: TextStyles.pro_file_textStyle,

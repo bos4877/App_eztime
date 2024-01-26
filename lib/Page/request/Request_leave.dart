@@ -1,19 +1,28 @@
-// ignore_for_file: prefer_const_constructors, prefer_final_fields, prefer_const_literals_to_create_immutables, sized_box_for_whitespace, unused_local_variable, unused_field, unused_import
+// ignore_for_file: prefer_const_constructors, prefer_final_fields, prefer_const_literals_to_create_immutables, sized_box_for_whitespace, unused_local_variable, unused_field, unused_import, unnecessary_cast
 
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
+import 'package:eztime_app/Components/APIServices/RequestleaveService/PushLeave/PushLeavService.dart';
+import 'package:eztime_app/Components/APIServices/RequestleaveService/Request_leave_Service.dart';
 import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
+import 'package:eztime_app/Components/Camera/camera_and_gallary.dart';
+import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
+import 'package:eztime_app/Components/DiaLog/SnackBar/Sanckbar.dart';
+import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
+import 'package:eztime_app/Components/DropDownWidget/DropDown_CM.dart';
 import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
+import 'package:eztime_app/Model/Get_Model/Request_leave/Request_leave_Model.dart';
 import 'package:eztime_app/Page/Login/Login_Page.dart';
 import 'package:flutter/material.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Request_leave extends StatefulWidget {
   const Request_leave({super.key});
@@ -23,63 +32,95 @@ class Request_leave extends StatefulWidget {
 }
 
 class _Request_leaveState extends State<Request_leave> {
-  TextEditingController _datecontrollorStart = TextEditingController();
-  TextEditingController _datecontrollorEnd = TextEditingController();
-  DateFormat _Sformat = DateFormat('dd-MM-y');
-
-  List<DateTime?> _dates = [];
+  final _formkey = GlobalKey<FormState>();
+  bool load = false;
+  var token;
+  var _time;
+  var _diff;
+  var _timeEnd;
   var _Startdate;
   var _Enddate;
-  DateTime _dayBuilder = DateTime.now();
-  String? selecteStr;
-  int? selectedValue;
-  List _item = ['ลากิจ', 'ลาป่วย', 'ลาไม่รับค่าจ้าง'];
-  var _diff;
-  bool load = false;
-  var _time;
-  var _timeEnd;
-  bool isWeekend = DateTime.now().weekday == DateTime.saturday ||
-      DateTime.now().weekday == DateTime.sunday;
   XFile? pickedImage;
   String? imagePath;
   String? imagePathname;
+  String? selecteStr;
+  int? selectedValue;
+  TimeOfDay? timeOfDay__datefill;
+  TimeOfDay? timeOfDay_datefill2;
+  List _item = [];
+  List<Leave> _laeveList = [];
+  List<DateTime?> _dates = [];
+  DateTime _dayBuilder = DateTime.now();
+  bool isWeekend = DateTime.now().weekday == DateTime.saturday ||
+      DateTime.now().weekday == DateTime.sunday;
+  TextEditingController _datecontrollorStart = TextEditingController();
+  TextEditingController _datecontrollorEnd = TextEditingController();
+  TextEditingController leaveDescription = TextEditingController();
+  DateFormat _Sformat = DateFormat('dd-MM-y');
+
+  Future getleave() async {
+    setState(() {
+      load = true;
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('_acessToken');
+    var service = Request_leave_Service();
+    var response = await service.model(token);
+    log(response.toString());
+    if (response == null) {
+      log('getleavefaile');
+      setState(() {
+        load = false;
+      });
+    } else {
+      _laeveList = response;
+      setState(() {
+        for (var element in _laeveList) {
+          if (element.leaveType != null) {
+            if (element.leaveType is Iterable<String>) {
+              _item.addAll(element.leaveType
+                  as Iterable); // ใส่ ! เพื่อบอกว่าข้อมูลไม่เป็น null
+            } else if (element.leaveType is String) {
+              _item.add(
+                element.leaveType,
+              ); // ใส่ ! เพื่อบอกว่าข้อมูลไม่เป็น null
+            }
+          }
+        }
+        load = false;
+      });
+    }
+  }
 
   @override
   void initState() {
-      InternetConnectionChecker().checker();
+    InternetConnectionChecker().checker();
+    getleave();
     super.initState();
   }
 
-  Future _pickImage() async {
-    final pickedFile = await ImagePickerHelper.pickImage();
-
-    if (pickedFile != null) {
-      setState(() {
-        pickedImage = pickedFile;
-        imagePath = pickedImage!.path;
-        imagePathname = pickedImage!.name;
-        log(imagePathname.toString());
-        log(imagePath.toString());
-      });
-    } else {
-      return Text('ไม่พบรูปภาพ');
-    }
+  Future fileToBase64(String filePath) async {
+    File file = File(filePath);
+    List<int> bytes = await file.readAsBytes();
+    return base64Encode(bytes);
   }
 
   Widget showImage() {
     // ที่อยู่ของรูปภาพ
-    String image = '${imagePath}';
+    String image = '${imagePathname}';
 
     // ตรวจสอบว่ารูปภาพมีหรือไม่
-    File imageFile = File(imagePath!);
+    File imageFile = File(image);
     if (!imageFile.existsSync()) {
-      return Text('ไม่พบรูปภาพ');
+      setState(() {
+        log('showImage: ${imageFile}');
+      });
     }
     // แสดงรูปภาพ
     return Image.file(imageFile);
   }
 
-  Future _date() async {
+  Future _datefill() async {
     var result = await showCalendarDatePicker2Dialog(
       context: context,
       config: CalendarDatePicker2WithActionButtonsConfig(
@@ -87,7 +128,7 @@ class _Request_leaveState extends State<Request_leave> {
         weekdayLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         weekdayLabelTextStyle:
             TextStyle(color: Colors.grey.shade600, fontSize: 14),
-        calendarType: CalendarDatePicker2Type.range,
+        calendarType: CalendarDatePicker2Type.single,
         dayTextStyle: TextStyle(),
         selectedDayTextStyle:
             TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
@@ -100,88 +141,33 @@ class _Request_leaveState extends State<Request_leave> {
       dialogSize: Size(325, 400),
       value: _dates,
       borderRadius: BorderRadius.circular(15),
-    ).then((result) {
-      print(result);
-      if (result != null) {
-        if (selectedValue == 0) {
-          setState(() {
-            if (result.length > 4) {
-              print(result.length);
-              _time = showTimePicker(
-                context: context,
-                initialTime: TimeOfDay.fromDateTime(
-                    DateTime.parse('2023-08-23 08:00:00.000')),
-              );
-              print(_time);
-            } else {
-              AwesomeDialog(
-                context: context,
-                animType: AnimType.scale,
-                dialogType: DialogType.warning,
-                title: 'การแจ้งเตือน',
-                titleTextStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                desc: 'ลากิจได้ไม่เกิน 4 วัน\n รวมเสาร์-อาทิต นะคะ',
-                btnOkOnPress: () {},
-                dismissOnBackKeyPress: false,
-                dismissOnTouchOutside: false,
-              )..show();
-            }
-          });
-        } else if (selectedValue == 1) {
-          setState(() {
-            print('object1');
-          });
+    ).then(
+      (result) {
+        if (result!.isNotEmpty) {
+          log(result.toString());
+          _time = showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(
+                DateTime.parse('2023-08-23 08:00:00.000')),
+          );
+          var _date = result.toString();
+          var formatdate =
+              _date.split('[').last.split(']').first.split(' ').first;
+          _Startdate = '$formatdate';
         } else {
-          setState(() {
-            print('object3');
-          });
+          _Startdate = '';
+          _time = showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(
+                DateTime.parse('2023-08-23 08:00:00.000')),
+          );
+          var date = DateTime.now().toString();
+          var formatdate =
+              date.split('[').last.split(']').first.split(' ').first;
+          _Startdate = '$formatdate';
         }
-
-      //   if (selectedValue == 0) {
-      //     print('0');
-      //     if (result.length == 1) {
-      //       print('1');
-      //       setState(() {
-      //         _dates = result;
-      //         _Startdate = _Sformat.format(_dates[0]!);
-      //         _datecontrollorStart.text = '${_Startdate} ';
-      //         setState(() {
-      //           load = false;
-      //         });
-      //       });
-      //     } else {
-      //       print('2');
-      //       setState(() {
-      //         _dates = result;
-      //         var _difference = _dates[1]!.difference(_dates[0]!).inDays + 1;
-      //         //  _diff = _difference.inDays+1;
-      //         ///////////////////////////////////////////////////////// ทำเรื่องการลา /////////////////////////////////////////////
-      //         if (_difference > 2 && selecteStr == 'ลากิจ') {
-      //           _Startdate = _Sformat.format(_dates[0]!);
-      //           _Enddate = _Sformat.format(_dates[1]!);
-      //         } else if (_difference > 3 && selecteStr == 'ลากิจ') {
-      //           print(_difference);
-      //         } else {
-      //           _Startdate = _Sformat.format(_dates[0]!);
-      //           _Enddate = _Sformat.format(_dates[1]!);
-      //           _datecontrollorStart.text = '${_Startdate}';
-      //           _datecontrollorEnd.text = '${_Enddate}';
-      //         }
-
-      //         log((_difference).toString());
-      //         setState(() {
-      //           load = false;
-      //         });
-      //       });
-      //     }
-      //   }
-      //   if (selectedValue == 1) {}
-      // } else {
-      //   return null;
-      // }
-      }
-    });
+      },
+    );
   }
 
   Future datefill2() async {
@@ -192,7 +178,7 @@ class _Request_leaveState extends State<Request_leave> {
         weekdayLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         weekdayLabelTextStyle:
             TextStyle(color: Colors.grey.shade600, fontSize: 14),
-        calendarType: CalendarDatePicker2Type.range,
+        calendarType: CalendarDatePicker2Type.single,
         dayTextStyle: TextStyle(),
         selectedDayTextStyle:
             TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
@@ -200,6 +186,7 @@ class _Request_leaveState extends State<Request_leave> {
         closeDialogOnOkTapped: true,
         centerAlignModePicker: true,
         firstDate: DateTime.now(),
+        // okButton:
       ),
       dialogBackgroundColor: Colors.white,
       dialogSize: Size(325, 400),
@@ -207,28 +194,26 @@ class _Request_leaveState extends State<Request_leave> {
       borderRadius: BorderRadius.circular(15),
     ).then((result) {
       print(result);
-      if (result != null) {
-        // if (result.length < 0) {
+      if (result!.isNotEmpty) {
         _timeEnd = showTimePicker(
           context: context,
           initialTime:
               TimeOfDay.fromDateTime(DateTime.parse('2023-08-23 17:30:00.000')),
         );
-        print('T${_timeEnd}');
-        // } else {
-        //   AwesomeDialog(
-        //     context: context,
-        //     animType: AnimType.scale,
-        //     dialogType: DialogType.warning,
-        //     title: 'การแจ้งเตือน',
-        //     titleTextStyle:
-        //         TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-        //     desc: 'ลากิจได้ไม่เกิน 4 วัน\n รวมเสาร์-อาทิต นะคะ',
-        //     btnOkOnPress: () {},
-        //     dismissOnBackKeyPress: false,
-        //     dismissOnTouchOutside: false,
-        //   )..show();
-        // }
+        var _date = result.toString();
+        var formatdate =
+            _date.split('[').last.split(']').first.split(' ').first;
+        _Enddate = '${formatdate}';
+      } else {
+        _Enddate = '';
+        _timeEnd = showTimePicker(
+          context: context,
+          initialTime:
+              TimeOfDay.fromDateTime(DateTime.parse('2023-08-23 17:30:00.000')),
+        );
+        var date = DateTime.now().toString();
+        var formatdate = date.split('[').last.split(']').first.split(' ').first;
+        _Enddate = '$formatdate';
       }
     });
   }
@@ -238,6 +223,7 @@ class _Request_leaveState extends State<Request_leave> {
       load = true;
     });
     await Future.delayed(Duration(milliseconds: 800));
+    await showImage();
     setState(() {
       load = false;
     });
@@ -257,42 +243,61 @@ class _Request_leaveState extends State<Request_leave> {
             ? Loading()
             : ListView(
                 children: [
-                  Container(
-                    // height: 40,
-                    child: Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _DropDown(context),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          selectedValue != null
-                              ? Material(
+                  Form(
+                    key: _formkey,
+                    child: Container(
+                      // height: 40,
+                      child: Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Drop_Down(
+                                  title: 'Request leave.select',
+                                  item: _item,
+                                  value: selecteStr,
+                                  onChang: (value) {
+                                    setState(() {
+                                      selectedValue = _item.indexOf(value);
+                                      var sucessValue = selectedValue! + 1;
+                                      selecteStr = value.toString();
+                                      var _laeveId = _item[selectedValue!];
+
+                                      print(selecteStr!);
+                                      print('sucessValue: ${sucessValue}');
+                                      print('selecteStr: ${selecteStr}');
+                                    });
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Material(
                                   color: Colors.white,
                                   elevation: 3,
                                   borderRadius: BorderRadius.circular(8),
                                   child: TextFormField(
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        Snack_Bar(
+                                            snackBarColor: Colors.red,
+                                            snackBarIcon:
+                                                Icons.warning_amber_rounded,
+                                            snackBarText:
+                                                'กรุณากรอกวันที่เริ่มต้น');
+                                      }
+                                    },
                                     onTap: () async {
-                                      await _date();
-                                      TimeOfDay timeOfDay = await _time;
+                                      await _datefill();
+                                      timeOfDay__datefill = await _time;
                                       setState(() {
-                                        print(timeOfDay);
+                                        print(timeOfDay__datefill);
                                         _datecontrollorStart.text =
-                                            '${_Startdate} ${timeOfDay.format(context)}';
-                                        // if (_Enddate.toString() == null) {
-                                          
-                                          _datecontrollorEnd.text =
-                                              '${_Enddate} ${timeOfDay.format(context)}';
-//                                         } else {
-//                                           print('E ${_Enddate}');
-//                                           // print(_datecontrollorEnd.text);
-// // _datecontrollorEnd.text = '${_Enddate}  ${timeOfDay.format(context)}';
-//                                         }
+                                            '${_Startdate} ${timeOfDay__datefill!.format(context)}';
                                       });
                                     },
                                     controller: _datecontrollorStart,
@@ -305,7 +310,7 @@ class _Request_leaveState extends State<Request_leave> {
                                           vertical:
                                               10.0), // ระยะห่างระหว่างข้อความและขอบ
                                       hintText:
-                                          'Request leave.Choose a time period'
+                                          'Request leave.Start Choose a time period'
                                               .tr(),
                                       hintStyle: TextStyle(
                                           color:
@@ -336,28 +341,23 @@ class _Request_leaveState extends State<Request_leave> {
                                       ),
                                     ),
                                   ),
-                                )
-                              : Container(),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          selectedValue != null
-                              ? Material(
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Material(
                                   color: Colors.white,
                                   elevation: 3,
                                   borderRadius: BorderRadius.circular(8),
                                   child: TextFormField(
                                     onTap: () async {
                                       await datefill2();
-                                      TimeOfDay timeOfDay = await _timeEnd;
-                                      _datecontrollorStart.text = '${_Startdate} ${timeOfDay.format(context)}';
-                                      if (_datecontrollorEnd.text.isEmpty) {
+                                      timeOfDay_datefill2 = await _timeEnd;
+                                      setState(() {
+                                        print(timeOfDay_datefill2);
                                         _datecontrollorEnd.text =
-                                            '${_Enddate} 17:30';
-                                      } else {
-                                        _datecontrollorEnd.text =
-                                            '${_Enddate} ${timeOfDay.format(context)}';
-                                      }
+                                            '${_Enddate} ${timeOfDay_datefill2!.format(context)}';
+                                      });
                                     },
                                     controller: _datecontrollorEnd,
                                     readOnly: true,
@@ -369,7 +369,7 @@ class _Request_leaveState extends State<Request_leave> {
                                           vertical:
                                               10.0), // ระยะห่างระหว่างข้อความและขอบ
                                       hintText:
-                                          'Request leave.Choose a time period'
+                                          'Request leave.End Choose a time period'
                                               .tr(),
                                       hintStyle: TextStyle(
                                           color:
@@ -400,13 +400,11 @@ class _Request_leaveState extends State<Request_leave> {
                                       ),
                                     ),
                                   ),
-                                )
-                              : Container(),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          selectedValue != null
-                              ? Column(
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Request leave.Details').tr(),
@@ -418,140 +416,188 @@ class _Request_leaveState extends State<Request_leave> {
                                       // elevation: 3,
                                       borderRadius: BorderRadius.circular(8),
                                       child: TextFormField(
+                                        controller: leaveDescription,
                                         decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.all(6),
                                             border: InputBorder.none),
                                         maxLines: 4, // รับข้อความหลายบรรทัด
                                       ),
                                     ),
                                   ],
-                                )
-                              : Container(),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          selectedValue != null
-                              ? Row(
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Request leave.AddImage').tr(),
-                                    imagePath != null
-                                        ? IconButton(
-                                            onPressed: () => _pickImage(),
-                                            icon: Icon(
-                                              Icons
-                                                  .add_photo_alternate_outlined,
-                                              size: 20,
-                                              color: Colors.blue,
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    imagePathname == null
+                                        ? Center(
+                                            child: ElevatedButton.icon(
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                        title: Text(
+                                                            'เลือกรูปภาพ',
+                                                            style: TextStyle(
+                                                                fontSize: 16)),
+                                                        content: Container(
+                                                          width: 80,
+                                                          height: 100,
+                                                          child: Column(
+                                                            children: [
+                                                              TextButton.icon(
+                                                                  onPressed:
+                                                                      () async {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    await camera()
+                                                                        .then(
+                                                                      (value) {
+                                                                        if (value ==
+                                                                            null) {
+                                                                          Snack_Bar(
+                                                                              snackBarColor: Colors.red,
+                                                                              snackBarIcon: Icon(Icons.warning_amber_outlined),
+                                                                              snackBarText: 'ไม่พบรูปภาพ');
+                                                                        } else {
+                                                                          imagePathname =
+                                                                              value;
+                                                                          _onRefresh();
+                                                                          log('fill1: ${value}');
+                                                                          log('imagePathname: ${imagePathname}');
+                                                                        }
+                                                                      },
+                                                                    );
+                                                                  },
+                                                                  icon: Icon(Icons
+                                                                      .camera_alt),
+                                                                  label: Text(
+                                                                    'กล้อง',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            16),
+                                                                  )),
+                                                              TextButton.icon(
+                                                                  onPressed:
+                                                                      () async {
+                                                                    Navigator.pop(
+                                                                        context);
+
+                                                                    await gallery()
+                                                                        .then(
+                                                                      (value) {
+                                                                        if (value ==
+                                                                            null) {
+                                                                          log('value: ${value}');
+                                                                          // _onRefresh();
+                                                                        } else {
+                                                                          imagePathname =
+                                                                              value;
+                                                                          _onRefresh();
+                                                                          log('imagePathname: ${imagePathname}');
+                                                                        }
+                                                                      },
+                                                                    );
+                                                                  },
+                                                                  icon: Icon(Icons
+                                                                      .photo),
+                                                                  label: Text(
+                                                                    'คลังภาพ',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            16),
+                                                                  ))
+                                                            ],
+                                                          ),
+                                                        ));
+                                                  },
+                                                );
+                                              },
+                                              icon: Icon(Icons
+                                                  .add_photo_alternate_outlined),
+                                              label:
+                                                  Text('Request leave.AddImage')
+                                                      .tr(),
                                             ),
                                           )
-                                        : Container()
+                                        : Center(
+                                            child: Container(
+                                              color: Colors.white,
+                                              width: double.infinity,
+                                              height: 300,
+                                              child: Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: showImage(),
+                                              ),
+                                            ),
+                                          ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
                                   ],
-                                )
-                              : Container(),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          imagePath != null
-                              ? Container(
-                                  color: Colors.white,
-                                  // width: 280,
-                                  // height: 200,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: showImage(),
-                                  ),
-                                )
-                              : selectedValue != null
-                                  ? ElevatedButton.icon(
-                                      onPressed: () => _pickImage(),
-                                      icon: Icon(
-                                          Icons.add_photo_alternate_outlined),
-                                      label:
-                                          Text('Request leave.AddImage').tr(),
-                                    )
-                                  : Container()
-
-                          // Container(
-                          //   alignment: Alignment.topLeft,
-                          //   child: Column(
-                          //     children: [
-                          //       SizedBox(
-                          //         height: 20,
-                          //       ),
-                          //       Text('Request leave.list').tr(),
-                          //       SizedBox(height: 5),
-                          //       Card(
-                          //         child: Container(
-                          //             width: double.infinity, child: Text('data').tr()),
-                          //       )
-                          //     ],
-                          //   ),
-                          // )
-                        ],
-                      ),
+                                ),
+                              ])),
                     ),
-                  ),
+                  )
                 ],
               ),
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Buttons(title: 'Request leave.Save'.tr(), press: () {}),
+        padding: EdgeInsets.all(8.0),
+        child: Buttons(
+            title: 'Request leave.Save'.tr(),
+            press: () async {
+              var base64 = await fileToBase64(imagePathname!);
+              log('base64: ${base64}');
+              log('_laeveList[selectedValue].leaveId: ${_laeveList[selectedValue!].leaveId}');
+              var service = PushLeave_Service();
+              var startTime = timeOfDay__datefill
+                  .toString()
+                  .split('(')
+                  .last
+                  .split(')')
+                  .first;
+              var endTime = timeOfDay_datefill2
+                  .toString()
+                  .split('(')
+                  .last
+                  .split(')')
+                  .first;
+              var response = await service.model(
+                token,
+                _laeveList[selectedValue!].leaveId,
+                _Startdate,
+                startTime,
+                _Enddate,
+                endTime,
+                leaveDescription.text,
+                base64,
+              );
+              log('responseStatus: ${response}');
+              if (response == 200) {
+                Dialog_Tang().successdialog(context);
+              } else {
+                Dialog_Tang().falsedialog(context);
+              }
+            }),
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
-    );
-  }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  Widget _DropDown(BuildContext context) {
-    return Material(
-      elevation: 3,
-      borderRadius: BorderRadius.circular(8),
-      color: Colors.white,
-      child: Container(
-        width: double.infinity,
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton2(
-            isExpanded: true,
-            hint: Text(
-              'Request leave.select',
-              style: TextStyle(
-                fontSize: 14,
-                color: Theme.of(context).hintColor,
-              ),
-            ).tr(),
-            items: _item
-                .map((item) => DropdownMenuItem(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            value: selecteStr,
-            onChanged: (value) {
-              setState(() {
-                selectedValue = _item.indexOf(value);
-                selecteStr = value.toString();
-                print(selecteStr!);
-                print(selectedValue.toString());
-              });
-            },
-            buttonStyleData: ButtonStyleData(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              // height: 40,
-              width: 140,
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-                // height: 40,
-                ),
-          ),
-        ),
-      ),
     );
   }
 }

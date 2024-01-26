@@ -1,9 +1,14 @@
-import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+var ip;
+ipshare() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  ip = prefs.getString('ip');
+}
 
 class connect_api {
-String? domain;
-// SharedPreferences prefs = await SharedPreferences.getInstance();
- connect_api(){
-  domain = 'https://9138-14-207-84-102.ngrok-free.app';
+  String? domain;
+  connect_api() {
+    domain = 'https://366d-27-130-254-41.ngrok-free.app';
+  }
 }
-} 

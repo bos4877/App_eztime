@@ -15,12 +15,12 @@ class Buttons extends StatelessWidget {
       height: 40,
       child: ElevatedButton(
           style: TextButton.styleFrom(
-            side: BorderSide(color: Color(0xFF1976D2)),
-            backgroundColor: Color(0xFF1976D2),
+            side: BorderSide(color: Color(0xFF0D47A1)),
+            backgroundColor: Color(0xFF0D47A1),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             elevation: 3,
             primary: Colors.black,
-            foregroundColor: Colors.blue,
+            foregroundColor: Color(0xFF0D47A1),
             // surfaceTintColor: Colors.amber,
           ),
           child: Text(

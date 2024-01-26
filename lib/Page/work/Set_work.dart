@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 // import 'package:buddhist_datetime_dateformat_sns/buddhist_datetime_dateformat_sns.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -14,13 +15,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart' as geolocator;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart ';
 import 'package:slide_digital_clock/slide_digital_clock.dart';
-import 'package:geolocator/geolocator.dart' as geolocator;
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Set_work extends StatefulWidget {
   Set_work({
@@ -55,7 +56,7 @@ class _Set_workState extends State<Set_work> {
       latitude: 13.6953089, // ละติจูดสถานที่ทำงาน
       longitude: 100.6417445,
       accuracy: radius, altitude: radius, heading: radius, speed: radius,
-      speedAccuracy: radius, timestamp: null, altitudeAccuracy: latitude,
+      speedAccuracy: radius, timestamp: DateTime.now(), altitudeAccuracy: latitude,
       headingAccuracy: longitude, // ลองจิจูดสถานที่ทำงาน
     );
 
@@ -136,9 +137,9 @@ class _Set_workState extends State<Set_work> {
 
   @override
   void initState() {
-    InternetConnectionChecker().checker();
-    getLocationAndCheckIn();
-    getLocation();
+    // InternetConnectionChecker().checker();
+    // getLocationAndCheckIn();
+    // getLocation();
     super.initState();
   }
 

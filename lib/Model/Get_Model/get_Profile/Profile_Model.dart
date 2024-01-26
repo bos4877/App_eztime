@@ -34,7 +34,7 @@ class EmployData {
   String? birthDay;
   String? branchOffice;
   String? department;
-  String? position;
+  String? positionId;
   String? salary;
   String? cashAdvance;
   String? startedDate;
@@ -52,6 +52,7 @@ class EmployData {
   String? refreshToken;
   String? companyId;
   String? lastUpdate;
+  String? role;
 
   EmployData(
       {this.rowId,
@@ -69,7 +70,7 @@ class EmployData {
       this.birthDay,
       this.branchOffice,
       this.department,
-      this.position,
+      this.positionId,
       this.salary,
       this.cashAdvance,
       this.startedDate,
@@ -86,7 +87,8 @@ class EmployData {
       this.deviceToken,
       this.refreshToken,
       this.companyId,
-      this.lastUpdate});
+      this.lastUpdate,
+      this.role});
 
   EmployData.fromJson(Map<String, dynamic> json) {
     rowId = json['row_id'];
@@ -104,7 +106,7 @@ class EmployData {
     birthDay = json['birth_day'];
     branchOffice = json['branch_office'];
     department = json['department'];
-    position = json['position'];
+    positionId = json['position_id'];
     salary = json['salary'];
     cashAdvance = json['cash_advance'];
     startedDate = json['started_date'];
@@ -122,6 +124,7 @@ class EmployData {
     refreshToken = json['refreshToken'];
     companyId = json['company_id'];
     lastUpdate = json['last_update'];
+    role = json['role'];
   }
 
   Map<String, dynamic> toJson() {
@@ -141,7 +144,7 @@ class EmployData {
     data['birth_day'] = this.birthDay;
     data['branch_office'] = this.branchOffice;
     data['department'] = this.department;
-    data['position'] = this.position;
+    data['position_id'] = this.positionId;
     data['salary'] = this.salary;
     data['cash_advance'] = this.cashAdvance;
     data['started_date'] = this.startedDate;
@@ -159,6 +162,7 @@ class EmployData {
     data['refreshToken'] = this.refreshToken;
     data['company_id'] = this.companyId;
     data['last_update'] = this.lastUpdate;
+    data['role'] = this.role;
     return data;
   }
 }

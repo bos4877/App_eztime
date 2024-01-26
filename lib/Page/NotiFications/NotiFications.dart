@@ -1,5 +1,7 @@
 // ignore_for_file: unused_import
 import 'dart:developer';
+
+import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -52,7 +54,7 @@ class NotificationService {
   }
 
   Future<void> notification() async {
-    await messaging.requestPermission(alert: true, badge: true, sound: true);
+    await messaging.requestPermission(alert: true, badge: true, sound: true,);
     final fCMToken = await messaging.getToken();
     log("Token : ${fCMToken}");
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -94,5 +96,8 @@ class NotificationService {
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
     FirebaseMessaging.onMessage.listen(handleMessage);
+  }
+  stopNoti()async{
+    await messaging.requestPermission(alert: false, badge: true, sound: true,announcement: true,);
   }
 }

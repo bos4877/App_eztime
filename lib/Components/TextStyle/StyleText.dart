@@ -89,5 +89,6 @@ class TextStyles {
     color: Colors.black,
   );
 
+
 }
 

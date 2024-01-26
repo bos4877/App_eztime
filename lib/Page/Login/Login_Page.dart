@@ -1,30 +1,31 @@
 // ignore_for_file: prefer_const_constructors, unused_import, camel_case_types, avoid_unnecessary_containers, unused_local_variable, body_might_complete_normally_nullable
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:isolate';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.dart';
 import 'package:eztime_app/Components/Background/Background.dart';
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/DiaLog/SnackBar/Sanckbar.dart';
-import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
-import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.dart';
-import 'package:eztime_app/Model/Company/Company_Model.dart';
+import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
+import 'package:eztime_app/Model/Get_Model/Company/Company_Model.dart';
 import 'package:eztime_app/Model/Login/Login_Model.dart';
 import 'package:eztime_app/Model/ResetToken/ResetToken_Model.dart';
 import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
 import 'package:eztime_app/Page/Home/HomePage.dart';
 import 'package:eztime_app/main.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:permission_handler/permission_handler.dart%20';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 class Login_Page extends StatefulWidget {
   const Login_Page({super.key});
@@ -49,8 +50,10 @@ class _Login_PageState extends State<Login_Page> {
   void _getDeviceToken() async {
     // final messing = FirebaseInstanceId.getInstance().getToken(“old-sender-id”, FirebaseMessaging.INSTANCE_ID_SCOPE);
     deviceToken = await messing.getToken();
+    log('deviceToken: ${deviceToken}');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     ip = prefs.getString('ip');
+    
   }
 
   Future loginUser(
@@ -62,7 +65,7 @@ class _Login_PageState extends State<Login_Page> {
       try {
         String url = '${connect_api().domain}/login_employee';
         var response = await Dio().post(url, data: {
-          'user_name': username,
+          'employee_no': username,
           'password': password,
           'device_token': device_token
         });
@@ -72,12 +75,11 @@ class _Login_PageState extends State<Login_Page> {
           LoginModel tokenModel = LoginModel.fromJson(Jsonres);
           SharedPreferences prefs = await SharedPreferences.getInstance();
           setState(() {
-            
             prefs.setString('_acessToken', "${tokenModel.token}");
             prefs.setString('_resetToken', '${tokenModel.refreshToken}');
-            prefs.setString('_deviceToken', '${deviceToken}');
-            prefs.setString('username', _username.text);
-            prefs.setString('password', _password.text);
+            prefs.setString('_deviceToken', deviceToken!);
+            prefs.setString('username', username);
+            prefs.setString('password', password);
             _loading = false;
             Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => BottomNavigationBar_Page(),

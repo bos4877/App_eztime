@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import
 
-import 'package:flutter/material.dart';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
 
 ThemeData mytheme() {
   Map<int, Color> color = {
@@ -24,8 +25,8 @@ ThemeData mytheme() {
         TargetPlatform.android: ZoomPageTransitionsBuilder()
       },
     ),
-    primarySwatch: MaterialColor(0xFF1976D2, color),
-    primaryColor: Color(0xFF1976D2),
+    primarySwatch: MaterialColor(0xFF0D47A1, color),
+    primaryColor: Color(0xFF0D47A1),
     // accentColor: Colors.transparent, //? Scroll Colors
     textTheme: TextTheme(
       bodyText2: TextStyle(
@@ -34,13 +35,13 @@ ThemeData mytheme() {
       ),
     ),
     drawerTheme: DrawerThemeData(
-      backgroundColor: Color(0xFF1976D2),
+      backgroundColor: Color(0xFF0D47A1),
     ),
     dialogTheme: DialogTheme(
         titleTextStyle: TextStyle(
             fontWeight: FontWeight.normal,
             color: Colors.black,
-            fontFamily: 'Kanit')),
+            fontFamily: 'Sarabun')),
     bottomAppBarTheme: BottomAppBarTheme(color: Colors.white),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
         selectedIconTheme: IconThemeData(size: 30),
@@ -52,17 +53,17 @@ ThemeData mytheme() {
     appBarTheme: AppBarTheme(
       toolbarHeight: 60,
       elevation: 10,
-        backgroundColor: Color(0xFF1976D2),
+        backgroundColor: Color(0xFF0D47A1),
         centerTitle: true,
         iconTheme: IconThemeData(size: 30, color: Colors.white),
         titleTextStyle: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
-          fontFamily: 'Kanit',
+          fontFamily: 'Sarabun',
           fontSize: 18,
           letterSpacing: 1,
         ),),
-    fontFamily: 'Kanit',
+    fontFamily: 'Sarabun',
   );
 }
 

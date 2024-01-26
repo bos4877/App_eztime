@@ -1,27 +1,71 @@
-// ignore_for_file: unused_import
-
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+String? imagePath;
+XFile? pickedImage;
+String? imagePathname;
+Future gallery() async {
+  final pickedFile = await ImagePickerHelper.pickImage(ImageSource.gallery);
+  if (pickedFile != null) {
+    pickedImage = pickedFile;
+    imagePath = pickedImage!.path;
+    imagePathname = pickedImage!.name;
+    return imagePath;
+  } else {
+    return null;
+  }
+}
+
+Future camera() async {
+  final pickedFile = await ImagePickerHelper.pickImage(ImageSource.camera);
+  if (pickedFile != null) {
+    pickedImage = pickedFile;
+    imagePath = pickedImage!.path;
+    imagePathname = pickedImage!.name;
+    log(imagePath!);
+    return imagePath;
+  } else {
+    return null;
+  }
+}
+
+// Widget showImage() {
+//   // ที่อยู่ของรูปภาพ
+//   String image = '${imagePath}';
+
+//   // ตรวจสอบว่ารูปภาพมีหรือไม่
+//   File imageFile = File(image);
+//   if (!imageFile.existsSync()) {
+//     return null;
+//   }
+//   // แสดงรูปภาพ
+//   return Image.file(imageFile);
+// }
+
 class ImagePickerHelper {
-  static Future<XFile?> pickImage() async {
+  static Future<XFile?> pickImage(ImageSource _type) async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(
+        source: _type,
+        maxWidth: 640,
+        maxHeight: 480,
+        imageQuality: 20,
+        preferredCameraDevice: CameraDevice.front);
+
     return pickedFile;
   }
 }
 
-class ImagePickerCamera {
-  Future<XFile?> pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.camera,
-      maxHeight: 1080,
-      maxWidth: 1080,
-    );
-log('pickedFile : ${pickedFile}');
-    return pickedFile;
+Future faceCamera() async {
+  final pickedFile = await ImagePickerHelper.pickImage(ImageSource.camera);
+  if (pickedFile != null) {
+    pickedImage = pickedFile;
+    imagePath = pickedImage!.path;
+    imagePathname = pickedImage!.name;
+    log(imagePath!);
+    return pickedImage;
+  } else {
+    return null;
   }
 }

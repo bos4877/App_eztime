@@ -22,18 +22,18 @@ class LoginApiService {
     password = prefs.getString('password');
     device_token = prefs.getString('_deviceToken');
     ip = prefs.getString('ip');
-    try {
-            var response = await _dio.post('${connect_api().domain}/login',
-      data: {"user_name": username, "password": password, "device_token":device_token});
-      log(response.statusCode.toString());
+      try {
+        String url = '${connect_api().domain}/login_employee';
+        var response = await Dio().post(url, data: {
+          'employee_no': username,
+          'password': password,
+          'device_token': device_token
+        });
       if (response.statusCode == 200) {
         LoginModel tokenModel = LoginModel.fromJson(response.data);
-        prefs.setString('_acessToken', "${tokenModel.token}");
+       prefs.setString('_acessToken', "${tokenModel.token}");
        prefs.setString('_resetToken', "${tokenModel.refreshToken}");
-       refreshToken =  prefs.getString('_resetToken');
-       token = prefs.getString('_acessToken');
-       log('token :${token}');
-       log('refreshToken : ${refreshToken}');
+       log('responseLogin: ${response.statusCode}');
         return response.statusCode;
       }else {
         throw Exception('Failed to load data: ${response.statusCode}');

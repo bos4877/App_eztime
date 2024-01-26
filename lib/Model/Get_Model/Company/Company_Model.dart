@@ -35,6 +35,8 @@ class Results {
   String? locationId;
   int? active;
   List<Domain>? domain;
+  int? empAmount;
+  String? businessType;
 
   Results(
       {this.rowId,
@@ -49,7 +51,9 @@ class Results {
       this.timeAfter,
       this.locationId,
       this.active,
-      this.domain});
+      this.domain,
+      this.empAmount,
+      this.businessType});
 
   Results.fromJson(Map<String, dynamic> json) {
     rowId = json['row_id'];
@@ -70,6 +74,8 @@ class Results {
         domain!.add(new Domain.fromJson(v));
       });
     }
+    empAmount = json['emp_amount'];
+    businessType = json['business_type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -89,6 +95,8 @@ class Results {
     if (this.domain != null) {
       data['domain'] = this.domain!.map((v) => v.toJson()).toList();
     }
+    data['emp_amount'] = this.empAmount;
+    data['business_type'] = this.businessType;
     return data;
   }
 }

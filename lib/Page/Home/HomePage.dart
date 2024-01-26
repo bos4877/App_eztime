@@ -1,37 +1,37 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations, unused_import, camel_case_types, avoid_print, unnecessary_brace_in_string_interps, unused_local_variable, no_leading_underscores_for_local_identifiers, avoid_unnecessary_containers, sort_child_properties_last, use_build_context_synchronously, avoid_single_cascade_in_expression_statements, unrelated_type_equality_checks, await_only_futures, unused_field, prefer_final_fields
+import 'dart:convert' as convert;
 import 'dart:developer';
-import 'dart:ui';
-import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.dart';
-import 'package:eztime_app/Components/DiaLog/SnackBar/Sanckbar.dart';
-import 'package:eztime_app/Components/Security/Pin_Code.dart';
-import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
-import 'package:flutter_screen_lock/flutter_screen_lock.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:open_app_settings/open_app_settings.dart';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/TextStyle/StyleText.dart';
+import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.dart';
+import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
+import 'package:eztime_app/Components/DiaLog/SnackBar/Sanckbar.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
+import 'package:eztime_app/Components/Security/Pin_Code.dart';
+import 'package:eztime_app/Components/TextButtons/HomePage_TextButtons_More.dart';
+import 'package:eztime_app/Components/TextStyle/StyleText.dart';
+import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:eztime_app/Page/Home/Setting/Drawer.dart';
+import 'package:eztime_app/Page/Login/Login_Page.dart';
 import 'package:eztime_app/Page/request/Request_OT_approval.dart';
+import 'package:eztime_app/Page/request/Request_leave.dart';
 import 'package:eztime_app/Page/request/View_OT_logs.dart';
 import 'package:eztime_app/Page/request/improve_uptime.dart';
 import 'package:eztime_app/Page/work/Set_work.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
-import 'package:eztime_app/Page/Login/Login_Page.dart';
-import 'package:eztime_app/Page/request/Request_leave.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/date_symbol_data_file.dart';
-import 'package:intl/intl.dart';
+import 'package:open_app_settings/open_app_settings.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_digital_clock/slide_digital_clock.dart';
-import 'dart:convert' as convert;
-import 'package:permission_handler/permission_handler.dart';
 
 class Home_Page extends StatefulWidget {
   final title;
@@ -58,14 +58,15 @@ class _Home_PageState extends State<Home_Page> {
   var _getToken;
   var _Tokenrefres;
   var _checkInternect;
-
+var service = LoginApiService();
   Future loadDataFromSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.getString('_acessToken');
-
+   _getToken= prefs.getString('_acessToken');
+    // await  service.fetchData();
     print(
         'Data For HomePage: $_getToken'); // ดึงข้อมูลจาก SharedPreferences ด้วยคีย์ 'responseData'
     print('Data : ${prefs.getString('_acessToken')}');
+    await LoginApiService().fetchData();
   }
 
   Future _check() async {
@@ -78,6 +79,7 @@ class _Home_PageState extends State<Home_Page> {
     if (!serviceEnabled) {
       return await Geolocator.requestPermission();
     }
+
     if (permissionStatus.isDenied) {
       // หากไม่ได้รับอนุญาตให้เข้าถึงตำแหน่งGPS
       // ให้บังคับผู้ใช้เปิดการใช้งาน GPS
@@ -135,14 +137,14 @@ class _Home_PageState extends State<Home_Page> {
 
   Future _formatdate() async {
     setState(() {
-      // loading = true;
+      loading = true;
     });
-    await Permission.notification.request();
-    DateTime _DateTime = DateTime.now();
+    DateTime _DateTime = await DateTime.now();
     _date = DateFormat.MMMMEEEEd('th').format(_DateTime);
     _time = DateFormat.Hms('th').format(_DateTime);
     _year = _DateTime.year + 543;
     setState(() {
+      
       loading = false;
     });
   }
@@ -160,10 +162,9 @@ class _Home_PageState extends State<Home_Page> {
       loading = true;
     });
     await Future.delayed(Duration(milliseconds: 800));
+    await loadDataFromSharedPreferences();
+    await _formatdate();
     setState(() {
-      loadDataFromSharedPreferences();
-      _formatdate();
-
       log(_checkInternect.toString());
       loading = false;
     });
@@ -172,6 +173,7 @@ class _Home_PageState extends State<Home_Page> {
   @override
   void initState() {
     _formatdate();
+     loadDataFromSharedPreferences();
     super.initState();
   }
 
@@ -477,10 +479,12 @@ class _Home_PageState extends State<Home_Page> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: ExpansionTile(
+                          initiallyExpanded: true,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                          backgroundColor: Colors.white,
+                          backgroundColor:
+                              const Color.fromRGBO(255, 255, 255, 1),
                           title: Row(
                             children: [
                               SvgPicture.asset(
@@ -510,124 +514,45 @@ class _Home_PageState extends State<Home_Page> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                    builder: (context) => Request_leave(),
-                                  )),
-                                  child: Container(
-                                    width: double.infinity,
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          'assets/icon_easytime/1x/icon_attendance_available.png',
-                                          scale: 23,
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text('homepage.Request leave',
-                                                style: TextStyles.normal)
-                                            .tr(),
-                                      ],
-                                    ),
-                                  ),
+                                TextButtons_More(
+                                  title: 'homepage.Request leave',
+                                  page: Request_leave(),
+                                  imagePath:
+                                      'assets/icon_easytime/1x/icon_attendance_available.png',
                                 ),
                                 Divider(),
-                                TextButton(
-                                  onPressed: () => Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                    builder: (context) => Request_OT_approval(),
-                                  )),
-                                  child: Container(
-                                    width: double.infinity,
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          'assets/icon_easytime/1x/icon_attendance_available.png',
-                                          scale: 23,
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text('homepage.Get approval, Ot',
-                                                style: TextStyles.normal)
-                                            .tr(),
-                                      ],
-                                    ),
-                                  ),
+                                TextButtons_More(
+                                    title: 'homepage.Get approval, Ot',
+                                    page: Request_OT_approval(),
+                                    imagePath:
+                                        'assets/icon_easytime/1x/icon_attendance_available.png'),
+                                Divider(),
+                                TextButtons_More(
+                                  title: 'homepage.Watch the Ot log',
+                                  page: View_OT_logs(),
+                                  imagePath:
+                                      'assets/icon_easytime/1x/icon_report_available2.png',
                                 ),
                                 Divider(),
-                                TextButton(
-                                  onPressed: () => Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                    builder: (context) => View_OT_logs(),
-                                  )),
-                                  child: Container(
-                                    width: double.infinity,
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          'assets/icon_easytime/1x/icon_report_available2.png',
-                                          scale: 23,
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text('homepage.Watch the Ot log',
-                                                style: TextStyles.normal)
-                                            .tr(),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Divider(),
-                                TextButton(
-                                  onPressed: () => Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                    builder: (context) => improve_uptime(),
-                                  )),
-                                  child: Container(
-                                      width: double.infinity,
-                                      child: Row(
-                                        children: [
-                                          Image.asset(
-                                            'assets/icon_easytime/1x/icon_time.png',
-                                            scale: 23,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text('homepage.Improve Uptime',
-                                                  style: TextStyles.normal)
-                                              .tr()
-                                        ],
-                                      )),
-                                ),
+                                TextButtons_More(
+                                    title: 'homepage.Improve Uptime',
+                                    page: improve_uptime(),
+                                    imagePath:
+                                        'assets/icon_easytime/1x/icon_time.png'),
                               ],
                             ),
                           ],
                         ),
                       ),
-                      Text('homepage.news information',
-                              style: TextStyles.normal)
-                          .tr(),
-                      Buttons(
-                        title: 'title',
-                        press: () {
-                          Snack_Bar(
-                                  snackBarIcon:
-                                      Icons.check_circle_outline_outlined,
-                                  snackBarColor: Colors.green,
-                                  snackBarText: 'homepage.loginSuccess')
-                              .showSnackBar(context);
-                          Snack_Bar(
-                                  snackBarIcon: Icons.warning_amber_rounded,
-                                  snackBarColor: Colors.red,
-                                  snackBarText: 'homepage.loginfailed')
-                              .showSnackBar(context);
-                        },
-                      )
+                      // Text('homepage.news information',
+                      //         style: TextStyles.normal)
+                      //     .tr(),
+                      // Buttons(
+                      //   title: 'title',
+                      //   press: () async {
+                      //    await LoginApiService().fetchData();
+                      //   },
+                      // )
                     ],
                   ),
                 ),

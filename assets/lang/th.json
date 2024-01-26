@@ -10,7 +10,7 @@
     "Get approval, Ot": "ขออนุมัติโอที",
     "Watch the Ot log": "ดูบันทึกโอที",
     "Improve Uptime": "ปรับปรุงเวลาทำงาน(ลืมแสกน)",
-    "news information":"ข้อมูลข่าวสาร",
+    "news information":"แจ้งเตือน",
     "loginSuccess": "เข้าสู่ระบบสำเร็จ",
     "loginfailed": "ชื่อผู้ใช้งานเเละรหัสผ่านไม่ถูกต้อง",
     "logout":"ออกจากระบบสำเร็จ",
@@ -26,9 +26,11 @@
     "username":"ชื่อผู้ใช้",
     "password":"รหัสผ่าน"
       },
-  "Employee Id": {
-    "employee Id": "รหัสพนักงาน : ",
-    "Name": "ชื่อ : "
+  "Employee information": {
+    "title":"ข้อมูลพนักงาน",
+    "employeeId": "รหัสพนักงาน",
+    "employeeIdName": "ชื่อ - นามสกุล",
+    "employeeIdCard":"เลขประจำตวประชาชน"
   },
   "Drawer": {
     "Edit": "จัดการข้อมูลพนักงาน",
@@ -53,7 +55,8 @@
     "Save": "บันทึก",
     "select": "เลือกหัวข้อการลา",
     "list": "รายการที่รอ",
-    "Choose a time period": "เลือกช่วงเวลา",
+    "Start Choose a time period": "เลือกช่วงเวลาเริ่มต้น",
+    "End Choose a time period": "เลือกช่วงเวลาสิ้นสุด",
     "Pending Items": "รายการที่รออนุมัติ",
     "Details":"รายละเอียด",
     "AddImage":"เพิ่มรูปภาพ"

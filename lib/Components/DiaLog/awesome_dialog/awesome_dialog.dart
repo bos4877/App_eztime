@@ -5,7 +5,9 @@ class Dialog_Tang extends StatelessWidget {
   Dialog_Tang({
     super.key,
   });
-  errordialog(BuildContext context,) {
+  errordialog(
+    BuildContext context,
+  ) {
     AwesomeDialog(
       context: context,
       dialogType: DialogType.error,
@@ -16,14 +18,52 @@ class Dialog_Tang extends StatelessWidget {
       btnOkOnPress: () {},
     )..show();
   }
-    successdialog(BuildContext context,) {
+
+  successdialog(
+    BuildContext context,
+  ) {
     AwesomeDialog(
       context: context,
       dialogType: DialogType.success,
-      animType: AnimType.scale,
+      animType: AnimType.rightSlide,
       title: 'แจ้งเตือน',
       desc: 'บันทึกสำเร็จ',
-      
+      autoHide: Duration(seconds: 2),
+      dismissOnTouchOutside: false,
+      onDismissCallback: (type) {
+        Navigator.of(context).pop(type);
+      },
+    )..show();
+  }
+
+  falsedialog(
+    BuildContext context,
+  ) {
+    AwesomeDialog(
+        context: context,
+        dialogType: DialogType.error,
+        animType: AnimType.rightSlide,
+        title: 'แจ้งเตือน',
+        desc: 'บันทึกไม่สำเร็จ',
+        dismissOnTouchOutside: false,
+        autoHide: Duration(seconds: 2))
+      ..show();
+  }
+
+  infodialog(
+    BuildContext context,
+  ) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.info,
+      animType: AnimType.scale,
+      title: 'แจ้งเตือน',
+      desc: 'ไม่พบข้อมูล',
+      barrierColor: Colors.grey,
+      autoDismiss: true,
+      onDismissCallback: (type) {
+        Navigator.of(context).pop(type);
+      },
     )..show();
   }
 

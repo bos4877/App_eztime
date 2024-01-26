@@ -2,11 +2,12 @@
 
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:eztime_app/Components/APIServices/EditService/EditProfileService/EditProfileService.dart';
+import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
 import 'package:eztime_app/Components/CustomTextFormField/CustomTextFormField_EditProfile.dart';
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
-import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
 import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
 import 'package:eztime_app/Components/TextStyle/StyleText.dart';
 import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
@@ -67,15 +68,15 @@ class _EditProfileState extends State<edit_profile> {
   XFile? pickedImage;
   String? imagePath;
 
-  Future<void> _pickImage() async {
-    final pickedFile = await ImagePickerHelper.pickImage();
-    if (pickedFile != null) {
-      setState(() {
-        pickedImage = pickedFile;
-        imagePath = pickedImage!.path;
-      });
-    }
-  }
+  // Future<void> _pickImage() async {
+  //   final pickedFile = await ImagePickerHelper.pickImage();
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       pickedImage = pickedFile;
+  //       imagePath = pickedImage!.path;
+  //     });
+  //   }
+  // }
 
   Future settext() async {
 
@@ -174,7 +175,9 @@ class _EditProfileState extends State<edit_profile> {
                         SizedBox(height: 20),
                         Center(
                             child: Buttons(
-                                title: 'Pick Image', press: _pickImage)),
+                                title: 'Pick Image', press: () {
+                                  
+                                },)),
                         SizedBox(
                           height: 10,
                         ),

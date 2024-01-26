@@ -2,8 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
-import 'package:eztime_app/Model/Profile/Profile_Model.dart';
-import 'package:flutter/foundation.dart';
+import 'package:eztime_app/Model/Get_Model/get_Profile/Profile_Model.dart';
 
 class get_profile_service {
   Future getprofile(var token) async {
@@ -19,7 +18,7 @@ class get_profile_service {
         return null;
       }
     } catch (e) {
-      return null;
+      return e;
     }
   }
 }

@@ -31,7 +31,8 @@
     "Save": "SAVE",
     "select": "select",
     "list": "waiting list",
-    "Choose a time period": "Choose a time period",
+    "Start Choose a time period": "Start Choose a time period",
+    "End Choose a time period": "End Choose a time period",
     "Pending Items": "Pending Items",
     "Details": "Details",
     "AddImage": "AddImage"
