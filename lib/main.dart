@@ -16,7 +16,6 @@ import 'package:eztime_app/Page/Login/SetDomain_Page.dart';
 import 'package:eztime_app/Page/NotiFications/NotiFications.dart';
 import 'package:eztime_app/Page/Splasscreen/Face_data_Page.dart';
 import 'package:eztime_app/Test.dart';
-import 'package:face_camera/face_camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +42,6 @@ void main() async {
   await WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
-  await FaceCamera.initialize();
   NotificationService().notification();
   DartPluginRegistrant.ensureInitialized();
   initializeDateFormatting();

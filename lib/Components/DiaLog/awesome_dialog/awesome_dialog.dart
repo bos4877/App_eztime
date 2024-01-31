@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
 import 'package:flutter/material.dart';
 
 class Dialog_Tang extends StatelessWidget {
@@ -13,9 +14,8 @@ class Dialog_Tang extends StatelessWidget {
       dialogType: DialogType.error,
       animType: AnimType.scale,
       title: 'แจ้งเตือน',
-      desc: '',
+      desc: 'การเชื่อมต่อผิดพลาด',
       btnCancelOnPress: () {},
-      btnOkOnPress: () {},
     )..show();
   }
 
@@ -64,6 +64,77 @@ class Dialog_Tang extends StatelessWidget {
       onDismissCallback: (type) {
         Navigator.of(context).pop(type);
       },
+    )..show();
+  }
+
+  checkFacedialog(
+    BuildContext context,
+  ) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.rightSlide,
+      title: 'แจ้งเตือน',
+      desc: 'ตรวจสอบสำเร็จ',
+      autoHide: Duration(seconds: 2),
+      // dismissOnTouchOutside: false,
+      // onDismissCallback: (type) {
+      //   Navigator.of(context).pop(type);
+      // },
+    )..show();
+  }
+
+  checkFacedFaildialog(
+    BuildContext context,
+  ) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.error,
+      animType: AnimType.rightSlide,
+      title: 'แจ้งเตือน',
+      desc: 'ไม่พบใบหน้า',
+      autoHide: Duration(seconds: 2),
+      dismissOnTouchOutside: false,
+      onDismissCallback: (type) {
+        Navigator.of(context).pop(type);
+      },
+    )..show();
+  }
+
+  checkinsuccessdialog(
+    BuildContext context,
+  ) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.rightSlide,
+      title: 'แจ้งเตือน',
+      desc: 'เข้างานสำเร็จ',
+      autoHide: Duration(seconds: 2),
+      dismissOnTouchOutside: false,
+      onDismissCallback: (type) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (type) => BottomNavigationBar_Page(),
+        ));
+      },
+    )..show();
+  }
+    checkinfaildialog(
+    BuildContext context,
+  ) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.error,
+      animType: AnimType.rightSlide,
+      title: 'แจ้งเตือน',
+      desc: 'เข้างานไม่สำเร็จ',
+      autoHide: Duration(seconds: 2),
+      dismissOnTouchOutside: false,
+      // onDismissCallback: (type) {
+      //   Navigator.of(context).pushReplacement(MaterialPageRoute(
+      //     builder: (type) => BottomNavigationBar_Page(),
+      //   ));
+      // },
     )..show();
   }
 

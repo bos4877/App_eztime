@@ -35,7 +35,7 @@ class promble_page extends StatefulWidget {
 }
 
 class _promble_pageState extends State<promble_page> {
-  bool load = false;
+  bool loading = false;
   bool expanOpen = false;
   List<DocList> _data = [];
   List<Leave> _laeveList = [];
@@ -47,7 +47,7 @@ class _promble_pageState extends State<promble_page> {
   var token;
   Future getprofile() async {
     setState(() {
-      load = true;
+      loading = true;
     });
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -59,19 +59,19 @@ class _promble_pageState extends State<promble_page> {
           Dialog_Tang().infodialog(context);
           log('faile');
           setState(() {
-            load = false;
+            loading = false;
           });
         } else {
           _profilelist = [response];
           log('success');
           setState(() {
             getonrLeave();
-            load = false;
+            loading = false;
           });
         }
       });
     } catch (e) {
-      load = false;
+      loading = false;
       log(e.toString());
       // Dialog_Tang().dialog(context);
     }
@@ -79,7 +79,7 @@ class _promble_pageState extends State<promble_page> {
 
   Future get_leave() async {
     setState(() {
-      load = true;
+      loading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('_acessToken');
@@ -88,7 +88,7 @@ class _promble_pageState extends State<promble_page> {
       var response = await service.model(token);
       if (response == null) {
         setState(() {
-          load = false;
+          loading = false;
         });
       } else {
         List<DocList> docList = response.docList!;
@@ -106,42 +106,42 @@ class _promble_pageState extends State<promble_page> {
         }
 
         setState(() {
-          load = false;
+          loading = false;
         });
       }
     } catch (e) {
       setState(() {
-        load = false;
+        loading = false;
       });
     }
   }
 
   getonrLeave() async {
     setState(() {
-      load = true;
+      loading = true;
     });
     var service = get_DocOne_Service();
     var response = await service.model(token);
     if (response == null) {
       log('kuy');
       setState(() {
-        load = false;
+        loading = false;
       });
     } else {
       _Doclist = response;
       setState(() {
-        load = false;
+        loading = false;
       });
     }
   }
 
   _onRefresh() async {
     setState(() {
-      load = true;
+      loading = true;
     });
     await Future.delayed(Duration(milliseconds: 800));
     setState(() {
-      load = false;
+      loading = false;
     });
   }
 
@@ -155,15 +155,15 @@ class _promble_pageState extends State<promble_page> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading(): Scaffold(
       appBar: AppBar(
         title: Text('Information.title').tr(),
         automaticallyImplyLeading: false,
       ),
       body: RefreshIndicator(
         onRefresh: () => _onRefresh(),
-        child: load
-            ? Loading()
+        child: loading ? Loading()
+           
             : _profilelist[0].role!.isEmpty
                 ? Center(
                   child: Container(
@@ -317,9 +317,8 @@ class _promble_pageState extends State<promble_page> {
                               ),
                             ),
                           ),
-                          load ? Loading() : Container()
-                        ],
-                      );
+                        
+                      ]);
                     }),
       ),
     );
@@ -453,7 +452,7 @@ class _promble_pageState extends State<promble_page> {
                   ),
                 ),
               ),
-              load ? Loading() : Container()
+              loading ? Loading() : Container()
             ],
           );
         });

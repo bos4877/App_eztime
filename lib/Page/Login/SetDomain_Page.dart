@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/DiaLog/SnackBar/Sanckbar.dart';
+import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
 import 'package:eztime_app/Model/Get_Model/Company/Company_Model.dart';
 import 'package:eztime_app/Page/Login/Login_Page.dart';
@@ -121,7 +122,7 @@ class _Domain_Set_PageState extends State<Domain_Set_Page> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _loading ? Loading():  Scaffold(
       appBar: AppBar(title: Text('Login.title').tr()),
       body: SingleChildScrollView(
         // controller: controller,

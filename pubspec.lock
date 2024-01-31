@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
+  badges:
+    dependency: "direct main"
+    description:
+      name: badges
+      sha256: a7b6bbd60dce418df0db3058b53f9d083c22cdb5132a052145dc267494df0b84
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -233,14 +241,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.2"
-  face_camera:
-    dependency: "direct main"
-    description:
-      name: face_camera
-      sha256: "6469d3dfeb3161a8c4a07cca03918c48bc21dee688c1eb4361de7fb72ef6e2bb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.9"
   fake_async:
     dependency: transitive
     description:
@@ -557,22 +557,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.4+2"
-  google_mlkit_commons:
-    dependency: transitive
-    description:
-      name: google_mlkit_commons
-      sha256: "046586b381cdd139f7f6a05ad6998f7e339d061bd70158249907358394b5f496"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.1"
-  google_mlkit_face_detection:
-    dependency: transitive
-    description:
-      name: google_mlkit_face_detection
-      sha256: a6ccff7d6ca8dfc2ab845ea7481645342e82aed31a81edd075169a3abbb25ed3
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.9.0"
   graphs:
     dependency: transitive
     description:

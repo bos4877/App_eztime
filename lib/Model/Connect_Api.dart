@@ -9,6 +9,6 @@ ipshare() async {
 class connect_api {
   String? domain;
   connect_api() {
-    domain = 'https://366d-27-130-254-41.ngrok-free.app';
+    domain = 'https://53e3-27-130-254-41.ngrok-free.app';
   }
 }

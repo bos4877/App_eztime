@@ -11,6 +11,7 @@ import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.
 import 'package:eztime_app/Components/APIServices/ProFileServices/ProfileService.dart';
 import 'package:eztime_app/Components/APIServices/getFaceRecog/getFaceRecog.dart';
 import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
+import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
 import 'package:eztime_app/Components/Security/Pin_Code.dart';
@@ -23,6 +24,7 @@ import 'package:eztime_app/Page/Approve/Submit_documents.dart';
 import 'package:eztime_app/Page/Approve/original_Employee.dart';
 import 'package:eztime_app/Page/Home/HomePage.dart';
 import 'package:eztime_app/Page/Home/Setting/Drawer.dart';
+import 'package:eztime_app/Page/Home/Setting/Show_time_information.dart';
 import 'package:eztime_app/Page/Home/promble.dart';
 import 'package:eztime_app/Page/Login/Login_Page.dart';
 import 'package:eztime_app/Page/NotiFications/NotiFications_Detail.dart';
@@ -70,9 +72,8 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
   ];
   final List<Widget> _bodies = <Widget>[
     Home_Page(),
-    promble_page(),
+    Information_login(),
     NotiFications_Detail_Page(),
-    promble_page(),
   ];
   var _profileService = get_profile_service();
   Future getprofile() async {
@@ -138,141 +139,16 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
       _OnStartpin();
     });
   }
-  Future<void> openImages() async {
-    try {
-      final XFile? photo = await ImagePicker().pickImage(
-        source: ImageSource.camera,
-        maxHeight: 1080,
-        maxWidth: 1080,
-      );
-      if (photo != (null)) {
-        List<int> imageBytes = await photo.readAsBytes();
-        var ImagesBase64 = await convert.base64Encode(imageBytes);
-        setState(() {
-          if (mounted) {
-            image = ImagesBase64;
-            log('image: ${image}');
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => Set_work(image: image),
-              ),
-            );
-          } else {
-            print("No image is selected.sdasdas");
-          }
-          loading = false;
-        });
-      } else {
-        print("No image is selected.");
-        setState(() {
-          loading = false;
-        });
-      }
-    } catch (e) {
-      print("Error while picking file. $e");
-      setState(() {
-        loading = false;
-      });
-    }
-  }
 
-  Future _opencamera() async {
-    await Permission.camera.request();
-    PermissionStatus status = await Permission.camera.status;
-    if (status.isGranted) {
-      await Permission.location.request();
-      permission = await Geolocator.checkPermission();
-      if (permission != LocationPermission.denied) {
-        PermissionStatus serviceEnabled = await Permission.location.status;
-        if (serviceEnabled.isDenied) {
-          AwesomeDialog(
-              context: context,
-              animType: AnimType.scale,
-              dialogType: DialogType.warning,
-              title: 'อนุญาตการเข้าถึง',
-              titleTextStyle:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              desc: 'อนุญาตเข้าถึงตำแหน่งของคุณ',
-              btnOkText: 'เปิดตั้งค่า',
-              btnOkOnPress: () {
-                openAppSettings();
-              },
-              btnCancelOnPress: () {
-                Navigator.of(context).canPop();
-              })
-            ..show();
-        } else {
-          openImages();
-        }
-      } else {
-        AwesomeDialog(
-            context: context,
-            animType: AnimType.scale,
-            dialogType: DialogType.warning,
-            title: 'อนุญาตการเข้าถึง',
-            titleTextStyle:
-                TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            desc: 'กรุณาอนุญาตเข้าถึงตำแหน่งของคุณ',
-            btnOkOnPress: () {
-              openAppSettings();
-            },
-            btnCancelOnPress: () {
-              Navigator.of(context).canPop();
-            })
-          ..show();
-      }
-    } else {
-      AwesomeDialog(
-          context: context,
-          animType: AnimType.scale,
-          dialogType: DialogType.warning,
-          title: 'อนุญาตการเข้าถึง',
-          titleTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          desc: 'กรุณาอนุญาตเข้าถึงกล้องในอุปกรณ์ของคุณ',
-          btnOkOnPress: () {
-            openAppSettings();
-          },
-          btnCancelOnPress: () {
-            Navigator.of(context).canPop();
-          })
-        ..show();
-    }
-  }
-  onGoback()async{
-    setState(() {
-      loading = true;
-    });
-    await Future.delayed(Duration(milliseconds: 1500));
-    await getface();
-    setState(() {
-      loading = false;
-    });
 
-  }
 
-  Future getface() async {
-    setState(() {
-      loading = true;
-    });
-    await LoginApiService().fetchData();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('_acessToken');
-    
-    // var service = getFaceRecog_Service();
-    var cout = await getFaceRecog_Service().model(token);
-    member.count = cout;
-    log(member.count.toString());
-    setState(() {
-      loading = false;
-    });
-  }
+ 
 
   @override
   void initState() {
     InternetConnectionChecker().checker();
     _OnStartpin();
     shareprefs();
-    getface();
     super.initState();
   }
 
@@ -288,11 +164,12 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
                 activeIndex: _bottomNavIndex,
                 itemCount: iconList.length,
                 gapLocation: GapLocation.center,
-                notchSmoothness: NotchSmoothness.verySmoothEdge,
-                onTap: (index) async {
+                notchSmoothness: NotchSmoothness.defaultEdge,
+                onTap: (index) {
                   index == 3
                       ? _scaffoldKey.currentState?.openEndDrawer()
                       : setState(() {
+                          log('index:${index}');
                           if (index == 1) {
                             if (_profilelist[0].role == '') {
                               index = 1;
@@ -311,20 +188,9 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
                   );
                   //other params
                 }),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.miniCenterDocked,
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                if (member.count == 1) {
-                  faceCamera().then((value)=> onGoback());
-                } else {
-                _opencamera();
-                }
-              },
-              tooltip: 'Open Camera',
-              child: Icon(Icons.camera_alt_outlined),
-              // elevation: 4.0,
-            ),
+            // floatingActionButtonLocation:
+            //     FloatingActionButtonLocation.miniCenterDocked,
+            // floatingActionButton:
           );
   }
 }

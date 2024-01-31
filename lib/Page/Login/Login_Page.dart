@@ -139,7 +139,7 @@ class _Login_PageState extends State<Login_Page> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
+    return  _loading ? Loading():Scaffold(
       body: SingleChildScrollView(
         child: Form(
           key: _formkey,

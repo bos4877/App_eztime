@@ -33,7 +33,7 @@ class Request_leave extends StatefulWidget {
 
 class _Request_leaveState extends State<Request_leave> {
   final _formkey = GlobalKey<FormState>();
-  bool load = false;
+  bool loading = false;
   var token;
   var _time;
   var _diff;
@@ -60,7 +60,7 @@ class _Request_leaveState extends State<Request_leave> {
 
   Future getleave() async {
     setState(() {
-      load = true;
+      loading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('_acessToken');
@@ -70,7 +70,7 @@ class _Request_leaveState extends State<Request_leave> {
     if (response == null) {
       log('getleavefaile');
       setState(() {
-        load = false;
+        loading = false;
       });
     } else {
       _laeveList = response;
@@ -87,7 +87,7 @@ class _Request_leaveState extends State<Request_leave> {
             }
           }
         }
-        load = false;
+        loading = false;
       });
     }
   }
@@ -220,12 +220,12 @@ class _Request_leaveState extends State<Request_leave> {
 
   _onRefresh() async {
     setState(() {
-      load = true;
+      loading = true;
     });
     await Future.delayed(Duration(milliseconds: 800));
     await showImage();
     setState(() {
-      load = false;
+      loading = false;
     });
   }
 
@@ -233,13 +233,13 @@ class _Request_leaveState extends State<Request_leave> {
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return loading ? Loading(): Scaffold(
       appBar: AppBar(
         title: Text('Request leave.title').tr(),
       ),
       body: RefreshIndicator(
         onRefresh: () => _onRefresh(),
-        child: load
+        child: loading
             ? Loading()
             : ListView(
                 children: [
@@ -266,10 +266,6 @@ class _Request_leaveState extends State<Request_leave> {
                                       var sucessValue = selectedValue! + 1;
                                       selecteStr = value.toString();
                                       var _laeveId = _item[selectedValue!];
-
-                                      print(selecteStr!);
-                                      print('sucessValue: ${sucessValue}');
-                                      print('selecteStr: ${selecteStr}');
                                     });
                                   },
                                 ),
