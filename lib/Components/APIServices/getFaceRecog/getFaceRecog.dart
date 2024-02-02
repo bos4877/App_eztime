@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
-import 'package:eztime_app/Model/Get_Model/getFaceRecog_Model/getFaceRecog_Model.dart';
+import 'package:eztime_app/Model/Get_Model/face/getFaceRecog_Model/getFaceRecog_Model.dart';
 
 class getFaceRecog_Service {
   model(token) async {

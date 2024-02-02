@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
-import 'package:eztime_app/Model/Get_Model/Request_leave/Request_leave_Model.dart';
+import 'package:eztime_app/Model/Get_Model/leave/Request_leave/Request_leave_Model.dart';
 
 class Request_leave_Service {
   Future model(var token) async {

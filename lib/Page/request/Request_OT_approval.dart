@@ -14,11 +14,12 @@ import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
 import 'package:eztime_app/Components/DropDownWidget/DropDown_CM.dart';
 import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
-import 'package:eztime_app/Model/Get_Model/get_doc_Ot_list_one/get_doc_Ot_list_one_model.dart'
+import 'package:eztime_app/Model/Get_Model/Ot/get_doc_Ot_list_one/get_doc_Ot_list_one_model.dart'
     as doclist;
-import 'package:eztime_app/Model/Get_Model/get_ot/get_Ot_Model.dart';
+import 'package:eztime_app/Model/Get_Model/Ot/get_ot/get_Ot_Model.dart';
 import 'package:eztime_app/Page/Home/promble.dart';
-import 'package:eztime_app/Page/request/approve_ot.dart';
+import 'package:eztime_app/Page/request/appeove/approve_ot.dart';
+import 'package:eztime_app/Page/request/request/request_ot.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -136,7 +137,7 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
         }
       }
     } catch (e) {
-      Dialog_Tang().errordialog(context);
+      Dialog_Tang().interneterrordialog(context);
       log(e.toString());
        setState(() {
         load = false;
@@ -256,7 +257,7 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => approve_ot_page(),));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Request_ot_page(),));
                 }, icon: Icon(Icons.receipt)),
               ),
             )

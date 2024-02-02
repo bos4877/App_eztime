@@ -112,7 +112,11 @@ class _Login_PageState extends State<Login_Page> {
                   snackBarText: 'homepage.catch')
               .showSnackBar(context);
                 } else {
-                  
+                  Snack_Bar(
+                  snackBarIcon: Icons.warning_amber_rounded,
+                  snackBarColor: Colors.red,
+                  snackBarText: 'ชื่อและรหัสผ่านไม่ถูกต้อง')
+              .showSnackBar(context);
                 }
         
       } else {

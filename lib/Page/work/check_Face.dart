@@ -5,7 +5,7 @@ import 'package:eztime_app/Components/APIServices/ProFileServices/ProfileService
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
-import 'package:eztime_app/Model/Get_Model/check_face_one/check_face_one_Model.dart';
+import 'package:eztime_app/Model/Get_Model/face/check_face_one/check_face_one_Model.dart';
 import 'package:eztime_app/Model/Get_Model/get_Profile/Profile_Model.dart';
 import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
 import 'package:eztime_app/Page/work/Set_work.dart';

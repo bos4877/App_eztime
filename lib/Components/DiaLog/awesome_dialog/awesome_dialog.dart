@@ -6,7 +6,24 @@ class Dialog_Tang extends StatelessWidget {
   Dialog_Tang({
     super.key,
   });
-  errordialog(
+   worktimefaildialog(
+    BuildContext context,
+  ) {
+    AwesomeDialog(
+      context: context,
+      barrierColor: Colors.grey,
+      dismissOnBackKeyPress: true,
+      dismissOnTouchOutside: true,
+      dialogType: DialogType.error,
+      animType: AnimType.scale,
+      title: 'แจ้งเตือน',
+      desc: 'คุณไม่อยู่ในกะ',
+      btnCancelOnPress: () {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => BottomNavigationBar_Page(),));
+      },
+    )..show();
+  }
+  interneterrordialog(
     BuildContext context,
   ) {
     AwesomeDialog(
@@ -33,6 +50,22 @@ class Dialog_Tang extends StatelessWidget {
       onDismissCallback: (type) {
         Navigator.of(context).pop(type);
       },
+    )..show();
+  }
+    approveSuccessdialog(
+    BuildContext context,
+  ) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.rightSlide,
+      title: 'แจ้งเตือน',
+      desc: 'อนุมัติสำเร็จ',
+      autoHide: Duration(seconds: 2),
+      // dismissOnTouchOutside: false,
+      // onDismissCallback: (type) {
+      //   Navigator.of(context).pop(type);
+      // },
     )..show();
   }
 

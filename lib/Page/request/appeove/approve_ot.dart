@@ -6,7 +6,7 @@ import 'package:eztime_app/Components/APIServices/get_doc_Ot_list_one/get_doc_Ot
 import 'package:eztime_app/Components/DiaLog/ButtonApprov/ButtonsTwoApprov.dart';
 import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
-import 'package:eztime_app/Model/Get_Model/get_doc_Ot_list_one/get_doc_Ot_list_one_model.dart';
+import 'package:eztime_app/Model/Get_Model/Ot/get_doc_Ot_list_one/get_doc_Ot_list_one_model.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

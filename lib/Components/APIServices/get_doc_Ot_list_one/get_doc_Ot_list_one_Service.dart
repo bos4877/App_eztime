@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
-import 'package:eztime_app/Model/Get_Model/get_doc_Ot_list_one/get_doc_Ot_list_one_model.dart';
+import 'package:eztime_app/Model/Get_Model/Ot/get_doc_Ot_list_one/get_doc_Ot_list_one_model.dart';
 
 class get_doc_Ot_list_one_Service {
   model(token)async{

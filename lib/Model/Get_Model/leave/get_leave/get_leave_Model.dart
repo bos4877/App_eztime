@@ -22,7 +22,6 @@ class get_leave_Model {
 }
 
 class DocList {
-  int? rowId;
   String? docLId;
   String? leaveId;
   String? startDate;
@@ -33,16 +32,15 @@ class DocList {
   String? companyId;
   String? description;
   String? createAt;
-  String? file;
+  Leave? leave;
   String? status;
   String? approveBy;
   String? status2;
   String? approveBy2;
-  Leave? leave;
+  Employee? employee;
 
   DocList(
-      {this.rowId,
-      this.docLId,
+      {this.docLId,
       this.leaveId,
       this.startDate,
       this.endDate,
@@ -52,15 +50,14 @@ class DocList {
       this.companyId,
       this.description,
       this.createAt,
-      this.file,
+      this.leave,
       this.status,
       this.approveBy,
       this.status2,
       this.approveBy2,
-      this.leave});
+      this.employee});
 
   DocList.fromJson(Map<String, dynamic> json) {
-    rowId = json['row_id'];
     docLId = json['doc_l_id'];
     leaveId = json['leave_id'];
     startDate = json['start_date'];
@@ -71,17 +68,18 @@ class DocList {
     companyId = json['company_id'];
     description = json['description'];
     createAt = json['create_at'];
-    file = json['file'];
+    leave = json['Leave'] != null ? new Leave.fromJson(json['Leave']) : null;
     status = json['status'];
     approveBy = json['approve_by'];
     status2 = json['status2'];
     approveBy2 = json['approve_by2'];
-    leave = json['Leave'] != null ? new Leave.fromJson(json['Leave']) : null;
+    employee = json['Employee'] != null
+        ? new Employee.fromJson(json['Employee'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['row_id'] = this.rowId;
     data['doc_l_id'] = this.docLId;
     data['leave_id'] = this.leaveId;
     data['start_date'] = this.startDate;
@@ -92,13 +90,15 @@ class DocList {
     data['company_id'] = this.companyId;
     data['description'] = this.description;
     data['create_at'] = this.createAt;
-    data['file'] = this.file;
+    if (this.leave != null) {
+      data['Leave'] = this.leave!.toJson();
+    }
     data['status'] = this.status;
     data['approve_by'] = this.approveBy;
     data['status2'] = this.status2;
     data['approve_by2'] = this.approveBy2;
-    if (this.leave != null) {
-      data['Leave'] = this.leave!.toJson();
+    if (this.employee != null) {
+      data['Employee'] = this.employee!.toJson();
     }
     return data;
   }
@@ -109,14 +109,17 @@ class Leave {
   String? leaveId;
   String? companyId;
   String? leaveType;
+  String? amount;
 
-  Leave({this.rowId, this.leaveId, this.companyId, this.leaveType});
+  Leave(
+      {this.rowId, this.leaveId, this.companyId, this.leaveType, this.amount});
 
   Leave.fromJson(Map<String, dynamic> json) {
     rowId = json['row_id'];
     leaveId = json['leave_id'];
     companyId = json['company_id'];
     leaveType = json['leave_type'];
+    amount = json['amount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -125,6 +128,26 @@ class Leave {
     data['leave_id'] = this.leaveId;
     data['company_id'] = this.companyId;
     data['leave_type'] = this.leaveType;
+    data['amount'] = this.amount;
+    return data;
+  }
+}
+
+class Employee {
+  String? firstName;
+  String? lastName;
+
+  Employee({this.firstName, this.lastName});
+
+  Employee.fromJson(Map<String, dynamic> json) {
+    firstName = json['first_name'];
+    lastName = json['last_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['first_name'] = this.firstName;
+    data['last_name'] = this.lastName;
     return data;
   }
 }

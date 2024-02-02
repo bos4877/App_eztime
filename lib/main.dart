@@ -42,6 +42,7 @@ void main() async {
   await WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
+  await LoginApiService().fetchData();
   NotificationService().notification();
   DartPluginRegistrant.ensureInitialized();
   initializeDateFormatting();

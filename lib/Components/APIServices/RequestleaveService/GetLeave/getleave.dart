@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
-import 'package:eztime_app/Model/Get_Model/get_leave/get_leave_Model.dart';
+import 'package:eztime_app/Model/Get_Model/leave/get_leave/get_leave_Model.dart';
 
 class get_doc_leave_Service {
   model(var token) async {
@@ -10,7 +10,7 @@ class get_doc_leave_Service {
           options: Options(headers: {'Authorization': 'Bearer $token'}));
       if (response.statusCode == 200) {
         get_leave_Model json = get_leave_Model.fromJson(response.data);
-        return json;
+        return json.docList;
       } else {
         return null;
       }

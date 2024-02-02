@@ -6,6 +6,8 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.dart';
+import 'package:eztime_app/Components/APIServices/ProFileServices/ProfileService.dart';
+import 'package:eztime_app/Components/APIServices/RequestleaveService/GetLeave/getleave.dart';
 import 'package:eztime_app/Components/APIServices/checkface/checkface.dart';
 import 'package:eztime_app/Components/APIServices/getFaceRecog/getFaceRecog.dart';
 import 'package:eztime_app/Components/APIServices/get_company_local/get_local.dart';
@@ -21,13 +23,19 @@ import 'package:eztime_app/Components/TextStyle/StyleText.dart';
 import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
 import 'package:eztime_app/Model/Get_Model/Company/get_company_local.dart';
-import 'package:eztime_app/Model/Get_Model/getFaceRecog_Model/getFaceRecog_Model.dart';
-import 'package:eztime_app/Model/Get_Model/get_doc_Ot_list_one/get_doc_Ot_list_one_model.dart';
+import 'package:eztime_app/Model/Get_Model/Ot/get_doc_Ot_list_one/get_doc_Ot_list_one_model.dart'
+    as otOne;
+import 'package:eztime_app/Model/Get_Model/face/getFaceRecog_Model/getFaceRecog_Model.dart';
+import 'package:eztime_app/Model/Get_Model/get_Profile/Profile_Model.dart';
+import 'package:eztime_app/Model/Get_Model/leave/get_leave/get_leave_Model.dart'
+    as leave;
 import 'package:eztime_app/Page/Home/Setting/Drawer.dart';
 import 'package:eztime_app/Page/Login/Login_Page.dart';
 import 'package:eztime_app/Page/request/Request_OT_approval.dart';
 import 'package:eztime_app/Page/request/Request_leave.dart';
 import 'package:eztime_app/Page/request/View_OT_logs.dart';
+import 'package:eztime_app/Page/request/appeove/approve_leave.dart';
+import 'package:eztime_app/Page/request/appeove/approve_ot.dart';
 import 'package:eztime_app/Page/request/improve_uptime.dart';
 import 'package:eztime_app/Page/work/Set_work.dart';
 import 'package:eztime_app/Page/work/check_Face.dart';
@@ -59,8 +67,11 @@ class _Home_PageState extends State<Home_Page> {
   getFaceRecog_Model member = getFaceRecog_Model();
   var serviceLocal = get_company_local_Service();
   get_company_local local = get_company_local();
-  List<DocList> docList = [];
-  int? notificationCount = 0;
+  List<otOne.DocList> docList = [];
+  List<EmployData> _profilelist = [];
+  List<leave.DocList> leaveList = [];
+  int? ot_Count = 0;
+  int? leave_cout = 0;
   LocationPermission? permission;
   bool _isExpanded = true;
   bool? serviceEnabled;
@@ -80,7 +91,7 @@ class _Home_PageState extends State<Home_Page> {
   var radians;
 
   Future loadDataFromSharedPreferences() async {
-     setState(() {
+    setState(() {
       loading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -88,14 +99,62 @@ class _Home_PageState extends State<Home_Page> {
     print(
         'Data For HomePage: $_getToken'); // ดึงข้อมูลจาก SharedPreferences ด้วยคีย์ 'responseData'
     print('Data : ${prefs.getString('_acessToken')}');
-    await LoginApiService().fetchData();
-    var get_ot = await get_doc_Ot_list_one_Service().model(_getToken);
-    docList = get_ot;
-    notificationCount = docList.length;
-    getface();
-      setState(() {
+   await getprofile();
+   await get_leaveandot();
+   await getface();
+    setState(() {
       loading = false;
     });
+  }
+
+  Future getprofile() async {
+    setState(() {
+      loading = true;
+    });
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('_acessToken');
+      var response = await get_profile_service().getprofile(token);
+      setState(() {
+        log(response.toString());
+        if (response == null) {
+          Dialog_Tang().infodialog(context);
+          log('faile');
+          setState(() {
+            loading = false;
+          });
+        } else {
+          _profilelist = [response];
+          log('success');
+          setState(() {
+            loading = false;
+          });
+        }
+      });
+    } catch (e) {
+      loading = false;
+      log(e.toString());
+      // Dialog_Tang().dialog(context);
+    }
+  }
+
+  Future get_leaveandot() async {
+    try {
+      setState(() {
+        loading = true;
+      });
+      var get_ot = await get_doc_Ot_list_one_Service().model(_getToken);
+      var get_doc_leave = await get_doc_leave_Service().model(_getToken);
+      docList = get_ot;
+      leaveList = get_doc_leave;
+      ot_Count = docList.length;
+      leave_cout = leaveList.length;
+    } catch (e) {
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   Future getface() async {
@@ -264,258 +323,271 @@ class _Home_PageState extends State<Home_Page> {
   @override
   Widget build(BuildContext context) {
     var changeLang = context.locale.languageCode;
-    return loading ? Loading() : Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text('homepage.title').tr(),
-          elevation: 10,
-        ),
-        drawerDragStartBehavior: DragStartBehavior.start,
-        extendBody: true,
-        extendBodyBehindAppBar: true,
-        body: loading
-            ? Loading()
-            : Stack(
-                children: [
-                  RefreshIndicator(
-                    onRefresh: () => _onRefresh(),
-                    child: ListView(
-                      padding: EdgeInsets.all(5),
-                      children: [
-                        SizedBox(height: 90),
-                        SizedBox(height: 10.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+    return loading
+        ? Loading()
+        : Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              title: Text('homepage.title').tr(),
+              elevation: 10,
+            ),
+            drawerDragStartBehavior: DragStartBehavior.start,
+            extendBody: true,
+            extendBodyBehindAppBar: true,
+            body: loading
+                ? Loading()
+                : Stack(
+                    children: [
+                      RefreshIndicator(
+                        onRefresh: () => _onRefresh(),
+                        child: ListView(
+                          padding: EdgeInsets.all(5),
                           children: [
-                            Image.asset(
-                              'assets/icon_easytime/1x/icon_personal_available.png',
-                              scale: 20,
-                              color: Colors.blue,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "homepage.username",
-                              style: TextStyle(fontSize: 16),
-                              textAlign: TextAlign.center,
-                            ).tr(),
-                          ],
-                        ),
-                        Card(
-                          color: Colors.white,
-                          margin: EdgeInsets.symmetric(
-                            vertical: 5.0,
-                            horizontal: 30.0,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                DigitalClock(
-                                  hourMinuteDigitTextStyle: Theme.of(context)
-                                      .textTheme
-                                      .headline4!
-                                      .copyWith(color: Colors.black),
-                                  secondDigitTextStyle: Theme.of(context)
-                                      .textTheme
-                                      .caption!
-                                      .copyWith(
-                                          color: Colors.black, fontSize: 14),
-                                  colon: Text(
-                                    ":",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1!
-                                        .copyWith(
-                                            color: Colors.black, fontSize: 30),
-                                  ),
-                                ),
-                                Center(
-                                  child: Text(
-                                    "$_date พ.ศ. $_year",
-                                    style: TextStyle(fontSize: 13),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Card(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: ExpansionTile(
-                            initiallyExpanded: true,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            backgroundColor: Colors.white,
-                            title: Row(
+                            SizedBox(height: 90),
+                            SizedBox(height: 10.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Image.asset(
-                                  'assets/icon_easytime/1x/icon_time.png',
+                                  'assets/icon_easytime/1x/icon_personal_available.png',
                                   scale: 20,
+                                  color: Colors.blue,
                                 ),
                                 SizedBox(
                                   width: 5,
                                 ),
                                 Text(
-                                  'homepage.Check in-Check out',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
+                                  "homepage.username",
+                                  style: TextStyle(fontSize: 16),
+                                  textAlign: TextAlign.center,
                                 ).tr(),
                               ],
                             ),
-                            children: [
-                              IntrinsicHeight(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                            Card(
+                              color: Colors.white,
+                              margin: EdgeInsets.symmetric(
+                                vertical: 5.0,
+                                horizontal: 30.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
                                   children: [
-                                    TextButton(
-                                      onPressed: () async {
-                                        await getface();
-                                        _opencamera();
-                                      },
-                                      child: Container(
-                                        child: Text('homepage.Check in',
-                                                style: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontWeight:
-                                                        FontWeight.normal))
-                                            .tr(),
+                                    DigitalClock(
+                                      hourMinuteDigitTextStyle:
+                                          Theme.of(context)
+                                              .textTheme
+                                              .headline4!
+                                              .copyWith(color: Colors.black),
+                                      secondDigitTextStyle: Theme.of(context)
+                                          .textTheme
+                                          .caption!
+                                          .copyWith(
+                                              color: Colors.black,
+                                              fontSize: 14),
+                                      colon: Text(
+                                        ":",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1!
+                                            .copyWith(
+                                                color: Colors.black,
+                                                fontSize: 30),
                                       ),
                                     ),
-                                    VerticalDivider(thickness: 2, endIndent: 5),
-                                    TextButton(
-                                      onPressed: () async {
-                                        await getface();
-                                        _opencamera();
-                                      },
-                                      child: Container(
-                                        child: Text('homepage.Check out',
-                                                style: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontWeight:
-                                                        FontWeight.normal))
-                                            .tr(),
+                                    Center(
+                                      child: Text(
+                                        "$_date พ.ศ. $_year",
+                                        style: TextStyle(fontSize: 13),
                                       ),
                                     ),
                                   ],
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Card(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: ExpansionTile(
-                            initiallyExpanded: true,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
+                              ),
                             ),
-                            backgroundColor:
-                                const Color.fromRGBO(255, 255, 255, 1),
-                            title: Row(
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/icons_Svg/align-left-svgrepo.svg',
-                                  color: Colors.blue,
+                            Card(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: ExpansionTile(
+                                initiallyExpanded: true,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                // Image.asset('assets/icons/align-left-svgrepo.svg'),
-                                SizedBox(
-                                  width: 5,
+                                backgroundColor: Colors.white,
+                                title: Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/icon_easytime/1x/icon_time.png',
+                                      scale: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      'homepage.Check in-Check out',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ).tr(),
+                                  ],
                                 ),
-                                Text(
-                                  'homepage.More',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ).tr(),
-                              ],
-                            ),
-                            onExpansionChanged: (expanded) {
-                              setState(() {
-                                expanded = false;
-                              });
-                            },
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  TextButtons_More(
-                                    notificationCount: docList.length,
-                                    title: 'homepage.Request leave',
-                                    page: Request_leave(),
-                                    imagePath:
-                                        'assets/icon_easytime/1x/icon_attendance_available.png',
-                                  ),
-                                  Divider(),
-                                  TextButtons_More(
-                                    notificationCount: docList.length,
-                                      title: 'homepage.Get approval, Ot',
-                                      page: Request_OT_approval(),
-                                      imagePath:
-                                          'assets/icon_easytime/1x/icon_attendance_available.png'),
-                                  Divider(),
-                                  TextButtons_More(
-                                    title: 'homepage.Watch the Ot log',
-                                    page: View_OT_logs(),
-                                    imagePath:
-                                        'assets/icon_easytime/1x/icon_report_available2.png',
-                                  ),
-                                  Divider(),
-                                  TextButtons_More(
-                                    
-                                      title: 'homepage.Improve Uptime',
-                                      page: improve_uptime(),
-                                      imagePath:
-                                          'assets/icon_easytime/1x/icon_time.png'),
+                                  IntrinsicHeight(
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () async {
+                                            await getface();
+                                            _opencamera();
+                                          },
+                                          child: Container(
+                                            child: Text('homepage.Check in',
+                                                    style: TextStyle(
+                                                        color: Colors.blue,
+                                                        fontWeight:
+                                                            FontWeight.normal))
+                                                .tr(),
+                                          ),
+                                        ),
+                                        VerticalDivider(
+                                            thickness: 2, endIndent: 5),
+                                        TextButton(
+                                          onPressed: () async {
+                                            await getface();
+                                            _opencamera();
+                                          },
+                                          child: Container(
+                                            child: Text('homepage.Check out',
+                                                    style: TextStyle(
+                                                        color: Colors.blue,
+                                                        fontWeight:
+                                                            FontWeight.normal))
+                                                .tr(),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
-                            ],
-                          ),
+                            ),
+                            Card(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: ExpansionTile(
+                                initiallyExpanded: true,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                backgroundColor:
+                                    const Color.fromRGBO(255, 255, 255, 1),
+                                title: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons_Svg/align-left-svgrepo.svg',
+                                      color: Colors.blue,
+                                    ),
+                                    // Image.asset('assets/icons/align-left-svgrepo.svg'),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      'homepage.More',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ).tr(),
+                                  ],
+                                ),
+                                onExpansionChanged: (expanded) {
+                                  setState(() {
+                                    expanded = false;
+                                  });
+                                },
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _profilelist[0].role == 'employee'
+                                          ? Container()
+                                          : TextButtons_More(
+                                              notificationCount: leave_cout,
+                                              title: 'อนุมัติลา',
+                                              page: approve_leave_page(),
+                                              imagePath:
+                                                  'assets/icon_easytime/1x/icon_time.png'),
+                                      Divider(),
+                                      _profilelist[0].role == 'employee'
+                                          ? Container()
+                                          : TextButtons_More(
+                                              notificationCount: ot_Count,
+                                              title: 'อนุมัติโอที',
+                                              page: approve_ot_page(),
+                                              imagePath:
+                                                  'assets/icon_easytime/1x/icon_time.png'),
+                                      TextButtons_More(
+                                        title: 'homepage.Request leave',
+                                        page: Request_leave(),
+                                        imagePath:
+                                            'assets/icon_easytime/1x/icon_attendance_available.png',
+                                      ),
+                                      Divider(),
+                                      TextButtons_More(
+                                          title: 'homepage.Get approval, Ot',
+                                          page: Request_OT_approval(),
+                                          imagePath:
+                                              'assets/icon_easytime/1x/icon_attendance_available.png'),
+                                      Divider(),
+                                      TextButtons_More(
+                                        title: 'homepage.Watch the Ot log',
+                                        page: View_OT_logs(),
+                                        imagePath:
+                                            'assets/icon_easytime/1x/icon_report_available2.png',
+                                      ),
+                                      Divider(),
+                                      TextButtons_More(
+                                          title: 'homepage.Improve Uptime',
+                                          page: improve_uptime(),
+                                          imagePath:
+                                              'assets/icon_easytime/1x/icon_time.png'),
+                                      Divider(),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        // Text('homepage.news information',
-                        //         style: TextStyles.normal)
-                        //     .tr(),
-                        // Buttons(
-                        //   title: 'title',
-                        //   press: () async {
-                        //    await LoginApiService().fetchData();
-                        //   },
-                        // )
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                   
-                ],
-              ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            await getface();
-            if (member.count == 0) {
-              faceCamera().then((value) => onGoback());
-            } else {
-              _opencamera();
-            }
-          },
-          child: Icon(Icons.camera_alt_outlined),
-        ));
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                // await getface();
+                if (member.count == 0) {
+                  faceCamera().then((value) => onGoback());
+                } else {
+                  _opencamera();
+                }
+              },
+              child: Icon(Icons.camera_alt_outlined),
+            ));
   }
 
   onGoback() async {
