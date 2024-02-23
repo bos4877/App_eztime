@@ -11,7 +11,7 @@ class get_DocOne_Service {
     var response = await Dio().get(url,
         options: Options(headers: {'Authorization': 'Bearer $token'}));
         if (response.statusCode == 200) {
-          get_doc_leavelist_one json = get_doc_leavelist_one.fromJson(response.data);
+          get_doc_leavelist_one_Model json = get_doc_leavelist_one_Model.fromJson(response.data);
           log('get_DocOne_Service: ${response.statusCode}');
           return json.docList;
         } else {

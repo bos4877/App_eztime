@@ -76,6 +76,10 @@ class _Domain_Set_PageState extends State<Domain_Set_Page> {
 //         },
 //       )..show();
         print("เกิดข้อผิดพลาดในการเชื่อมต่อ: ${e}");
+      }finally{
+        setState(() {
+          _loading = false;
+        });
       }
     } else {}
   }

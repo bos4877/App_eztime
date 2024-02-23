@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:eztime_app/Components/APIServices/ProFileServices/ProfileService.dart';
+import 'package:eztime_app/controller/APIServices/ProFileServices/ProfileService.dart';
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
@@ -52,30 +52,34 @@ class _Check_face_PageState extends State<Check_face_Page> {
   }
 
   Future _checkface(XFile file) async {
-    setState(() {
-      loading = true;
-    });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('_acessToken');
-    FormData formData = FormData.fromMap({
-      'image': await MultipartFile.fromFile(
-        file.path,
-        filename: file.name,
-      ),
-    });
-    String url = '${connect_api().domain}/check_face_one';
-    var response = await Dio().post(url,
-        data: formData,
-        options: Options(headers: {'Authorization': 'Bearer $token'}));
-    if (response.statusCode == 200) {
+    try {
       setState(() {
-        status = response.statusCode.toString();
-        loading = false;
+        loading = true;
       });
-    } else {
-      log('faild');
-      log('responseCheck_face_Page: ${response}');
-      // Dialog_Tang().checkFacedFaildialog(context);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('_acessToken');
+      FormData formData = FormData.fromMap({
+        'image': await MultipartFile.fromFile(
+          file.path,
+          filename: file.name,
+        ),
+      });
+      String url = '${connect_api().domain}/check_face_one';
+      var response = await Dio().post(url,
+          data: formData,
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+      if (response.statusCode == 200) {
+        setState(() {
+          status = response.statusCode.toString();
+        });
+      } else {
+        log('faild');
+        log('responseCheck_face_Page: ${response}');
+        // Dialog_Tang().checkFacedFaildialog(context);
+      }
+    } catch (e) {
+      log(e.toString());
+    } finally {
       setState(() {
         loading = false;
       });
@@ -93,65 +97,81 @@ class _Check_face_PageState extends State<Check_face_Page> {
 
   @override
   Widget build(BuildContext context) {
-    return loading ? Loading(): Scaffold(
-      appBar: AppBar(title: Text('ตรวจสอบใบหน้า')),
-      body: loading
-          ? Center(
-              child: Container(
-                alignment: Alignment.center,
-                child: CircularProgressIndicator(
-                  strokeWidth: 5.0,
-                  color: Colors.blue,
-                ),
-              ),
-            )
-          :  Center(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                   status == '200' ? Icon(Icons.check_circle_outlined,
-                        size: 200, color: Colors.green):Icon(Icons.close_rounded,color: Colors.red,size: 200,),
-                    SizedBox(
-                      height: 20,
+    return loading
+        ? Loading()
+        : Scaffold(
+            appBar: AppBar(title: Text('ตรวจสอบใบหน้า')),
+            body: loading
+                ? Center(
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 5.0,
+                        color: Colors.blue,
+                      ),
                     ),
-                    Text('รหัสพนักงาน : ${_profileList[0].employeeNo}'),
-                    Text('ชื่อ : ${_profileList[0].firstName}'),
-                    Text('สกุล : ${_profileList[0].lastName}'),
-                    Text('บริษัท : ${_profileList[0].branchOffice}'),
-                    Text('ตำแหน่ง : ${_profileList[0].department}'),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    status == '200'
-                        ? Buttons(
-                            title: 'ลงเวลา',
-                            press: () async{
-                              var latitude = await widget.latitude;
-                              var longitude = await widget.longitude;
-                              var radius = await widget.radius;
-                              var name = '${_profileList[0].firstName} ${_profileList[0].lastName}';
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => Set_work(
-                                  name: name,
-                                  latitude: latitude,
-                                  longitude:longitude ,
-                                  radius: radius,
+                  )
+                : Center(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          status == '200'
+                              ? Icon(Icons.check_circle_outlined,
+                                  size: 200, color: Colors.green)
+                              : Icon(
+                                  Icons.close_rounded,
+                                  color: Colors.red,
+                                  size: 200,
                                 ),
-                              ));
-                            },
-                          )
-                        : Buttons(
-                            title: 'กลับ',
-                            press: () {
-                              Navigator.of(context).pop(MaterialPageRoute(
-                                builder: (context) => BottomNavigationBar_Page(),
-                              ));
-                            },
+                          SizedBox(
+                            height: 20,
                           ),
-                    loading ? Loading() : Container()
-                  ]),
-            ),
-    );
+                         status == '200'
+                              ? Text('รหัสพนักงาน : ${_profileList[0].employeeNo}') :Container(),
+                         status == '200'
+                              ? Text('ชื่อ : ${_profileList[0].firstName}'):Container(),
+                        status == '200'
+                              ?  Text('สกุล : ${_profileList[0].lastName}'):Container(),
+                         status == '200'
+                              ? Text('บริษัท : ${_profileList[0].branchOffice}'): Container(),
+                         status == '200'
+                              ? Text('ตำแหน่ง : ${_profileList[0].department}') : Center(child: Text('ไม่พบข้อมูลใบหน้า'),),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          status == '200'
+                              ? Buttons(
+                                  title: 'ลงเวลา',
+                                  press: () async {
+                                    var latitude = await widget.latitude;
+                                    var longitude = await widget.longitude;
+                                    var radius = await widget.radius;
+                                    var name =
+                                        '${_profileList[0].firstName} ${_profileList[0].lastName}';
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => Set_work(
+                                        name: name,
+                                        latitude: latitude,
+                                        longitude: longitude,
+                                        radius: radius,
+                                      ),
+                                    ));
+                                  },
+                                )
+                              : Buttons(
+                                  title: 'กลับ',
+                                  press: () {
+                                    Navigator.of(context).pop(MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavigationBar_Page(),
+                                    ));
+                                  },
+                                ),
+                          loading ? Loading() : Container()
+                        ]),
+                  ),
+          );
   }
 }

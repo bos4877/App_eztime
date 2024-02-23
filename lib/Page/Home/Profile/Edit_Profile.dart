@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:eztime_app/Components/APIServices/EditService/EditProfileService/EditProfileService.dart';
+import 'package:eztime_app/controller/APIServices/EditService/EditProfileService/EditProfileService.dart';
 import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
 import 'package:eztime_app/Components/CustomTextFormField/CustomTextFormField_EditProfile.dart';
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';

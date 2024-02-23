@@ -9,7 +9,7 @@
     "More": "More...",
     "Request leave": "Request leave",
     "Get approval, Ot": "Get approval, Ot.",
-    "Watch the Ot log": "Watch the Ot log.",
+    "Watch the Ot log": "Work day approval",
     "Improve Uptime": "Improve Uptime",
     "news information": "news information",
     "loginSuccess": "LoginSuccess",
@@ -84,7 +84,10 @@
     "ConfirmPassword": "ConfirmPassword"
   },
   "buttons": {
-    "Save": "SAVE"
+    "Save": "Save",
+    "out": "Out",
+    "in":"In",
+    "cancle":"Cancle"
   },
   "Notification": {
     "title": "Notification",
@@ -99,8 +102,24 @@
     "position": "current position",
     "image": "image"
   },
-  "Information": {
-    "title": "Information"
+  "Check in-out":{
+    "title": "Work Entry-Exit Information",
+    "workingday": "Working Day:",
+    "Timetowork": "Time to Start Work:",
+    "Lateforwork": "Late for Work:",
+    "Timeoffwork": "Time to Finish Work:",
+    "min":"Min"
+  },
+  "Leaverequestlist": {
+    "title": "Leave Request List",
+    "name": "Name:",
+    "starttime": "Start Time:",
+    "endTime": "End Time:",
+    "Leavetype": "Leave Type:",
+    "details": "Details:",
+    "status": "Status:",
+    "picture": "Picture:",
+    "Person with approval": "Person with Approval:"
   },
   "salary_calculation": {
     "title": "Salary Summary",

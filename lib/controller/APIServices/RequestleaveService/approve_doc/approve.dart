@@ -10,9 +10,9 @@ class Approve_Service {
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
     if (response.statusCode == 200) {
-      return response.statusCode;
+      return response.statusCode is int;
     } else {
-      return response.statusCode;
+      return response.statusCode is int;
     }
   }
 }

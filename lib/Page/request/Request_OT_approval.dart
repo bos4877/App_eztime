@@ -6,8 +6,6 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/APIServices/get_Ot/get_Ot_service.dart';
-import 'package:eztime_app/Components/APIServices/get_doc_Ot_list_one/get_doc_Ot_list_one_Service.dart';
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
@@ -18,8 +16,10 @@ import 'package:eztime_app/Model/Get_Model/Ot/get_doc_Ot_list_one/get_doc_Ot_lis
     as doclist;
 import 'package:eztime_app/Model/Get_Model/Ot/get_ot/get_Ot_Model.dart';
 import 'package:eztime_app/Page/Home/promble.dart';
+import 'package:eztime_app/Page/request/LogRequest/request_ot.dart';
 import 'package:eztime_app/Page/request/appeove/approve_ot.dart';
-import 'package:eztime_app/Page/request/request/request_ot.dart';
+import 'package:eztime_app/controller/APIServices/get_Ot/get_Ot_service.dart';
+import 'package:eztime_app/controller/APIServices/get_Ot/get_doc_Ot_list_one/get_doc_Ot_list_one_Service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,7 +35,7 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
   TextEditingController _datecontrollorStart = TextEditingController();
   TextEditingController _datecontrollorEnd = TextEditingController();
   TextEditingController leaveDescription = TextEditingController();
-  bool load = false;
+  bool loading = false;
   bool _cleariconfile1 = false;
   bool _cleariconfile2 = false;
   String? selecteStr;
@@ -78,7 +78,11 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
 
   Future ad_ot(
       ot_id, startDate, startTime, endDate, endTime, description) async {
+    setState(() {
+      loading = true;
+    });
     try {
+      await Future.delayed(Duration(milliseconds: 500));
       String url = '${connect_api().domain}/add_ot';
       var response = await Dio().post(url,
           data: {
@@ -98,13 +102,17 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
       }
     } catch (e) {
       Dialog_Tang().falsedialog(context);
+    } finally {
+      setState(() {
+        loading = false;
+      });
     }
   }
 
   Future _get_ot() async {
     try {
       setState(() {
-        load = true;
+        loading = true;
       });
       var response = await get_Ot_Service().model(token);
       var get_ot = await get_doc_Ot_list_one_Service().model(token);
@@ -124,23 +132,23 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
             }
           }
         }
-         setState(() {
-        load = false;
-      });
+        setState(() {
+          loading = false;
+        });
         if (get_ot == null) {
         } else {
           docList = get_ot;
-         notificationCount = docList.length;
+          notificationCount = docList.length;
           setState(() {
-        load = false;
-      });
+            loading = false;
+          });
         }
       }
     } catch (e) {
       Dialog_Tang().interneterrordialog(context);
       log(e.toString());
-       setState(() {
-        load = false;
+      setState(() {
+        loading = false;
       });
     }
   }
@@ -239,135 +247,150 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
       }
     });
   }
-
   bool _text_open_buttons = false;
 
   @override
   Widget build(BuildContext context) {
-    return load ? Loading() : Scaffold(
-        appBar: AppBar(
-          title: Text('Get approval, Ot.title').tr(),
-          actions: [
-            badges.Badge(
-              position: badges.BadgePosition.topEnd(end: 8,top: 8),
-              badgeContent: Text(
-                notificationCount.toString(),
-                style: TextStyle(color: Colors.white),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Request_ot_page(),));
-                }, icon: Icon(Icons.receipt)),
-              ),
-            )
-          ],
-        ),
-        bottomNavigationBar: Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.35,
-              vertical: MediaQuery.of(context).size.height * 0.05),
-          child: Buttons(
-              title: 'Get approval, Ot.Save'.tr(),
-              press: () {
-                ad_ot(otid, _Startdate, timeOfDay__datefill, _Enddate,
-                    timeOfDay_datefill2, leaveDescription.text);
-              }),
-        ),
-        body: ListView(
-          padding: EdgeInsets.all(8),
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Drop_Down(
-              title: 'เลือกประเภท OT',
-              item: _item,
-              value: selecteStr,
-              onChang: (p0) {
-                setState(() {
-                  selectedValue = _item.indexOf(p0);
-                  var sucessValue = selectedValue! + 1;
-                  selecteStr = p0.toString();
-                  var _laeveId = _item[selectedValue!];
-                  otid = _otdata[selectedValue!].otId;
-                  log(_laeveId.toString());
-                });
-              },
-            ),
-            Container(
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Material(
-                      color: Colors.white,
-                      elevation: 3,
-                      borderRadius: BorderRadius.circular(8),
-                      child: TextFormField(
-                        onTap: () async {
-                          await _datefill();
-                          timeOfDay__datefill = await _time;
-                          setState(() {
-                            print(timeOfDay__datefill);
-                            _datecontrollorStart.text =
-                                '${_Startdate} ${timeOfDay__datefill!.format(context)}';
-                          });
+    return loading
+        ? Loading()
+        : Scaffold(
+            appBar: AppBar(
+              title: Text('Get approval, Ot.title').tr(),
+              actions: [
+                badges.Badge(
+                  position: badges.BadgePosition.topEnd(end: 8, top: 8),
+                  badgeContent: Text(
+                    notificationCount.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Request_ot_page(),
+                          ));
                         },
-                        controller: _datecontrollorStart,
-                        readOnly: true,
-                        style: TextStyle(color: Colors.black), // สีของข้อความ
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10.0), // ระยะห่างระหว่างข้อความและขอบ
-                          hintText: 'Get approval, Ot.Choose start time'.tr(),
-                          hintStyle:
-                              TextStyle(color: Colors.blue), // สีข้อความในฮินท์
-                          prefixIcon:
-                              Icon(Icons.calendar_month, color: Colors.blue),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              _datecontrollorStart.clear();
-                              setState(() {
-                                _cleariconfile1 = false;
-                                _text_open_buttons = false;
-                              });
-                            },
-                            icon: Icon(Icons.highlight_remove_outlined,
-                                color: _cleariconfile1
-                                    ? Colors.blue
-                                    : Colors.white),
-                          ), // สีไอคอน
-                          filled: true,
-                          fillColor: Colors.white, // สีพื้นหลัง
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide.none, // ไม่มีเส้นขอบ
+                        icon: Icon(Icons.receipt)),
+                  ),
+                )
+              ],
+            ),
+            bottomNavigationBar: Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.35,
+                  vertical: MediaQuery.of(context).size.height * 0.05),
+              child: Buttons(
+                  title: 'Get approval, Ot.Save'.tr(),
+                  press: () {
+                    var timefile1 = timeOfDay__datefill
+                        .toString()
+                        .split('(')
+                        .last
+                        .split(')')
+                        .first;
+                    var timefile2 = timeOfDay_datefill2
+                        .toString()
+                        .split('(')
+                        .last
+                        .split(')')
+                        .first;
+                    ad_ot(otid, _Startdate, timefile1, _Enddate, timefile2,
+                        leaveDescription.text);
+                  }),
+            ),
+            body: ListView(
+              padding: EdgeInsets.all(8),
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Drop_Down(
+                  title: 'เลือกประเภท OT',
+                  item: _item,
+                  value: selecteStr,
+                  onChang: (p0) {
+                    setState(() {
+                      selectedValue = _item.indexOf(p0);
+                      var sucessValue = selectedValue! + 1;
+                      selecteStr = p0.toString();
+                      var _laeveId = _item[selectedValue!];
+                      otid = _otdata[selectedValue!].otId;
+                      log(_laeveId.toString());
+                    });
+                  },
+                ),
+                Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Material(
+                        color: Colors.white,
+                        elevation: 3,
+                        borderRadius: BorderRadius.circular(8),
+                        child: TextFormField(
+                          onTap: () async {
+                            await _datefill();
+                            timeOfDay__datefill = await _time;
+                            setState(() {
+                              print(timeOfDay__datefill);
+                              _datecontrollorStart.text =
+                                  '${_Startdate} ${timeOfDay__datefill == null ? '08:00' : timeOfDay__datefill!.format(context)}';
+                            });
+                          },
+                          controller: _datecontrollorStart,
+                          readOnly: true,
+                          style: TextStyle(color: Colors.black), // สีของข้อความ
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 10.0), // ระยะห่างระหว่างข้อความและขอบ
+                            hintText: 'Get approval, Ot.Choose start time'.tr(),
+                            hintStyle: TextStyle(
+                                color: Colors.blue), // สีข้อความในฮินท์
+                            prefixIcon:
+                                Icon(Icons.calendar_month, color: Colors.blue),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                _datecontrollorStart.clear();
+                                setState(() {
+                                  _cleariconfile1 = false;
+                                  _text_open_buttons = false;
+                                });
+                              },
+                              icon: Icon(Icons.highlight_remove_outlined,
+                                  color: _cleariconfile1
+                                      ? Colors.blue
+                                      : Colors.white),
+                            ), // สีไอคอน
+                            filled: true,
+                            fillColor: Colors.white, // สีพื้นหลัง
+
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.blue, style: BorderStyle.solid),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.blue, style: BorderStyle.solid),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    _datecontrollorStart.text.isNotEmpty
-                        ? Material(
-                            color: Colors.white,
-                            elevation: 3,
-                            borderRadius: BorderRadius.circular(8),
-                            ///////////////////////////////////////////////////////////
-                            child: TextFormField(
+                      SizedBox(
+                        height: 5,
+                      ),
+                      _datecontrollorStart.text.isNotEmpty
+                          ? TextFormField(
                               onTap: () async {
                                 await datefill2();
                                 timeOfDay_datefill2 = await _timeEnd;
                                 setState(() {
                                   print(timeOfDay_datefill2);
                                   _datecontrollorEnd.text =
-                                      '${_Enddate} ${timeOfDay_datefill2!.format(context)}';
+                                      '${_Enddate} ${timeOfDay__datefill == null ? '17:30' : timeOfDay_datefill2!.format(context).split('TimeOfDay').last.split("(").last.split(')').first}';
                                 });
                               },
                               controller: _datecontrollorEnd,
@@ -400,57 +423,55 @@ class _Request_OT_approvalState extends State<Request_OT_approval> {
                                 ), // สีไอคอน
                                 filled: true,
                                 fillColor: Colors.white, // สีพื้นหลัง
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.blue,
+                                      style: BorderStyle.solid),
+                                ),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide.none, // ไม่มีเส้นขอบ
+                                  borderSide: BorderSide(
+                                      color: Colors.blue,
+                                      style: BorderStyle.solid),
                                 ),
                               ),
-                            ),
-                          )
-                        : Container(),
-                    SizedBox(height: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Request leave.Details').tr(),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Material(
-                          color: Colors.white,
-                          // elevation: 3,
-                          borderRadius: BorderRadius.circular(8),
-                          child: TextFormField(
-                            controller: leaveDescription,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(6),
-                                border: InputBorder.none),
-                            maxLines: 4, // รับข้อความหลายบรรทัด
+                            )
+                          : Container(),
+                      SizedBox(height: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Request leave.Details').tr(),
+                          SizedBox(
+                            height: 5,
                           ),
-                        ),
-                      ],
-                    ),
-                    // Container(
-                    //   padding: EdgeInsets.all(8),
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       SizedBox(
-                    //         height: 20,
-                    //       ),
-                    //       Text('Request leave.Pending Items').tr(),
-                    //       SizedBox(height: 5),
-                    //       Card(
-                    //         child: Column(children: []),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                  ],
+                          Material(
+                            color: Colors.white,
+                            // elevation: 3,
+                            borderRadius: BorderRadius.circular(8),
+                            child: TextFormField(
+                              controller: leaveDescription,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(6),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.blue,
+                                      style: BorderStyle.solid),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.blue,
+                                      style: BorderStyle.solid),
+                                ),
+                              ),
+                              maxLines: 4, // รับข้อความหลายบรรทัด
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-          ],
-        ));
+              ],
+            ));
   }
 }

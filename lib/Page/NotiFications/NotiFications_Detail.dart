@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 class NotiFications_Detail_Page extends StatefulWidget {
   final section;
-  const NotiFications_Detail_Page({super.key, this.section});
+  final  notificationData;
+  const NotiFications_Detail_Page({super.key, this.section, this.notificationData});
 
   @override
   State<NotiFications_Detail_Page> createState() =>
@@ -21,7 +22,7 @@ class _NotiFications_Detail_PageState extends State<NotiFications_Detail_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Notification_Detail.title').tr()),
+      appBar: AppBar(title: Text('Notification.title').tr()),
     
     );
   }

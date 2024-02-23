@@ -5,13 +5,6 @@ import 'dart:developer';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.dart';
-import 'package:eztime_app/Components/APIServices/ProFileServices/ProfileService.dart';
-import 'package:eztime_app/Components/APIServices/RequestleaveService/GetLeave/getleave.dart';
-import 'package:eztime_app/Components/APIServices/checkface/checkface.dart';
-import 'package:eztime_app/Components/APIServices/getFaceRecog/getFaceRecog.dart';
-import 'package:eztime_app/Components/APIServices/get_company_local/get_local.dart';
-import 'package:eztime_app/Components/APIServices/get_doc_Ot_list_one/get_doc_Ot_list_one_Service.dart';
 import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/DiaLog/SnackBar/Sanckbar.dart';
@@ -23,22 +16,37 @@ import 'package:eztime_app/Components/TextStyle/StyleText.dart';
 import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
 import 'package:eztime_app/Model/Get_Model/Company/get_company_local.dart';
-import 'package:eztime_app/Model/Get_Model/Ot/get_doc_Ot_list_one/get_doc_Ot_list_one_model.dart'
-    as otOne;
+import 'package:eztime_app/Model/Get_Model/Ot/get_doc_Ot_list_model/get_doc_Ot_list_model.dart'
+    as ot;
 import 'package:eztime_app/Model/Get_Model/face/getFaceRecog_Model/getFaceRecog_Model.dart';
 import 'package:eztime_app/Model/Get_Model/get_Profile/Profile_Model.dart';
+import 'package:eztime_app/Model/Get_Model/get_addtime_lis/get_addtime_list_model%20.dart'
+    as addtime;
+import 'package:eztime_app/Model/Get_Model/gettimeattendent/get_attendent_employee_one_model.dart';
 import 'package:eztime_app/Model/Get_Model/leave/get_leave/get_leave_Model.dart'
     as leave;
-import 'package:eztime_app/Page/Home/Setting/Drawer.dart';
+import 'package:eztime_app/Page/Home/Drawer/Drawer.dart';
 import 'package:eztime_app/Page/Login/Login_Page.dart';
+import 'package:eztime_app/Page/Splasscreen/Face_data_Page.dart';
+import 'package:eztime_app/Page/request/LogRequest/improve_uptime.dart';
 import 'package:eztime_app/Page/request/Request_OT_approval.dart';
 import 'package:eztime_app/Page/request/Request_leave.dart';
-import 'package:eztime_app/Page/request/View_OT_logs.dart';
+import 'package:eztime_app/Page/request/appeove/approve_improve_uptime.dart';
 import 'package:eztime_app/Page/request/appeove/approve_leave.dart';
 import 'package:eztime_app/Page/request/appeove/approve_ot.dart';
-import 'package:eztime_app/Page/request/improve_uptime.dart';
 import 'package:eztime_app/Page/work/Set_work.dart';
 import 'package:eztime_app/Page/work/check_Face.dart';
+import 'package:eztime_app/controller/APIServices/LoginServices/LoginApiService.dart';
+import 'package:eztime_app/controller/APIServices/ProFileServices/ProfileService.dart';
+import 'package:eztime_app/controller/APIServices/RequestleaveService/GetLeave/getleave.dart';
+import 'package:eztime_app/controller/APIServices/checkface/checkface.dart';
+import 'package:eztime_app/controller/APIServices/getFaceRecog/getFaceRecog.dart';
+import 'package:eztime_app/controller/APIServices/get_Ot/get_Ot_service.dart';
+import 'package:eztime_app/controller/APIServices/get_Ot/get_doc_Ot_list_one/get_doc_Ot_list_one_Service.dart';
+import 'package:eztime_app/controller/APIServices/get_Ot/get_ot_list/get_ot_list.dart';
+import 'package:eztime_app/controller/APIServices/get_addtime_list/get_addtime_list_service.dart';
+import 'package:eztime_app/controller/APIServices/get_company_local/get_local.dart';
+import 'package:eztime_app/controller/APIServices/getattendentEmployee/get_attendent_employee_one.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
@@ -67,11 +75,14 @@ class _Home_PageState extends State<Home_Page> {
   getFaceRecog_Model member = getFaceRecog_Model();
   var serviceLocal = get_company_local_Service();
   get_company_local local = get_company_local();
-  List<otOne.DocList> docList = [];
+  List<ot.DocList> docList = [];
   List<EmployData> _profilelist = [];
   List<leave.DocList> leaveList = [];
+  List<addtime.DocList> _addtime = [];
+  List<AttendanceData> attendanceData = [];
   int? ot_Count = 0;
   int? leave_cout = 0;
+  int? _addtimeCount = 0;
   LocationPermission? permission;
   bool _isExpanded = true;
   bool? serviceEnabled;
@@ -99,9 +110,9 @@ class _Home_PageState extends State<Home_Page> {
     print(
         'Data For HomePage: $_getToken'); // ดึงข้อมูลจาก SharedPreferences ด้วยคีย์ 'responseData'
     print('Data : ${prefs.getString('_acessToken')}');
-   await getprofile();
-   await get_leaveandot();
-   await getface();
+    await getprofile();
+    await get_leaveandot();
+    await getface();
     setState(() {
       loading = false;
     });
@@ -125,6 +136,9 @@ class _Home_PageState extends State<Home_Page> {
           });
         } else {
           _profilelist = [response];
+          prefs.setString('firstName', _profilelist[0].firstName.toString());
+          prefs.setString('lastName', _profilelist[0].lastName.toString());
+          prefs.setString('userid', _profilelist[0].employeeNo.toString());
           log('success');
           setState(() {
             loading = false;
@@ -134,33 +148,53 @@ class _Home_PageState extends State<Home_Page> {
     } catch (e) {
       loading = false;
       log(e.toString());
-      // Dialog_Tang().dialog(context);
+      Dialog_Tang().interneterrordialog(context);
     }
   }
 
+  var get_checkin;
   Future get_leaveandot() async {
     try {
       setState(() {
         loading = true;
       });
-      var get_ot = await get_doc_Ot_list_one_Service().model(_getToken);
-      var get_doc_leave = await get_doc_leave_Service().model(_getToken);
+      var get_addtime = await get_addtime_list_Service().model(_getToken);
+      _addtime = get_addtime;
+      var get_ot = await get_OtList_Service().model(_getToken);
       docList = get_ot;
+      var get_doc_leave = await get_doc_leave_Service().model(_getToken);
       leaveList = get_doc_leave;
-      ot_Count = docList.length;
-      leave_cout = leaveList.length;
+      int countLeaveW = leaveList
+          .where((leave) => leave.docLeaveApprove![0].status == 'W')
+          .length;
+      int countdocListW = docList
+          .where((docList) => docList.docOtApprove![0].status == 'W')
+          .length;
+      int countaddtimeW = docList
+          .where((docList) => docList.docOtApprove![0].status == 'W')
+          .length;
+      ot_Count = countdocListW;
+      leave_cout = countLeaveW;
+      _addtimeCount = countaddtimeW;
+      get_checkin = await get_attendent_employee_one().model(_getToken);
+      log('check in : ${get_checkin}');
+      if (get_checkin == 503) {
+        attendanceData = [];
+      } else {
+        attendanceData = get_checkin;
+      }
+      print(leaveList);
     } catch (e) {
+      log(e.toString());
     } finally {
       setState(() {
         loading = false;
+        // Dialog_Tang().interneterrordialog(context);
       });
     }
   }
 
   Future getface() async {
-    setState(() {
-      loading = true;
-    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _getToken = prefs.getString('_acessToken');
     var localRes = await serviceLocal.model(_getToken);
@@ -170,17 +204,13 @@ class _Home_PageState extends State<Home_Page> {
     latitude = local.company!.latitude;
     longitude = local.company!.longitude;
     radians = local.company!.radians;
-    setState(() {
-      log('success');
-      loading = false;
-    });
   }
 
   Future _openImages() async {
     try {
       final XFile? photo = await ImagePicker().pickImage(
         source: ImageSource.camera,
-        preferredCameraDevice: CameraDevice.front,
+        preferredCameraDevice: CameraDevice.rear,
         maxHeight: 1080,
         maxWidth: 1080,
       );
@@ -304,7 +334,7 @@ class _Home_PageState extends State<Home_Page> {
     setState(() {
       loading = true;
     });
-    await Future.delayed(Duration(milliseconds: 800));
+    await get_leaveandot();
     await loadDataFromSharedPreferences();
     await _formatdate();
     setState(() {
@@ -331,6 +361,15 @@ class _Home_PageState extends State<Home_Page> {
               automaticallyImplyLeading: false,
               title: Text('homepage.title').tr(),
               elevation: 10,
+              actions: [
+                member.count == 0
+                    ? IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add_a_photo_outlined),
+                        tooltip: 'เพิ่มรูปภาพ',
+                      )
+                    : Container()
+              ],
             ),
             drawerDragStartBehavior: DragStartBehavior.start,
             extendBody: true,
@@ -344,8 +383,9 @@ class _Home_PageState extends State<Home_Page> {
                         child: ListView(
                           padding: EdgeInsets.all(5),
                           children: [
-                            SizedBox(height: 90),
-                            SizedBox(height: 10.0),
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.12),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -358,11 +398,14 @@ class _Home_PageState extends State<Home_Page> {
                                   width: 5,
                                 ),
                                 Text(
-                                  "homepage.username",
+                                  "${_profilelist[0].firstName} ${_profilelist[0].lastName}",
                                   style: TextStyle(fontSize: 16),
                                   textAlign: TextAlign.center,
                                 ).tr(),
                               ],
+                            ),
+                            SizedBox(
+                              height: 10,
                             ),
                             Card(
                               color: Colors.white,
@@ -409,6 +452,9 @@ class _Home_PageState extends State<Home_Page> {
                                 ),
                               ),
                             ),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Card(
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
@@ -448,33 +494,67 @@ class _Home_PageState extends State<Home_Page> {
                                       children: [
                                         TextButton(
                                           onPressed: () async {
-                                            await getface();
-                                            _opencamera();
+                                            getface();
+                                            if (member.count == 0) {
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        testDecestion(),
+                                                  ))
+                                                  .then((value) => onGoback);
+                                            } else {
+                                              _opencamera();
+                                            }
                                           },
                                           child: Container(
-                                            child: Text('homepage.Check in',
-                                                    style: TextStyle(
-                                                        color: Colors.blue,
-                                                        fontWeight:
-                                                            FontWeight.normal))
-                                                .tr(),
+                                            child: attendanceData.isNotEmpty &&
+                                                    attendanceData[0]
+                                                            .timeInput !=
+                                                        503
+                                                ? Text(
+                                                    '${attendanceData[0].timeInput}')
+                                                : Text('homepage.Check in',
+                                                        style: TextStyle(
+                                                            color: Colors.blue,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal))
+                                                    .tr(),
                                           ),
                                         ),
                                         VerticalDivider(
                                             thickness: 2, endIndent: 5),
                                         TextButton(
                                           onPressed: () async {
-                                            await getface();
-                                            _opencamera();
+                                            getface();
+                                            if (member.count == 0) {
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                builder: (context) =>
+                                                    testDecestion(),
+                                              ));
+                                            } else {
+                                              _opencamera()
+                                                  .then((value) => onGoback());
+                                            }
                                           },
                                           child: Container(
-                                            child: Text('homepage.Check out',
-                                                    style: TextStyle(
-                                                        color: Colors.blue,
-                                                        fontWeight:
-                                                            FontWeight.normal))
-                                                .tr(),
-                                          ),
+                                              child: attendanceData.isEmpty ||
+                                                      attendanceData.length == 1
+                                                  //     .timeInput !=
+                                                  // 503
+                                                  ? Text('homepage.Check out',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.blue,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal))
+                                                      .tr()
+                                                  : Text(
+                                                      '${attendanceData[1].timeInput}')),
                                         ),
                                       ],
                                     ),
@@ -529,44 +609,97 @@ class _Home_PageState extends State<Home_Page> {
                                           : TextButtons_More(
                                               notificationCount: leave_cout,
                                               title: 'อนุมัติลา',
-                                              page: approve_leave_page(),
+                                              onPres: () {
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          approve_leave_page(),
+                                                    ))
+                                                    .then(
+                                                        (value) => onGoback());
+                                              },
                                               imagePath:
                                                   'assets/icon_easytime/1x/icon_time.png'),
-                                      Divider(),
+                                      _profilelist[0].role == 'employee'
+                                          ? Container()
+                                          : Divider(),
                                       _profilelist[0].role == 'employee'
                                           ? Container()
                                           : TextButtons_More(
                                               notificationCount: ot_Count,
                                               title: 'อนุมัติโอที',
-                                              page: approve_ot_page(),
+                                              onPres: () {
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          approve_ot_page(),
+                                                    ))
+                                                    .then(
+                                                        (value) => onGoback());
+                                              },
                                               imagePath:
                                                   'assets/icon_easytime/1x/icon_time.png'),
+                                      _profilelist[0].role == 'employee'
+                                          ? Container()
+                                          : Divider(),
+                                      _profilelist[0].role == 'employee'
+                                          ? Container()
+                                          : TextButtons_More(
+                                              notificationCount: _addtimeCount,
+                                              title:
+                                                  'homepage.Watch the Ot log',
+                                              onPres: () {
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          approve_improve_uptime_page(),
+                                                    ))
+                                                    .then(
+                                                        (value) => onGoback());
+                                              },
+                                              imagePath:
+                                                  'assets/icon_easytime/1x/icon_report_available2.png',
+                                            ),
+                                      Divider(),
                                       TextButtons_More(
                                         title: 'homepage.Request leave',
-                                        page: Request_leave(),
+                                        onPres: () {
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Request_leave(),
+                                              ))
+                                              .then((value) => onGoback());
+                                        },
                                         imagePath:
                                             'assets/icon_easytime/1x/icon_attendance_available.png',
                                       ),
                                       Divider(),
                                       TextButtons_More(
                                           title: 'homepage.Get approval, Ot',
-                                          page: Request_OT_approval(),
+                                          onPres: () {
+                                            Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Request_OT_approval(),
+                                                ))
+                                                .then((value) => onGoback());
+                                          },
                                           imagePath:
                                               'assets/icon_easytime/1x/icon_attendance_available.png'),
                                       Divider(),
                                       TextButtons_More(
-                                        title: 'homepage.Watch the Ot log',
-                                        page: View_OT_logs(),
-                                        imagePath:
-                                            'assets/icon_easytime/1x/icon_report_available2.png',
-                                      ),
-                                      Divider(),
-                                      TextButtons_More(
                                           title: 'homepage.Improve Uptime',
-                                          page: improve_uptime(),
+                                          onPres: () {
+                                            Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      improve_uptime(),
+                                                ))
+                                                .then((value) => onGoback());
+                                          },
                                           imagePath:
                                               'assets/icon_easytime/1x/icon_time.png'),
-                                      Divider(),
                                     ],
                                   ),
                                 ],
@@ -577,25 +710,28 @@ class _Home_PageState extends State<Home_Page> {
                       ),
                     ],
                   ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                // await getface();
-                if (member.count == 0) {
-                  faceCamera().then((value) => onGoback());
-                } else {
-                  _opencamera();
-                }
-              },
-              child: Icon(Icons.camera_alt_outlined),
-            ));
+            floatingActionButton: member.count == 0
+                ? Container()
+                : FloatingActionButton(
+                    onPressed: () async {
+                      await getface();
+                      if (member.count == 0) {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => testDecestion(),
+                        ));
+                      } else {
+                        _opencamera();
+                      }
+                    },
+                    child: Icon(Icons.camera_alt_outlined),
+                  ));
   }
 
   onGoback() async {
     setState(() {
       loading = true;
     });
-    await Future.delayed(Duration(milliseconds: 1500));
-    await getface();
+    await get_leaveandot();
     setState(() {
       loading = false;
     });

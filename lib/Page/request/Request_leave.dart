@@ -9,9 +9,6 @@ import 'package:badges/badges.dart' as badges;
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/APIServices/RequestleaveService/PushLeave/PushLeavService.dart';
-import 'package:eztime_app/Components/APIServices/RequestleaveService/Request_leave_Service.dart';
-import 'package:eztime_app/Components/APIServices/RequestleaveService/get_DocOne/get_DocOne.dart';
 import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
 import 'package:eztime_app/Components/Camera/camera_and_gallary.dart';
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
@@ -25,7 +22,10 @@ import 'package:eztime_app/Model/Get_Model/leave/get_DocOne_Model/get_DocOne_Mod
     as docList;
 import 'package:eztime_app/Page/Login/Login_Page.dart';
 import 'package:eztime_app/Page/request/appeove/approve_leave.dart';
-import 'package:eztime_app/Page/request/request/request_leave_one.dart';
+import 'package:eztime_app/Page/request/LogRequest/request_leave_one.dart';
+import 'package:eztime_app/controller/APIServices/RequestleaveService/PushLeave/PushLeavService.dart';
+import 'package:eztime_app/controller/APIServices/RequestleaveService/Request_leave_Service.dart';
+import 'package:eztime_app/controller/APIServices/RequestleaveService/get_DocOne/get_DocOne.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -82,7 +82,7 @@ class _Request_leaveState extends State<Request_leave> {
       });
     } else {
       _laeveList = response;
-       get_One_leave();
+      get_One_leave();
       setState(() {
         for (var element in _laeveList) {
           if (element.leaveType != null) {
@@ -96,7 +96,7 @@ class _Request_leaveState extends State<Request_leave> {
             }
           }
         }
-       
+
         loading = false;
       });
     }
@@ -132,7 +132,7 @@ class _Request_leaveState extends State<Request_leave> {
     return base64Encode(bytes);
   }
 
-  Widget showImage() {
+  showImage() {
     // ที่อยู่ของรูปภาพ
     String image = '${imagePathname}';
 
@@ -285,18 +285,81 @@ class _Request_leaveState extends State<Request_leave> {
                 )
               ],
             ),
+            bottomNavigationBar: Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.35,
+                  vertical: MediaQuery.of(context).size.height * 0.04),
+              child: Buttons(
+                  title: 'Get approval, Ot.Save'.tr(),
+                  press: () async {
+
+                    if (imagePathname == null || imagePathname!.isNotEmpty) {
+                      var service = PushLeave_Service();
+                      var startTime = timeOfDay__datefill
+                          .toString()
+                          .split('(')
+                          .last
+                          .split(')')
+                          .first;
+                      var endTime = timeOfDay_datefill2
+                          .toString()
+                          .split('(')
+                          .last
+                          .split(')')
+                          .first;
+                      var response = await service.model(
+                        token,
+                        _laeveList[selectedValue!].leaveId,
+                        _Startdate,
+                        startTime,
+                        _Enddate,
+                        endTime,
+                        leaveDescription.text,
+                        'ไม่พบรูปภาพ',
+                      );
+                      log('responseStatus: ${response}');
+                      if (response == 200) {
+                        Dialog_Tang().successdialog(context);
+                      } else {
+                        Dialog_Tang().falsedialog(context);
+                      }
+                    } else {
+                      var base64 = await fileToBase64(imagePathname!);
+                      var service = PushLeave_Service();
+                      var startTime = timeOfDay__datefill
+                          .toString()
+                          .split('(')
+                          .last
+                          .split(')')
+                          .first;
+                      var endTime = timeOfDay_datefill2
+                          .toString()
+                          .split('(')
+                          .last
+                          .split(')')
+                          .first;
+                      var response = await service.model(
+                        token,
+                        _laeveList[selectedValue!].leaveId,
+                        _Startdate,
+                        startTime,
+                        _Enddate,
+                        endTime,
+                        leaveDescription.text,
+                        base64,
+                      );
+                    }
+                  }),
+            ),
             body: RefreshIndicator(
               onRefresh: () => _onRefresh(),
               child: loading
                   ? Loading()
                   : ListView(
+                    padding: EdgeInsets.all(8),
                       children: [
                         Form(
                           key: _formkey,
-                          child: Container(
-                            // height: 40,
-                            child: Padding(
-                                padding: EdgeInsets.all(15),
                                 child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -338,6 +401,7 @@ class _Request_leaveState extends State<Request_leave> {
                                                   snackBarText:
                                                       'กรุณากรอกวันที่เริ่มต้น');
                                             }
+                                            return null;
                                           },
                                           onTap: () async {
                                             await _datefill();
@@ -385,11 +449,16 @@ class _Request_leaveState extends State<Request_leave> {
                                             filled: true,
                                             fillColor:
                                                 Colors.white, // สีพื้นหลัง
+
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.blue,
+                                                  style: BorderStyle.solid),
+                                            ),
                                             border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              borderSide: BorderSide
-                                                  .none, // ไม่มีเส้นขอบ
+                                              borderSide: BorderSide(
+                                                  color: Colors.blue,
+                                                  style: BorderStyle.solid),
                                             ),
                                           ),
                                         ),
@@ -419,9 +488,7 @@ class _Request_leaveState extends State<Request_leave> {
                                               color:
                                                   Colors.black), // สีของข้อความ
                                           decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.symmetric(
-                                                vertical:
-                                                    10.0), // ระยะห่างระหว่างข้อความและขอบ
+                                            // ระยะห่างระหว่างข้อความและขอบ
                                             hintText:
                                                 'Request leave.End Choose a time period'
                                                     .tr(),
@@ -449,11 +516,16 @@ class _Request_leaveState extends State<Request_leave> {
                                             filled: true,
                                             fillColor:
                                                 Colors.white, // สีพื้นหลัง
+                                            contentPadding: EdgeInsets.all(6),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.blue,
+                                                  style: BorderStyle.solid),
+                                            ),
                                             border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              borderSide: BorderSide
-                                                  .none, // ไม่มีเส้นขอบ
+                                              borderSide: BorderSide(
+                                                  color: Colors.blue,
+                                                  style: BorderStyle.solid),
                                             ),
                                           ),
                                         ),
@@ -479,10 +551,22 @@ class _Request_leaveState extends State<Request_leave> {
                                               decoration: InputDecoration(
                                                   contentPadding:
                                                       EdgeInsets.all(6),
-                                                  border: InputBorder.none),
-                                              maxLines:
-                                                  4, // รับข้อความหลายบรรทัด
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.blue,
+                                                        style:
+                                                            BorderStyle.solid),
+                                                  ),
+                                                  border: OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.blue,
+                                                        style:
+                                                            BorderStyle.solid),
+                                                  )),
+                                              maxLines: 4,
                                             ),
+                                            // รับข้อความหลายบรรทัด
                                           ),
                                         ],
                                       ),
@@ -583,14 +667,11 @@ class _Request_leaveState extends State<Request_leave> {
                                                 )
                                               : Center(
                                                   child: Container(
+                                                    padding: EdgeInsets.all(8),
                                                     color: Colors.white,
                                                     width: double.infinity,
-                                                    height: 300,
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsets.all(8.0),
-                                                      child: showImage(),
-                                                    ),
+                                                    height: 250,
+                                                    child: showImage()
                                                   ),
                                                 ),
                                           SizedBox(
@@ -602,77 +683,8 @@ class _Request_leaveState extends State<Request_leave> {
                                         ],
                                       ),
                                     ])),
-                          ),
-                        )
                       ],
                     ),
-            ),
-            floatingActionButton: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Buttons(
-                  title: 'Request leave.Save'.tr(),
-                  press: () async {
-                    // log('base64: ${base64}');
-                    // log('_laeveList[selectedValue].leaveId: ${_laeveList[selectedValue!].leaveId}');
-                    if (imagePathname == null|| imagePathname!.isNotEmpty ) {
-                      
-                      var service = PushLeave_Service();
-                    var startTime = timeOfDay__datefill
-                        .toString()
-                        .split('(')
-                        .last
-                        .split(')')
-                        .first;
-                    var endTime = timeOfDay_datefill2
-                        .toString()
-                        .split('(')
-                        .last
-                        .split(')')
-                        .first;
-                    var response = await service.model(
-                      token,
-                      _laeveList[selectedValue!].leaveId,
-                      _Startdate,
-                      startTime,
-                      _Enddate,
-                      endTime,
-                      leaveDescription.text,
-                      'ไม่พบรูปภาพ',
-                    );
-                    log('responseStatus: ${response}');
-                     if (response == 200) {
-                      Dialog_Tang().successdialog(context);
-                    } else {
-                      Dialog_Tang().falsedialog(context);
-                    }
-                    } else {
-                      var base64 = await fileToBase64(imagePathname!);
-                      var service = PushLeave_Service();
-                    var startTime = timeOfDay__datefill
-                        .toString()
-                        .split('(')
-                        .last
-                        .split(')')
-                        .first;
-                    var endTime = timeOfDay_datefill2
-                        .toString()
-                        .split('(')
-                        .last
-                        .split(')')
-                        .first;
-                    var response = await service.model(
-                      token,
-                      _laeveList[selectedValue!].leaveId,
-                      _Startdate,
-                      startTime,
-                      _Enddate,
-                      endTime,
-                      leaveDescription.text,
-                     base64,
-                    );
-                    }
-
-                  }),
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniCenterDocked,

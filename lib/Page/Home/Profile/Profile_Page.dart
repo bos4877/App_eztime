@@ -1,7 +1,7 @@
 // ignore_for_file: unused_import
 import 'dart:developer';
 
-import 'package:eztime_app/Components/APIServices/ProFileServices/ProfileService.dart';
+import 'package:eztime_app/controller/APIServices/ProFileServices/ProfileService.dart';
 import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';

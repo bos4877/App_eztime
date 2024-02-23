@@ -26,14 +26,17 @@ class Leave {
   String? leaveId;
   String? companyId;
   String? leaveType;
+  String? amount;
 
-  Leave({this.rowId, this.leaveId, this.companyId, this.leaveType});
+  Leave(
+      {this.rowId, this.leaveId, this.companyId, this.leaveType, this.amount});
 
   Leave.fromJson(Map<String, dynamic> json) {
     rowId = json['row_id'];
     leaveId = json['leave_id'];
     companyId = json['company_id'];
     leaveType = json['leave_type'];
+    amount = json['amount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -42,6 +45,7 @@ class Leave {
     data['leave_id'] = this.leaveId;
     data['company_id'] = this.companyId;
     data['leave_type'] = this.leaveType;
+    data['amount'] = this.amount;
     return data;
   }
 }

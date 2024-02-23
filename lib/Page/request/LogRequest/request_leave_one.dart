@@ -1,11 +1,14 @@
 import 'dart:developer';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/APIServices/RequestleaveService/get_DocOne/get_DocOne.dart';
-import 'package:eztime_app/Components/APIServices/RequestleaveService/get_pic_doc/get_pic_doc.dart';
 import 'package:eztime_app/Components/DiaLog/SnackBar/Sanckbar.dart';
+import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
 import 'package:eztime_app/Model/Get_Model/leave/get_DocOne_Model/get_DocOne_Model.dart';
+import 'package:eztime_app/controller/APIServices/RequestleaveService/approve_doc/approve.dart';
+import 'package:eztime_app/controller/APIServices/RequestleaveService/get_DocOne/get_DocOne.dart';
+import 'package:eztime_app/controller/APIServices/RequestleaveService/get_pic_doc/get_pic_doc.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,19 +63,40 @@ class _Request_leave_pageState extends State<Request_leave_page> {
     }
   }
 
+  Future delect_doc(id, status, tokenD) async {
+    setState(() {
+      loading = true;
+    });
+    try {
+      var response = Approve_Service().model(id, status, tokenD);
+      if (response == 200) {
+        Dialog_Tang().approveSuccessdialog(context);
+      } else {
+        Dialog_Tang().falsedialog(context);
+      }
+    } catch (e) {
+      Dialog_Tang().interneterrordialog(context);
+      log(e.toString());
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return loading
         ? Loading()
         : Scaffold(
             appBar: AppBar(
-              title: Text('รายการขอลา'),
+              title: Text('Leaverequestlist.title').tr(),
             ),
             body: ListView.builder(
                 itemCount: docList.length,
                 itemBuilder: (context, index) {
                   String status;
-                  var approveName = docList[index].approveName;
+                  var docLeaveApprove = docList[index].docLeaveApprove;
                   var indentStatus = docList[index].status;
                   if (indentStatus == 'W') {
                     status = 'รออนุมัติ';
@@ -146,34 +170,59 @@ class _Request_leave_pageState extends State<Request_leave_page> {
                                           thickness: 1,
                                           indent: 5,
                                           endIndent: 5),
-                                      Text(
-                                          'ชื่อ - สกุล: ${docList[index].employee!.firstName} ${docList[index].employee!.lastName}'),
-                                      SizedBox(
-                                        height: 5,
+                                      Wrap(
+                                        children: [
+                                          Text('Leaverequestlist.name').tr(),
+                                          Text(
+                                              ' ${docList[index].employee!.firstName} ${docList[index].employee!.lastName}'),
+                                        ],
                                       ),
-                                      Text(
-                                          'เวลาเริ่มต้น: ${docList[index].startDate} ${docList[index].startTime}'),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                          'เวลาสิ้นสุด: ${docList[index].endDate} ${docList[index].endTime}'),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                          'ประเภทการลา: ${docList[index].approveBy}'),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                          'รายละเอียด: ${docList[index].description}'),
                                       SizedBox(
                                         height: 5,
                                       ),
                                       Wrap(
                                         children: [
-                                          Text('สถานะ: '),
+                                          Text('Leaverequestlist.starttime').tr(),
+                                          Text(
+                                              ' ${docList[index].startDate} ${docList[index].startTime}'),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text('Leaverequestlist.endTime').tr(),
+                                          Text(
+                                              ' ${docList[index].endDate} ${docList[index].endTime}'),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text('Leaverequestlist.Leavetype').tr(),
+                                          Text(
+                                              ' ${docList[index].leave!.leaveType}'),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text('Leaverequestlist.details').tr(),
+                                          Text(
+                                              ' ${docList[index].description}'),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Wrap(
+                                        children: [
+                                          Text('Leaverequestlist.status').tr(),
                                           Text('$status',
                                               style: TextStyle(
                                                   color: indentStatus == 'W'
@@ -190,7 +239,7 @@ class _Request_leave_pageState extends State<Request_leave_page> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text('รูปภาพ: '),
+                                          Text('Leaverequestlist.picture').tr(),
                                           IconButton(
                                               onPressed: () async {
                                                 var bytes;
@@ -235,22 +284,32 @@ class _Request_leave_pageState extends State<Request_leave_page> {
                                               )),
                                         ],
                                       ),
-                                      Text('ผู้มีสิทธิ อนุมัติ:'),
+                                      Text('Leaverequestlist.Person with approval').tr(),
                                       ListView.builder(
                                           shrinkWrap: true,
                                           padding: EdgeInsets.zero,
-                                          itemCount: approveName!.length,
+                                          itemCount: docLeaveApprove!.length,
                                           itemBuilder: (context, index) {
+                                            String appoveStatus;
+                                            var appeoveStatus =
+                                                docLeaveApprove[index].status;
+                                            if (appeoveStatus == 'W') {
+                                              appoveStatus = 'รออนุมัติ';
+                                            } else if (appeoveStatus == 'A') {
+                                              appoveStatus = 'อนุมัติเเล้ว';
+                                            } else {
+                                              appoveStatus = 'ไม่อนุมัติ';
+                                            }
                                             return ListTile(
                                               contentPadding: EdgeInsets.zero,
                                               dense: true,
                                               leading: Text(
-                                                  '${approveName[index].firstName} ${approveName[index].lastName}'),
-                                              trailing: Text('$status',
+                                                  '${docLeaveApprove[index].approveFname} ${docLeaveApprove[index].approveLname}'),
+                                              trailing: Text('$appoveStatus',
                                                   style: TextStyle(
-                                                      color: indentStatus == 'W'
+                                                      color: appeoveStatus == 'W'
                                                           ? Colors.amber
-                                                          : indentStatus == 'A'
+                                                          : appeoveStatus == 'A'
                                                               ? Colors.green
                                                               : Colors.red)),
                                             );
@@ -259,46 +318,40 @@ class _Request_leave_pageState extends State<Request_leave_page> {
                                     ],
                                   ),
                                 ),
-                                // approveList[index].status == 'A' ||
-                                //         approveList[index].status == 'N'
-                                //     ? Container()
-                                //     : ButtonTwoAppprove(
-                                //         onPressBtSucess: () async {
-                                //           try {
-                                //             setState(() {
-                                //               loading = true;
-                                //             });
-                                //                String statuscode = 'A';
-                                //           var response =
-                                //               await Approve_Service()
-                                //                   .model(
-                                //                       approveList[index]
-                                //                           .docLId
-                                //                           .toString(),
-                                //                           statuscode,
-                                //                       token
-                                //                       );
-                                //           if (response == 200) {
-                                //             SharedPrefs();
-                                //             Dialog_Tang()
-                                //                 .approveSuccessdialog(
-                                //                     context);
-                                //           } else {
-                                //             Dialog_Tang()
-                                //                 .falsedialog(context);
-                                //           }
-                                //           } catch (e) {
-                                //             Dialog_Tang().interneterrordialog(context);
-                                //             log(e.toString());
-                                //           }finally{
-                                //             setState(() {
-                                //               loading = false;
-                                //             });
-                                //           }
-
-                                //         },
-                                //         onPressBtcal: () {},
-                                //       ),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.25,
+                                  height: 40,
+                                  child: ElevatedButton.icon(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.red)),
+                                    icon: Icon(Icons.close, size: 12),
+                                    label: Text(
+                                      'buttons.cancle',
+                                      style: TextStyle(fontSize: 10),
+                                    ).tr(),
+                                    onPressed: () async {
+                                      AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.error,
+                                        animType: AnimType.rightSlide,
+                                        title: 'แจ้งเตือน',
+                                        desc: 'ต้องการยกลิกใช่หรือไม่',
+                                        btnCancelText: 'ยกเลิก',
+                                        btnCancelOnPress: () {},
+                                        btnOkText: 'ตกลง',
+                                        btnOkOnPress: () {
+                                          delect_doc(
+                                              docList[index].docLId.toString(),
+                                              status,
+                                              token);
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
                                 SizedBox(
                                   height: 10,
                                 )

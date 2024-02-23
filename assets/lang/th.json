@@ -8,7 +8,7 @@
     "More": "เพิ่มเติม...",
     "Request leave": "ขออนุมัติลา",
     "Get approval, Ot": "ขออนุมัติโอที",
-    "Watch the Ot log": "ดูบันทึกโอที",
+    "Watch the Ot log": "อนุมัติวันทำงาน",
     "Improve Uptime": "ปรับปรุงเวลาทำงาน(ลืมแสกน)",
     "news information":"แจ้งเตือน",
     "loginSuccess": "เข้าสู่ระบบสำเร็จ",
@@ -62,7 +62,7 @@
     "AddImage":"เพิ่มรูปภาพ"
   },
   "Watch the Ot log": {
-    "title": "ดูบันทึกโอที",
+    "title": "อนุมัติวันทำงาน",
     "Choose a time period": "เลือกช่วงเวลา"
   },
   "Get approval, Ot": {
@@ -95,7 +95,10 @@
     "ConfirmPassword": "ยืนยันรหัสผ่านใหม่"
   },
   "buttons": {
-    "Save": "บันทึก"
+    "Save": "บันทึก",
+    "out": "ออก",
+    "in":"เข้า",
+    "cancle":"ยกเลิก"
   },
   "Notification": {
     "title": "การเเจ้งเตือน"
@@ -108,8 +111,34 @@
     "position":"ตำแหน่งปัจจุบัน",
     "image":"รูปภาพ"
   },
-  "Information":{
-    "title":"ข้อมูลข่าวสาร"
+  "Leaverequestlist":{
+    "title":"รายการขอลา",
+    "name":"ชื่อ - สกุล:",
+    "starttime":"เวลาเริ่มต้น:",
+    "endTime":"เวลาสิ้นสุด:",
+    "Leavetype":"ประเภทการลา:",
+    "details":"รายละเอียด:",
+    "status":"สถานะ:",
+    "picture":"รูปภาพ:",
+    "Person with approval":"ผู้มีสิทธิอนุมัติ:"
+  },
+  "OTrequestlist":{
+"titile":"รายการขอโอที",
+"name":"ชื่อ - สกุล:",
+"starttime":"เวลาเริ่มต้น:",
+"endTime":"เวลาสิ้นสุด:",
+"Leavetype":"ประเภทการลา:",
+"details":"รายละเอียด:",
+"status":"สถานะ:",
+"Person with approval":"ผู้มีสิทธิอนุมัติ:"
+  },
+  "Check in-out":{
+    "title":"ข้อมูลการเข้า-ออกงาน",
+    "workingday":"วันที่ทำงาน:",
+    "Timetowork":"เวลาเข้างาน:",
+    "Lateforwork":"เข้างานสาย:",
+    "Timeoffwork":"เวลาออกงาน:",
+    "min":"นาที"
   },
   "salary_calculation":{
     "title":"สรุปเงินเดือน",

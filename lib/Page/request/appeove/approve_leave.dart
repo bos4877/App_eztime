@@ -1,14 +1,14 @@
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/APIServices/RequestleaveService/GetLeave/getleave.dart';
-import 'package:eztime_app/Components/APIServices/RequestleaveService/approve_doc/approve.dart';
-import 'package:eztime_app/Components/APIServices/RequestleaveService/get_pic_doc/get_pic_doc.dart';
 import 'package:eztime_app/Components/DiaLog/ButtonApprov/ButtonsTwoApprov.dart';
+import 'package:eztime_app/Components/DiaLog/SnackBar/Sanckbar.dart';
 import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
 import 'package:eztime_app/Model/Get_Model/leave/get_leave/get_leave_Model.dart';
+import 'package:eztime_app/controller/APIServices/RequestleaveService/GetLeave/getleave.dart';
+import 'package:eztime_app/controller/APIServices/RequestleaveService/approve_doc/approve.dart';
+import 'package:eztime_app/controller/APIServices/RequestleaveService/get_pic_doc/get_pic_doc.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -51,15 +51,14 @@ class _approve_leave_pageState extends State<approve_leave_page> {
       });
     }
   }
-  onGoblack()async{
+
+  onGoblack() async {
     try {
       await shareprefs();
     } catch (e) {
-      
-    }finally{
+    } finally {
       Dialog_Tang().interneterrordialog(context);
     }
-
   }
 
   @override
@@ -73,6 +72,7 @@ class _approve_leave_pageState extends State<approve_leave_page> {
             body: ListView.builder(
                 itemCount: approveList.length,
                 itemBuilder: (context, index) {
+                  var docotApprove = approveList[index].docLeaveApprove;
                   String status;
                   var indentStatus = approveList[index].status;
                   if (indentStatus == 'W') {
@@ -82,7 +82,7 @@ class _approve_leave_pageState extends State<approve_leave_page> {
                   } else {
                     status = 'ไม่อนุมัติ';
                   }
-                  return approveList[index].status == 'W'
+                  return approveList[index].status == 'W' && docotApprove![0].status == 'W'
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,7 +164,7 @@ class _approve_leave_pageState extends State<approve_leave_page> {
                                               height: 5,
                                             ),
                                             Text(
-                                                'ประเภทการลา: ${approveList[index].approveBy}'),
+                                                'ประเภทการลา: ${approveList[index].leave!.leaveType}'),
                                             SizedBox(
                                               height: 5,
                                             ),
@@ -190,22 +190,75 @@ class _approve_leave_pageState extends State<approve_leave_page> {
                                             SizedBox(
                                               height: 5,
                                             ),
-
-                                           Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                             children: [
-                                              Text('รูปภาพ: '),
-                                               IconButton(
-                                                      onPressed: () async {
-                                                        var service =
-                                                            get_pic_docService();
-                                                        var response =
-                                                            await service.model(
-                                                                token,
-                                                                approveList[index]
-                                                                    .docLId
-                                                                    .toString());
-                                                        Uint8List bytes = response;
+                                            ListView.builder(
+                                                shrinkWrap: true,
+                                                padding: EdgeInsets.zero,
+                                                itemCount: docotApprove!.length,
+                                                itemBuilder: (context, index) {
+                                                  String appoveStatus;
+                                                  var appeoveStatus =
+                                                      docotApprove[index]
+                                                          .status;
+                                                  if (appeoveStatus == 'W') {
+                                                    appoveStatus = 'รออนุมัติ';
+                                                  } else if (appeoveStatus ==
+                                                      'A') {
+                                                    appoveStatus =
+                                                        'อนุมัติเเล้ว';
+                                                  } else {
+                                                    appoveStatus = 'ไม่อนุมัติ';
+                                                  }
+                                                  return ListTile(
+                                                    contentPadding:
+                                                        EdgeInsets.zero,
+                                                    dense: true,
+                                                    leading: Text(
+                                                        '${docotApprove[index].approveFname} ${docotApprove[index].approveLname}'),
+                                                    trailing: Text(
+                                                        '${appoveStatus}',
+                                                        style: TextStyle(
+                                                            color: appeoveStatus ==
+                                                                    'W'
+                                                                ? Colors.amber
+                                                                : appeoveStatus ==
+                                                                        'A'
+                                                                    ? Colors
+                                                                        .green
+                                                                    : Colors
+                                                                        .red)),
+                                                  );
+                                                }),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text('รูปภาพ: '),
+                                                IconButton(
+                                                    onPressed: () async {
+                                                      var bytes;
+                                                      var service =
+                                                          get_pic_docService();
+                                                      var response =
+                                                          await service.model(
+                                                              token,
+                                                              approveList[index]
+                                                                  .docLId
+                                                                  .toString());
+                                                      log(response.toString());
+                                                      if (response ==
+                                                          'ไม่พบรูปภาพ') {
+                                                        Snack_Bar(
+                                                                snackBarColor:
+                                                                    Colors.red,
+                                                                snackBarIcon: Icons
+                                                                    .warning_rounded,
+                                                                snackBarText:
+                                                                    'ไม่มีรูปภาพ')
+                                                            .showSnackBar(
+                                                                context);
+                                                      } else {
+                                                        bytes = response;
                                                         return showDialog(
                                                           context: context,
                                                           builder: (context) {
@@ -213,41 +266,21 @@ class _approve_leave_pageState extends State<approve_leave_page> {
                                                               title: Container(
                                                                 width: 200,
                                                                 height: 200,
-                                                                child: Image.memory(
-                                                                    bytes),
+                                                                child: Image
+                                                                    .memory(
+                                                                        bytes),
                                                               ),
                                                             );
                                                           },
                                                         );
-                                                      },
-                                                      icon: Icon(
-                                                        Icons.image_outlined,
-                                                        size: 40,
-                                                      )),
-                                             ],
-                                           ),
-                                          
-                                            //   Text('ผู้มีสิทธิ อนุมัติ:'),
-                                            //  ListView.builder(
-                                            //   shrinkWrap: true,
-                                            //   padding: EdgeInsets.zero,
-                                            //   itemCount: approveName!.length,
-                                            //     itemBuilder: (context, index) {
-                                            //       return ListTile(
-                                            //         contentPadding: EdgeInsets.zero,
-                                            //         dense: true,
-                                            //         leading: Text(
-                                            //             '${approveName[index].firstName} ${approveName[index].lastName}'),
-                                            //         trailing: Text('$status',
-                                            //             style: TextStyle(
-                                            //                 color: indentStatus == 'W'
-                                            //                     ? Colors.amber
-                                            //                     : indentStatus == 'A'
-                                            //                         ? Colors.green
-                                            //                         : Colors.red)),
-                                            //       );
-                                            //     }
-                                            //   ),
+                                                      }
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.image_outlined,
+                                                      size: 40,
+                                                    )),
+                                              ],
+                                            ),
                                             Divider(),
                                           ],
                                         ),
@@ -261,36 +294,71 @@ class _approve_leave_pageState extends State<approve_leave_page> {
                                                   setState(() {
                                                     loading = true;
                                                   });
-                                                     String statuscode = 'A';
-                                                var response =
-                                                    await Approve_Service()
-                                                        .model(
-                                                            approveList[index]
-                                                                .docLId
-                                                                .toString(),
-                                                                statuscode,
-                                                            token
-                                                            );
-                                                if (response == 200) {
-                                                  shareprefs();
-                                                  Dialog_Tang()
-                                                      .approveSuccessdialog(
-                                                          context);
-                                                } else {
-                                                  Dialog_Tang()
-                                                      .falsedialog(context);
-                                                }
+                                                  String statuscode = 'A';
+                                                  var response =
+                                                      await Approve_Service()
+                                                          .model(
+                                                              approveList[index]
+                                                                  .docLId
+                                                                  .toString(),
+                                                              statuscode,
+                                                              token);
+                                                  if (response == 200) {
+                                                   
+                                                    Dialog_Tang()
+                                                        .approveSuccessdialog(
+                                                            context);
+                                                  } else {
+                                                    Dialog_Tang()
+                                                        .falsedialog(context);
+                                                  }
                                                 } catch (e) {
-                                                  Dialog_Tang().interneterrordialog(context);
+                                                  Dialog_Tang()
+                                                      .interneterrordialog(
+                                                          context);
                                                   log(e.toString());
-                                                }finally{
+                                                } finally {
                                                   setState(() {
+                                                     shareprefs();
                                                     loading = false;
                                                   });
                                                 }
-                                             
                                               },
-                                              onPressBtcal: () {},
+                                              onPressBtNotsuc: () async {
+                                                try {
+                                                  setState(() {
+                                                    loading = true;
+                                                  });
+                                                  String statuscode = 'N';
+                                                  var response =
+                                                      await Approve_Service()
+                                                          .model(
+                                                              approveList[index]
+                                                                  .docLId
+                                                                  .toString(),
+                                                              statuscode,
+                                                              token);
+                                                  if (response == 200) {
+                                                    shareprefs();
+                                                    Dialog_Tang()
+                                                        .approveSuccessdialog(
+                                                            context);
+                                                  } else {
+                                                    Dialog_Tang()
+                                                        .falsedialog(context);
+                                                  }
+                                                } catch (e) {
+                                                  Dialog_Tang()
+                                                      .interneterrordialog(
+                                                          context);
+                                                  log(e.toString());
+                                                } finally {
+                                                  setState(() {
+                                                     shareprefs();
+                                                    loading = false;
+                                                  });
+                                                }
+                                              },
                                             ),
                                       SizedBox(
                                         height: 10,

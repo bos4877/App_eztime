@@ -1,9 +1,9 @@
-class get_doc_leavelist_one {
+class get_doc_leavelist_one_Model {
   List<DocList>? docList;
 
-  get_doc_leavelist_one({this.docList});
+  get_doc_leavelist_one_Model({this.docList});
 
-  get_doc_leavelist_one.fromJson(Map<String, dynamic> json) {
+  get_doc_leavelist_one_Model.fromJson(Map<String, dynamic> json) {
     if (json['doc_list'] != null) {
       docList = <DocList>[];
       json['doc_list'].forEach((v) {
@@ -32,13 +32,10 @@ class DocList {
   String? companyId;
   String? description;
   String? createAt;
-  Leave? leave;
   String? status;
-  String? approveBy;
-  String? status2;
-  String? approveBy2;
+  Leave? leave;
+  List<DocLeaveApprove>? docLeaveApprove;
   Employee? employee;
-  List<ApproveName>? approveName;
 
   DocList(
       {this.docLId,
@@ -51,13 +48,10 @@ class DocList {
       this.companyId,
       this.description,
       this.createAt,
-      this.leave,
       this.status,
-      this.approveBy,
-      this.status2,
-      this.approveBy2,
-      this.employee,
-      this.approveName});
+      this.leave,
+      this.docLeaveApprove,
+      this.employee});
 
   DocList.fromJson(Map<String, dynamic> json) {
     docLId = json['doc_l_id'];
@@ -70,20 +64,17 @@ class DocList {
     companyId = json['company_id'];
     description = json['description'];
     createAt = json['create_at'];
-    leave = json['Leave'] != null ? new Leave.fromJson(json['Leave']) : null;
     status = json['status'];
-    approveBy = json['approve_by'];
-    status2 = json['status2'];
-    approveBy2 = json['approve_by2'];
+    leave = json['Leave'] != null ? new Leave.fromJson(json['Leave']) : null;
+    if (json['Doc_Leave_Approve'] != null) {
+      docLeaveApprove = <DocLeaveApprove>[];
+      json['Doc_Leave_Approve'].forEach((v) {
+        docLeaveApprove!.add(new DocLeaveApprove.fromJson(v));
+      });
+    }
     employee = json['Employee'] != null
         ? new Employee.fromJson(json['Employee'])
         : null;
-    if (json['approve_name'] != null) {
-      approveName = <ApproveName>[];
-      json['approve_name'].forEach((v) {
-        approveName!.add(new ApproveName.fromJson(v));
-      });
-    }
   }
 
   Map<String, dynamic> toJson() {
@@ -98,18 +89,16 @@ class DocList {
     data['company_id'] = this.companyId;
     data['description'] = this.description;
     data['create_at'] = this.createAt;
+    data['status'] = this.status;
     if (this.leave != null) {
       data['Leave'] = this.leave!.toJson();
     }
-    data['status'] = this.status;
-    data['approve_by'] = this.approveBy;
-    data['status2'] = this.status2;
-    data['approve_by2'] = this.approveBy2;
+    if (this.docLeaveApprove != null) {
+      data['Doc_Leave_Approve'] =
+          this.docLeaveApprove!.map((v) => v.toJson()).toList();
+    }
     if (this.employee != null) {
       data['Employee'] = this.employee!.toJson();
-    }
-    if (this.approveName != null) {
-      data['approve_name'] = this.approveName!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -144,6 +133,28 @@ class Leave {
   }
 }
 
+class DocLeaveApprove {
+  String? approveFname;
+  String? approveLname;
+  String? status;
+
+  DocLeaveApprove({this.approveFname, this.approveLname, this.status});
+
+  DocLeaveApprove.fromJson(Map<String, dynamic> json) {
+    approveFname = json['approve_fname'];
+    approveLname = json['approve_lname'];
+    status = json['status'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['approve_fname'] = this.approveFname;
+    data['approve_lname'] = this.approveLname;
+    data['status'] = this.status;
+    return data;
+  }
+}
+
 class Employee {
   String? firstName;
   String? lastName;
@@ -151,24 +162,6 @@ class Employee {
   Employee({this.firstName, this.lastName});
 
   Employee.fromJson(Map<String, dynamic> json) {
-    firstName = json['first_name'];
-    lastName = json['last_name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
-    return data;
-  }
-}
-class ApproveName {
-  String? firstName;
-  String? lastName;
-
-  ApproveName({this.firstName, this.lastName});
-
-  ApproveName.fromJson(Map<String, dynamic> json) {
     firstName = json['first_name'];
     lastName = json['last_name'];
   }

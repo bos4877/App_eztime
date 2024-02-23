@@ -1,14 +1,15 @@
 // ignore_for_file: unused_import
 import 'dart:developer';
 
-import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.dart';
+import 'package:eztime_app/Page/NotiFications/NotiFications_Detail.dart';
+import 'package:eztime_app/controller/APIServices/LoginServices/LoginApiService.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   log("BackgroundMessage : ${"Title : ${message.notification?.title}, \n" "Body : ${message.notification?.body}, \n" "Data : ${message.data}"}");
+
 }
 
 class NotificationService {
@@ -16,7 +17,7 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  Future<void> handleMessage(RemoteMessage message) async {
+  Future<void> handleMessage(RemoteMessage message,) async {
     
     BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
       message.notification!.body.toString(),
@@ -46,11 +47,12 @@ class NotificationService {
     NotificationDetails platformChannel =
         NotificationDetails(android: androidChannel, iOS: iosChannel);
 
-    await flutterLocalNotificationsPlugin.show(1, message.notification?.title,
-    
+    await flutterLocalNotificationsPlugin.show(1, 
+    message.notification?.title,
         message.notification?.body, platformChannel,
         payload: message.data['body']);
     log("ForegroundMessage : ${"Title : ${message.notification?.title}, \n" "Body : ${message.notification?.body}, \n" "Data : ${message.data}"}");
+
   }
 
   Future<void> notification() async {
@@ -87,9 +89,8 @@ class NotificationService {
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
         
-        log('${details.notificationResponseType}');
+        log('notificationResponseType: ${details.notificationResponseType}');
  
-        // bottomController.ontapItem(2);
       },
     );
 
@@ -100,4 +101,6 @@ class NotificationService {
   stopNoti()async{
     await messaging.requestPermission(alert: false, badge: true, sound: true,announcement: true,);
   }
+
+
 }

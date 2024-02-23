@@ -60,12 +60,8 @@ class Dialog_Tang extends StatelessWidget {
       dialogType: DialogType.success,
       animType: AnimType.rightSlide,
       title: 'แจ้งเตือน',
-      desc: 'อนุมัติสำเร็จ',
+      desc: 'สำเร็จ',
       autoHide: Duration(seconds: 2),
-      // dismissOnTouchOutside: false,
-      // onDismissCallback: (type) {
-      //   Navigator.of(context).pop(type);
-      // },
     )..show();
   }
 

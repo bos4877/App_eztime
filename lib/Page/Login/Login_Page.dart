@@ -7,7 +7,6 @@ import 'dart:isolate';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.dart';
 import 'package:eztime_app/Components/Background/Background.dart';
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/DiaLog/SnackBar/Sanckbar.dart';
@@ -19,6 +18,7 @@ import 'package:eztime_app/Model/Login/Login_Model.dart';
 import 'package:eztime_app/Model/ResetToken/ResetToken_Model.dart';
 import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
 import 'package:eztime_app/Page/Home/HomePage.dart';
+import 'package:eztime_app/controller/APIServices/LoginServices/LoginApiService.dart';
 import 'package:eztime_app/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -205,7 +205,7 @@ class _Login_PageState extends State<Login_Page> {
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.zero,
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Colors.blue,),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       border: OutlineInputBorder(

@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
-import 'package:eztime_app/Model/Get_Model/gettimeattendent/get_attendent_employee_one_model.dart';
+import 'package:eztime_app/Model/Get_Model/gettimeattendent/get_attendent_employee_month_shift.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +18,7 @@ class Information_login extends StatefulWidget {
 class _Information_loginState extends State<Information_login> {
   List<String> _months = DateFormat.MMMM().dateSymbols.MONTHS.toList();
   List<AttendanceData> attendanceData = [];
+  List _itemstatusIn = [];
   int _selectedYear = DateTime.now().year;
   bool loading = false;
   int? _selectedMonth;
@@ -55,12 +56,12 @@ class _Information_loginState extends State<Information_login> {
       setState(() {
         loading = true;
       });
-      String url = '${connect_api().domain}/get_attendent_employee_one_shift';
+      String url = '${connect_api().domain}/get_attendent_employee_month_shift';
       var response = await Dio().post(url,
           options: Options(headers: {'Authorization': 'Bearer $token'}));
       if (response.statusCode == 200) {
-        get_attendent_employee_one_model json =
-            get_attendent_employee_one_model.fromJson(response.data);
+        get_attendent_employee_month_Modedl json =
+            get_attendent_employee_month_Modedl.fromJson(response.data);
         attendanceData = json.attendanceData!;
       } else {}
     } catch (e) {
@@ -71,37 +72,80 @@ class _Information_loginState extends State<Information_login> {
     }
   }
 
-  _onRefresh() {}
+  _onRefresh() async {
+    await shareprefs();
+  }
 
   @override
   Widget build(BuildContext context) {
     return loading
         ? Loading()
         : Scaffold(
-            appBar: AppBar(title: Text('ข้อมูลการเข้า-ออกงาน')),
+            appBar: AppBar(title: Text('Check in-out.title').tr()),
             body: RefreshIndicator(
                 onRefresh: () => _onRefresh(),
                 child: ListView.builder(
                   itemCount: attendanceData.length,
                   itemBuilder: (context, index) {
+                    attendanceData.any((element) =>
+                        element.createAt!.split('T').first ==
+                        element.createAt!.split('T').first);
                     return Card(
                       margin: EdgeInsets.all(16),
                       child: Column(
                         children: [
                           Container(
+                            // color: attendanceData[index]. Colors.white,
                             width: double.infinity,
                             padding: EdgeInsets.all(8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 10),
-                                  Text('วันที่ทำงาน: ${attendanceData[index].createAt!.split('T').first}'),
-                                  Text('เวลาเข้างาน: ${attendanceData[index].timeInput}'),
-                                  Text('เข้างานสาย: ${attendanceData[index].late} นาที'),
-                                  Text('เวลาออกงาน:')
-                                ],
-                              ),
-                            
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 10),
+                                Wrap(
+                                  children: [
+                                    Text('Check in-out.workingday').tr(),
+                                    Text(
+                                        ' ${attendanceData[index].createAt!.split('T').first}')
+                                  ],
+                                ),
+                                attendanceData[index].status == 'in'
+                                    ? Wrap(
+                                        children: [
+                                          Text('Check in-out.Timetowork')
+                                              .tr(),
+                                          Text(' ${attendanceData[index].timeInput}')
+                                        ],
+                                      )
+                                    : Container(),
+                                Wrap(
+                                  children: [
+                                    Text('Check in-out.Lateforwork')
+                                        .tr(),
+                                        Text(' ${attendanceData[index].late} '),
+                                        Text('Check in-out.min').tr()
+                                  ],
+                                ),
+                                attendanceData[index].status == 'out'
+                                    ? Row(
+                                      children: [
+                                        Text('Check in-out.Timeoffwork')
+                                            .tr(),
+                                            Text(' ${attendanceData[index].timeInput}')
+                                      ],
+                                    )
+                                    : Container()
+                                // ListView.builder(
+                                //   itemCount: attendanceData.length,
+                                //   itemBuilder: (context, index) {
+                                //     return attendanceData[index].status ==
+                                //             'out'
+                                //         ? Container()
+                                //         :
+                                //   },
+                                // )
+                              ],
+                            ),
                           ),
                         ],
                       ),

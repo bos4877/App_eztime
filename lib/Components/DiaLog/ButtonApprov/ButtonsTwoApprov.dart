@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class ButtonTwoAppprove extends StatelessWidget {
   final VoidCallback onPressBtSucess;
-  final VoidCallback onPressBtcal;
-  const ButtonTwoAppprove({super.key,required this.onPressBtSucess,required this.onPressBtcal});
+  final VoidCallback onPressBtNotsuc;
+  const ButtonTwoAppprove({super.key,required this.onPressBtSucess,required this.onPressBtNotsuc});
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +31,12 @@ class ButtonTwoAppprove extends StatelessWidget {
           child: ElevatedButton.icon(
               style: ButtonStyle(
                   backgroundColor: MaterialStatePropertyAll(Colors.red)),
-              onPressed: onPressBtcal,
+              onPressed: onPressBtNotsuc,
               icon: Icon(Icons.close, size: 12),
               label: Text('ไม่อนุมัติ',
                 style: TextStyle(fontSize: 9),)),
-        )
+        ),
+
       ],
     );
   }

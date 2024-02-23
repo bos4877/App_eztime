@@ -5,7 +5,6 @@ import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.dart';
 import 'package:eztime_app/Components/Security/Pin_Code.dart';
 import 'package:eztime_app/Components/Them/Them.dart';
 import 'package:eztime_app/Model/ResetToken/ResetToken_Model.dart';
@@ -16,6 +15,7 @@ import 'package:eztime_app/Page/Login/SetDomain_Page.dart';
 import 'package:eztime_app/Page/NotiFications/NotiFications.dart';
 import 'package:eztime_app/Page/Splasscreen/Face_data_Page.dart';
 import 'package:eztime_app/Test.dart';
+import 'package:eztime_app/controller/APIServices/LoginServices/LoginApiService.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -42,12 +42,10 @@ void main() async {
   await WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
-  await LoginApiService().fetchData();
   NotificationService().notification();
   DartPluginRegistrant.ensureInitialized();
   initializeDateFormatting();
   MyHttpOverrides();
-  // Intl.defaultLocale = "th";
   AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings(
           'logo_notification'); // แทนที่ด้วยชื่อไอคอนของแอปของคุณ
@@ -82,7 +80,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
@@ -108,8 +105,10 @@ Future<Widget> checkAppStatus(String? _token , var pincode) async {
   // var prefs = await SharedPreferences.getInstance();
   if (_token != null) {
     if (pincode != null) {
+        await LoginApiService().fetchData();
       return Pin_code();
     } else {
+        await LoginApiService().fetchData();
       return  BottomNavigationBar_Page();
     }
   } else {

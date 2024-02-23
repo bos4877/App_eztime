@@ -7,9 +7,6 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/APIServices/LoginServices/LoginApiService.dart';
-import 'package:eztime_app/Components/APIServices/ProFileServices/ProfileService.dart';
-import 'package:eztime_app/Components/APIServices/getFaceRecog/getFaceRecog.dart';
 import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
@@ -20,15 +17,17 @@ import 'package:eztime_app/Model/Connect_Api.dart';
 import 'package:eztime_app/Model/Get_Model/face/getFaceRecog_Model/getFaceRecog_Model.dart';
 import 'package:eztime_app/Model/Get_Model/get_Profile/Profile_Model.dart';
 import 'package:eztime_app/Model/Login/Login_Model.dart';
+import 'package:eztime_app/Page/Home/Drawer/Drawer.dart';
 import 'package:eztime_app/Page/Home/HomePage.dart';
-import 'package:eztime_app/Page/Home/Setting/Drawer.dart';
 import 'package:eztime_app/Page/Home/Setting/Show_time_information.dart';
 import 'package:eztime_app/Page/Home/promble.dart';
 import 'package:eztime_app/Page/Login/Login_Page.dart';
 import 'package:eztime_app/Page/NotiFications/NotiFications_Detail.dart';
 import 'package:eztime_app/Page/Splasscreen/Face_data_Page.dart';
-import 'package:eztime_app/Page/request/improve_uptime.dart';
 import 'package:eztime_app/Page/work/Set_work.dart';
+import 'package:eztime_app/controller/APIServices/LoginServices/LoginApiService.dart';
+import 'package:eztime_app/controller/APIServices/ProFileServices/ProfileService.dart';
+import 'package:eztime_app/controller/APIServices/getFaceRecog/getFaceRecog.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
@@ -72,7 +71,15 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
     Home_Page(),
     Information_login(),
     NotiFications_Detail_Page(),
+    Container()
   ];
+  //    void _navigateToNotificationScreen(BuildContext context, RemoteMessage message) {
+  //   // เปลี่ยนหน้าจอเมื่อมีการคลิกที่ Notification
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => NotiFications_Detail_Page(notificationData: message,)),
+  //   );
+  // }
   var _profileService = get_profile_service();
   Future getprofile() async {
     setState(() {
@@ -161,7 +168,8 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
             bottomNavigationBar: AnimatedBottomNavigationBar.builder(
                 activeIndex: _bottomNavIndex,
                 itemCount: iconList.length,
-                gapLocation: GapLocation.center,
+
+                gapLocation: GapLocation.none,
                 notchSmoothness: NotchSmoothness.defaultEdge,
                 onTap: (index) {
                   index == 3
@@ -169,7 +177,8 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
                       : setState(() {
                           log('index:${index}');
                           if (index == 1) {
-                            if (_profilelist[0].role == '') {
+                            if (_profilelist
+                             [0].role == '') {
                               index = 1;
                             } else {
                               _bottomNavIndex = index;

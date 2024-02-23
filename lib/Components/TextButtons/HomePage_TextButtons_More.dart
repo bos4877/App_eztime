@@ -5,23 +5,21 @@ import 'package:flutter/material.dart';
 
 class TextButtons_More extends StatelessWidget {
   String title;
-  Widget page;
   String imagePath;
   final notificationCount;
+  final VoidCallback onPres;
   TextButtons_More(
       {super.key,
       required this.title,
-      required this.page,
       required this.imagePath,
-      this.notificationCount
+      required this.onPres,
+      this.notificationCount,
       });
 
   @override
   Widget build(BuildContext context) {
     return  notificationCount == 0 || notificationCount == null ? TextButton(
-        onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => page,
-        )),
+        onPressed: onPres,
         child: Container(
           width: double.infinity,
           child: Row(
@@ -44,9 +42,7 @@ class TextButtons_More extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
       child: TextButton(
-        onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => page,
-        )),
+        onPressed: onPres,
         child: Container(
           width: double.infinity,
           child: Row(

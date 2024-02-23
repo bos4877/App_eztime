@@ -8,12 +8,12 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 // import 'package:buddhist_datetime_dateformat_sns/buddhist_datetime_dateformat_sns.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/APIServices/checkface/checkface.dart';
 import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
 import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
 import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
 import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
+import 'package:eztime_app/controller/APIServices/checkface/checkface.dart';
 // import 'package:eztime_app/Page/HomePage/controllers/HomePage_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -78,14 +78,14 @@ class _Set_workState extends State<Set_work> {
     radius = await double.parse(widget.radius);
   }
 
-  Future checkIn(lat, lng) async {
+  Future checkIn(lat, lng, status) async {
     try {
       setState(() {
         loading = true;
       });
       String url = '${connect_api().domain}/checkIn';
       var response = await Dio().post(url,
-          data: {"lat": lat, "lng": lng, "time": "", "status": ""},
+          data: {"lat": lat, "lng": lng, "time": "", "status": "$status"},
           options: Options(headers: {'Authorization': 'Bearer $token'}));
       if (response.statusCode == 200) {
         setState(() {
@@ -99,14 +99,12 @@ class _Set_workState extends State<Set_work> {
       if (e is DioError) {
         if (e.response!.statusCode == 517) {
           Dialog_Tang().worktimefaildialog(context);
-        } else {
-          
-        }
+        } else {}
       } else {
         // Handle other exceptions
         print("Error: $e");
       }
-    }finally{
+    } finally {
       setState(() {
         loading = false;
       });
@@ -175,15 +173,25 @@ class _Set_workState extends State<Set_work> {
             appBar: AppBar(
               title: Text('Set_work.title').tr(),
             ),
-            bottomNavigationBar: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.3,
-                  vertical: MediaQuery.of(context).size.height * 0.01),
-              child: Buttons(
-                  title: 'buttons.Save'.tr(),
-                  press: () {
-                    checkIn(latitude, longitude);
-                  }),
+            bottomNavigationBar: Container(
+              padding: EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Buttons(
+                      title: 'buttons.in'.tr(),
+                      press: () {
+                        String status = 'in';
+                        checkIn(latitude, longitude, status);
+                      }),
+                  Buttons(
+                      title: 'buttons.out'.tr(),
+                      press: () {
+                        String status = 'out';
+                        checkIn(latitude, longitude, status);
+                      }),
+                ],
+              ),
             ),
             body: latitude == null && longitude == null
                 ? Center(child: CircularProgressIndicator())
@@ -289,8 +297,8 @@ class _Set_workState extends State<Set_work> {
                                               circles: Set<Circle>.of([
                                                 Circle(
                                                   circleId: CircleId("1"),
-                                                  center: LatLng(13.6953089,
-                                                      100.6417445), // ตำแหน่งศูนย์กลางวงกลม (ละติจูด, ลองจิจูด)
+                                                  center: LatLng(latitude,
+                                                      longitude), // ตำแหน่งศูนย์กลางวงกลม (ละติจูด, ลองจิจูด)
                                                   radius:
                                                       radius, // รัศมีของวงกลมในหน่วยเมตร
                                                   fillColor: Colors.blue
@@ -302,8 +310,7 @@ class _Set_workState extends State<Set_work> {
                                                       2, // ความกว้างของเส้นของวงกลม
                                                 )
                                               ]), // เพิ่มเข้าไปใน circles
-                                              onMapCreated: (GoogleMapController
-                                                  controller) {
+                                              onMapCreated: (controller) {
                                                 _controller
                                                     .complete(controller);
                                               },
@@ -312,6 +319,9 @@ class _Set_workState extends State<Set_work> {
                                         ),
                                   loading ? Loading() : Container()
                                 ])),
-                      ));
+                      ),
+            // floatingActionButtonLocation:
+            //     FloatingActionButtonLocation.centerDocked,
+          );
   }
 }

@@ -9,6 +9,7 @@ import 'package:eztime_app/Components/DiaLog/SnackBar/Sanckbar.dart';
 import 'package:eztime_app/Components/TextStyle/StyleText.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
 import 'package:eztime_app/Model/ResetToken/ResetToken_Model.dart';
+import 'package:eztime_app/Page/Home/Drawer/Dayoff_page.dart';
 import 'package:eztime_app/Page/Home/Profile/Profile_Page.dart';
 import 'package:eztime_app/Page/Home/Setting/Setting_Page.dart';
 import 'package:eztime_app/Page/Home/Setting/Show_time_information.dart';
@@ -35,6 +36,9 @@ class _MyDrawerState extends State<MyDrawer> {
   var _acessToken;
   var _resetToken;
   var _New_Token;
+  var fname;
+  var lname;
+  var userid;
   var ip;
   bool _loading = false;
 
@@ -44,6 +48,9 @@ class _MyDrawerState extends State<MyDrawer> {
       _acessToken = prefs.getString('_acessToken');
       device_token = prefs.getString('_deviceToken');
       _resetToken = prefs.getString('_resetToken');
+      fname = prefs.getString('firstName');
+      lname = prefs.getString('lastName');
+      userid = prefs.getString('userid');
     ip = prefs.getString('ip');
       log(_resetToken);
       log('device_token: ${device_token}');
@@ -123,13 +130,13 @@ class _MyDrawerState extends State<MyDrawer> {
           children: [
             UserAccountsDrawerHeader(
               accountName: Text(
-                "Employee Id.employee Id",
+                "$userid",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ).tr(),
               accountEmail: Text(
-                "Employee Id.Name",
+                "$fname $lname",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -223,6 +230,26 @@ class _MyDrawerState extends State<MyDrawer> {
             ListTile(
               minLeadingWidth: 25,
               horizontalTitleGap: 0,
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => TableBasicsExample(),
+                ));
+              },
+              leading: Image.asset(
+                'assets/icon_easytime/1x/icon_attendance_available.png',
+                color: Colors.blue,
+                scale: 30,
+              ),
+              title: Text(
+                'ปฏิทิน',
+                style: TextStyles.textStyleDrawer,
+                overflow: TextOverflow.ellipsis,
+              ).tr(),
+            ),
+            ListTile(
+              minLeadingWidth: 25,
+              horizontalTitleGap: 0,
               onTap: () async {
                 await Permission.storage.request();
                 PermissionStatus status = await Permission.storage.status;
@@ -289,7 +316,6 @@ class _MyDrawerState extends State<MyDrawer> {
               minLeadingWidth: 25,
               horizontalTitleGap: 0,
               onTap: () {
-                
                 logOutModul();
               },
               leading: Transform(
