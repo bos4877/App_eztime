@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Page/submit_documents/appeove/ot/approve_ot_status/approve_status_n.dart';
+import 'package:eztime_app/Page/submit_documents/request/improve_uptime/improve_uptime_status/request_improve_uptime_status_status_a.dart';
 import 'package:eztime_app/Page/submit_documents/request/improve_uptime/improve_uptime_status/request_improve_uptime_status_status_n.dart';
 import 'package:eztime_app/Page/submit_documents/request/improve_uptime/improve_uptime_status/request_improve_uptime_status_status_w.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +59,7 @@ class _tapbar_request_improve_uptimeState extends State<tapbar_request_improve_u
           children: [
           request_improve_uptime_status_waiting(),
           request_improve_uptime_status_approved(),
-          status_Not_approved_ot()
+          request_improve_uptime_status_not_approved()
         ]));
   }
 }

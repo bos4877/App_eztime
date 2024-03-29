@@ -18,7 +18,7 @@ flutter_native_splash:
 
   # The image parameter allows you to specify an image used in the splash screen.  It must be a
   # png file and should be sized for 4x pixel density.
-  image: "assets/logo_app/Eztime_circle_white.png"
+  image: "assets/Logo_app/Eztime_logo_blue_png.png"
 
   # The branding property allows you to specify an image used as branding in the splash screen.
   # It must be a png file. It is supported for Android, iOS and the Web.  For Android 12,
@@ -57,7 +57,7 @@ flutter_native_splash:
     # image: assets/logo_app/eztime_logo.png
 
     # Splash screen background color.
-    color: "#191970"
+    color: "#FFFFFF"
 
     # App icon background color.
     #icon_background_color: "#111111"

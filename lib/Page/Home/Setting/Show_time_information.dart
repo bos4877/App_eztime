@@ -63,38 +63,38 @@ class _Information_loginState extends State<Information_login> {
   }
 
   Future get_checkin_one_employee() async {
-    try {
+    // try {
+    setState(() {
+      loading = true;
+    });
+    var _mon = _selectedMonth.toString();
+    var formate = formatMonth(_mon);
+    String url = '${connect_api().domain}/GetTimeStampData';
+    var response = await Dio().post(url,
+        data: {"month": "$formate", "year": "$_selectedYear"},
+        options: Options(headers: {'Authorization': 'Bearer $token'}));
+    print("${response.statusCode}");
+    if (response.statusCode == 200) {
       setState(() {
-        loading = true;
-      });
-      var _mon = _selectedMonth.toString();
-      var formate = formatMonth(_mon);
-      String url = '${connect_api().domain}/GetTimeStampData';
-      var response = await Dio().post(url,
-          data: {"month": "$formate", "year": "$_selectedYear"},
-          options: Options(headers: {'Authorization': 'Bearer $token'}));
-          print("${response.statusCode}");
-      if (response.statusCode == 200) {
-        setState(() {
-           get_checkin_out_time_month_model json =
+        get_checkin_out_time_month_model json =
             get_checkin_out_time_month_model.fromJson(response.data);
         _getTimeStampData = json.data!;
-          loading = false;
-        });
-      } else {
-        setState(() {
-          loading = false;
-        });
-      }
-    } catch (e) {
-      setState(() {
         loading = false;
       });
-    } finally {
+    } else {
       setState(() {
         loading = false;
       });
     }
+    // } catch (e) {
+    //   setState(() {
+    //     loading = false;
+    //   });
+    // } finally {
+    //   setState(() {
+    //     loading = false;
+    //   });
+    // }
   }
 
   _onRefresh() async {
@@ -112,16 +112,19 @@ class _Information_loginState extends State<Information_login> {
                 child: ListView.builder(
                   itemCount: _getTimeStampData.length,
                   itemBuilder: (context, index) {
-                    Color _color = Colors.grey;
+                    Color _color = Colors.grey.shade300;
                     var checkin = _getTimeStampData[index].checkinTime;
                     var checkout = _getTimeStampData[index].checkoutTime;
+                    var status = _getTimeStampData[index].isWork;
+                    var _late = _getTimeStampData[index].late; 
                     var _now =
                         _getTimeStampData[index].shiftDate?.split('T').first;
                     var _datetime_now = DateTime.now().toString();
                     var formate_datetime_now = _datetime_now.split(' ').first;
-   
+
                     return Card(
-                      color: Colors.red,
+                      elevation: 10,
+                      color: _color,
                       margin: EdgeInsets.all(5),
                       child: Column(
                         children: [
@@ -144,14 +147,28 @@ class _Information_loginState extends State<Information_login> {
                                   children: [
                                     Text('Check in-out.Timetowork').tr(),
                                     Text(
-                                        ' ${_getTimeStampData[index].checkinTime!.split('T').first}')
+                                        ' ${_getTimeStampData[index].checkinTime!.split('T').last.split(".").first}')
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     Text('Check in-out.Timeoffwork').tr(),
                                     Text(
-                                        ' ${_getTimeStampData[index].checkoutTime!.split('T').first}')
+                                        ' ${_getTimeStampData[index].checkoutTime!.split('T').last.split(".").first}')
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text('สถานะ: ').tr(),
+                                    Text(
+                                        ' ${status == 'true' ? 'มาทำงาน' : 'ไม่ได้มาทำงาน'}')
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text('เวลา: ').tr(),
+                                    Text(
+                                        ' ${_late == 'true' ? 'สาย' : 'ปกติ'}')
                                   ],
                                 )
                               ],

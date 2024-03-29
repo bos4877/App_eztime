@@ -76,6 +76,7 @@ void didChangeDependencies() {
       if (response.statusCode == 200) {
         log('MyDrawerresponse: ${response.data}');
         setState(() {
+          // prefs.clear();
           prefs.remove('_acessToken');
           prefs.remove('_deviceToken');
           prefs.remove('username');
