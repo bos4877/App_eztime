@@ -11,7 +11,7 @@ class Buttons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.35,
+      // width: MediaQuery.of(context).size.width * 0.35,
       height: 40,
       child: ElevatedButton(
           style: TextButton.styleFrom(
@@ -27,7 +27,7 @@ class Buttons extends StatelessWidget {
             title.tr(),
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.normal,
               letterSpacing: 1,
             ),

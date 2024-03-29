@@ -2,7 +2,7 @@
   "homepage": {
     "title": "หน้าหลัก",
     "username": "ชื่อผู้ใช้งาน",
-    "Check in-Check out": "บันทึกเวลา เข้า - ออก งาน",
+    "Check in-Check out": "บันทึกเวลา",
     "Check in": "เข้างาน",
     "Check out": "ออกงาน",
     "More": "เพิ่มเติม...",
@@ -10,45 +10,74 @@
     "Get approval, Ot": "ขออนุมัติโอที",
     "Watch the Ot log": "อนุมัติวันทำงาน",
     "Improve Uptime": "ปรับปรุงเวลาทำงาน(ลืมแสกน)",
-    "news information":"แจ้งเตือน",
+    "news information": "แจ้งเตือน",
     "loginSuccess": "เข้าสู่ระบบสำเร็จ",
     "loginfailed": "ชื่อผู้ใช้งานเเละรหัสผ่านไม่ถูกต้อง",
-    "logout":"ออกจากระบบสำเร็จ",
+    "logout": "ออกจากระบบสำเร็จ",
     "logoutfailed": "ออกจากระบบไม่สำเร็จ : ไม่สามารถเชื่อมต่อได้",
-    "catch":"ไม่สามารถเชื่อมต่อได้",
-    "":""
+    "catch": "ไม่สามารถเชื่อมต่อได้",
+    "errorDivice": "กรุณาออกจากระบบบนอุปกรณ์อื่น",
+    "exit": "กดอีกครั้งเพื่อออก"
   },
-  "Login":{
-    "title":"บริษัท",
-    "name":"บริษัท : ",
-    "next":"ถัดไป",
-    "login":"เข้าสู่ระบบ",
-    "username":"ชื่อผู้ใช้",
-    "password":"รหัสผ่าน"
-      },
-  "Employee information": {
-    "title":"ข้อมูลพนักงาน",
+  "login": {
+    "title": "บริษัท",
+    "name": "บริษัท : ",
+    "next": "ยืนยัน",
+    "check_again": "ตรวจสอบ",
+    "login": "เข้าสู่ระบบ",
+    "username": "ชื่อผู้ใช้",
+    "password": "รหัสผ่าน"
+  },
+  "Profile": {
+    "title": "ข้อมูลพนักงาน",
+    "General_information": "ข้อมูลทั่วไป",
     "employeeId": "รหัสพนักงาน",
     "employeeIdName": "ชื่อ - นามสกุล",
-    "employeeIdCard":"เลขประจำตวประชาชน"
+    "employeeIdCard": "เลขประจำตัวประชาชน",
+    "Mobile_number": "เบอร์มือถือ",
+    "Email": "อีเมล",
+    "Gender": "เพศ",
+    "nationality": "สัญชาติ",
+    "birthday": "วันเกิด",
+    "status": "สถานะ",
+    "company": "บริษัท",
+    "department": "แผนก",
+    "position": "ตำแหน่ง",
+    "Employeetype": "ประเภทพนักงาน",
+    "salary": "เงินเดือน",
+    "Starting_day": "วันเริ่มทำงาน",
+    "Packing_date": "วันที่บรรจุ",
+    "tax": "ภาษี",
+    "Not_data": "ไม่พบข้อมูล",
+    "bank": "ธนาคาร",
+    "bank_number": "เลขบัญชี"
   },
   "Drawer": {
     "Edit": "จัดการข้อมูลพนักงาน",
+    "Report": "รายงาน",
+    "Manage_time": "จัดการเวลา",
+    "offer_Document": "ยื่นเอกสาร",
     "Request leave": "ขออนุมัติลา",
     "Get approval, Ot": "ขออนุมัติโอที",
     "Summarize": "สรปุข้อมูล เข้า-ออกงาน",
     "salary summary": "สรุปเงินเดือน",
     "setting": "ตั้งค่า",
-    "Logout": "ออกจากระบบ"
+    "logout": "ออกจากระบบ"
   },
-  "DiaLog":{
-    "titleinternet":"เเจ้งเตือน",
-    "internet":"เชื่อมต่ออินเตอร์เน็ต",
-    "Allowaccess":"อนุญาตการเข้าถึง",
-    "location":"อนุญาตการเข้าถึงตำแหน่ง",
-    "opensetting":"เปิดตั้งค่า",
-    "cancle":"ยกเลิก",
-    "connect":"เชื่อมต่อ"
+  "Manage_time": {
+    "title": "จัดการเวลา",
+    "working_time": "เวลาการทำงาน",
+    "Calendar": "ปฎิทิน",
+    "ClockIn/Out": "เวลาเข้าออกงาน"
+  },
+  "Dialog": {
+    "titleinternet": "เเจ้งเตือน",
+    "internet": "เชื่อมต่ออินเตอร์เน็ต",
+    "Allowaccess": "อนุญาตการเข้าถึง",
+    "location": "อนุญาตการเข้าถึงตำแหน่ง",
+    "opensetting": "เปิดตั้งค่า",
+    "cancle": "ยกเลิก",
+    "connect": "เชื่อมต่อ"
   },
   "Request leave": {
     "title": "ขออนุมัติลา",
@@ -58,12 +87,23 @@
     "Start Choose a time period": "เลือกช่วงเวลาเริ่มต้น",
     "End Choose a time period": "เลือกช่วงเวลาสิ้นสุด",
     "Pending Items": "รายการที่รออนุมัติ",
-    "Details":"รายละเอียด",
-    "AddImage":"เพิ่มรูปภาพ"
+    "Details": "รายละเอียด",
+    "AddImage": "เพิ่มรูปภาพ"
   },
-  "Watch the Ot log": {
+  "Apporv_Improve_Uptime": {
     "title": "อนุมัติวันทำงาน",
-    "Choose a time period": "เลือกช่วงเวลา"
+    "employeenum": "รหัสพนักงาน: ",
+    "Name": "ชื่อ - สกุล: ",
+    "creat": "วันที่ขอ: ",
+    "date": "วันที่แก้ไข: ",
+    "detail": "รายละเอียด: ",
+    "status": "สถานะ: ",
+    "Approval_authority": "ผู้มีสิทธิ์อนุมัติ",
+    "Waiting_for_approval": "รออนุมัติ",
+    "Approved": "อนุมัติเเล้ว",
+    "Not_approved": "ไม่อนุมัติ",
+    "Approve": "อนุมัติ",
+    "Not Approve": "ไม่อนุมัติ"
   },
   "Get approval, Ot": {
     "title": "ขออนุมัติโอที",
@@ -81,7 +121,7 @@
   "setting": {
     "title": "ตั้งค่า",
     "changeLang": "เปลี่ยนภาษา",
-    "SecuritySettings":"ตั้งค่าความปลอดภัย",
+    "SecuritySettings": "ตั้งค่าความปลอดภัย",
     "ChangePassword": "ตั้งค่ารหัสผ่าน",
     "Notification": "ตั้งค่าการเเจ้งเตือน",
     "on": "เปิด",
@@ -96,9 +136,9 @@
   },
   "buttons": {
     "Save": "บันทึก",
-    "out": "ออก",
-    "in":"เข้า",
-    "cancle":"ยกเลิก"
+    "out": "ออกงาน",
+    "in": "เข้างาน",
+    "cancle": "ยกเลิก"
   },
   "Notification": {
     "title": "การเเจ้งเตือน"
@@ -107,51 +147,135 @@
     "title": "รายละเอียดการเเจ้งเตือน"
   },
   "Set_work": {
-    "title":"work time",
-    "position":"ตำแหน่งปัจจุบัน",
-    "image":"รูปภาพ"
+    "title": "ลงเวลางาน",
+    "position": "ตำแหน่งปัจจุบัน",
+    "image": "รูปภาพ",
+    "name": "ชื่อ - สกุล: ",
+    "EmployeeNo": "รหัสพนักงาน: ",
+    "Company": "บริษัท: ",
+    "department": "ตำแหน่ง: "
   },
-  "Leaverequestlist":{
-    "title":"รายการขอลา",
-    "name":"ชื่อ - สกุล:",
-    "starttime":"เวลาเริ่มต้น:",
-    "endTime":"เวลาสิ้นสุด:",
-    "Leavetype":"ประเภทการลา:",
-    "details":"รายละเอียด:",
-    "status":"สถานะ:",
-    "picture":"รูปภาพ:",
-    "Person with approval":"ผู้มีสิทธิอนุมัติ:"
+  "Leaverequestlist": {
+    "title": "รายการขอลา",
+    "name": "ชื่อ - สกุล:",
+    "starttime": "เวลาเริ่มต้น:",
+    "endTime": "เวลาสิ้นสุด:",
+    "Leavetype": "ประเภทการลา:",
+    "details": "รายละเอียด:",
+    "status": "สถานะ:",
+    "picture": "รูปภาพ:",
+    "Approval_authority": "ผู้มีสิทธิ์อนุมัติ",
+    "Person_With_Approval": "ผู้มีสิทธิอนุมัติ:",
+    "Waiting_for_approval": "รออนุมัติ",
+    "Approved": "อนุมัติเเล้ว",
+    "Not_approved": "ไม่อนุมัติ",
+    "Picture_not_found": "ไม่พบรูปภาพ"
   },
-  "OTrequestlist":{
-"titile":"รายการขอโอที",
-"name":"ชื่อ - สกุล:",
-"starttime":"เวลาเริ่มต้น:",
-"endTime":"เวลาสิ้นสุด:",
-"Leavetype":"ประเภทการลา:",
-"details":"รายละเอียด:",
-"status":"สถานะ:",
-"Person with approval":"ผู้มีสิทธิอนุมัติ:"
+  "Request_Improve_Uptime":{
+    "title": "ขอเพิ่มเวลางาน",
+    "details":"รายละเอียด: ",
+    "shift_date":"กะ: ",
+    "name":"ชื่อ: ",
+    "create_date":"วันที่ขอ: ",
+    "status":"สถานะ: ",
+    "Approval_authority":"ผู้มีสิทธิ์อนุมัติ: "
   },
-  "Check in-out":{
-    "title":"ข้อมูลการเข้า-ออกงาน",
-    "workingday":"วันที่ทำงาน:",
-    "Timetowork":"เวลาเข้างาน:",
-    "Lateforwork":"เข้างานสาย:",
-    "Timeoffwork":"เวลาออกงาน:",
-    "min":"นาที"
+  "Approve_leave": {
+    "tapName": "อนุมัติลา",
+    "title": "รายการขอลา",
+    "name": "ชื่อ - สกุล: ",
+    "starttime": "วันที่ขอ: ",
+    "endTime": "เวลาสิ้นสุด: ",
+    "Leavetype": "ประเภทการลา: ",
+    "details": "รายละเอียด: ",
+    "status": "สถานะ: ",
+    "Approval_authority": "ผู้มีสิทธิ์อนุมัติ",
+    "picture": "รูปภาพ: ",
+    "Person_With_Approval": "ผู้มีสิทธิอนุมัติ: ",
+    "Waiting_for_approval": "รออนุมัติ",
+    "Approved": "อนุมัติเเล้ว",
+    "Not_approved": "ไม่อนุมัติ",
+    "Picture_not_found": "ไม่พบรูปภาพ"
   },
-  "salary_calculation":{
-    "title":"สรุปเงินเดือน",
-    "SelectMount":"เลือกเดือน",
-    "Mount":"เดือน",
-    "Year":"ปี",
-    "SelectYear":"เลือกปี",
-    "Salary":"เงินเดือน :",
-    "Hardship Allowance":"เบี้ยขยัน :",
-    "Absenteeism":"ขาดงาน :",
-    "Social_Security":"ประกันสังคม :",
-    "Received_Salary":"เงินเดือนที่ได้รับ :",
-    "Salary slip":"สลิปเงินเดือน"
-    
+  "OT_request_list": {
+    "tapName": "อนุมัติโอที",
+    "title": "รายการขอโอที",
+    "name": "ชื่อ - สกุล: ",
+    "starttime": "เวลาเริ่มต้น: ",
+    "endTime": "เวลาสิ้นสุด: ",
+    "OTtype": "ประเภทโอที: ",
+    "details": "รายละเอียด: ",
+    "Notdetails": "ไม่มีรายระเอียด",
+    "Approval_authority": "ผู้มีสิทธิ์อนุมัติ",
+    "status": "สถานะ: ",
+    "Person with approval": "ผู้มีสิทธิอนุมัติ:",
+    "Waiting_for_approval": "รออนุมัติ",
+    "Approved": "อนุมัติเเล้ว",
+    "Not_approved": "ไม่อนุมัติ"
+  },
+  "Check in-out": {
+    "title": "ข้อมูลการเข้า-ออกงาน",
+    "workingday": "วันที่ทำงาน:",
+    "Timetowork": "เวลาเข้างาน:",
+    "Lateforwork": "เข้างานสาย:",
+    "Timeoffwork": "เวลาออกงาน:",
+    "min": "นาที"
+  },
+  "salary_calculation": {
+    "title": "สรุปเงินเดือน",
+    "SelectMount": "เลือกเดือน",
+    "Mount": "เดือน",
+    "Year": "ปี",
+    "SelectYear": "เลือกปี",
+    "Salary": "เงินเดือน :",
+    "Hardship Allowance": "เบี้ยขยัน :",
+    "Absenteeism": "ขาดงาน :",
+    "Social_Security": "ประกันสังคม :",
+    "Received_Salary": "เงินเดือนที่ได้รับ :",
+    "Salary slip": "สลิปเงินเดือน"
+  },
+  "offerDocument": {
+    "title": "ยื่นเอกสาร"
+  },
+  "Document": {
+    "title": "เอกสาร"
+  },
+  "setdomain": {
+    "title": "บริษัท",
+    "domain": "โดเมนเนม: ",
+    "select": "เลือกบริษัทของคุณ",
+    "input": "กรอกโดเมนเนม",
+    "errordomain": "กรุณากรอกโดเมนเนม!!",
+    "btn": "ตรวจสอบ"
+  },
+  "Edit_profile":{
+    "title":"แก้ไขข้อมูล",
+    "name":"ชื่อ:",
+    "lastname":"สกุล:",
+    "birthday":"วันเกิด:",
+    "Phone":"เบอร์มือถือ:",
+    "email":"อีเมล:",
+    "gender":"เพศ:",
+    "nationality":"สัญชาติ:",
+    "bank":"ธนาคาร:",
+    "bank_number":"เลขบัญชี:",
+    "No Image Selected":"ไม่ได้เลือกรูปภาพ",
+    "Select Image":"เลือกรูปภาพ",
+    "validateEmail":"กรุณาใส่อีเมล์ที่ถูกต้อง"
+  },
+  "validateEdit":{
+    "validatName": "กรุณากรอกชื่อของคุณ!!",
+    "validatlastName": "กรุณากรอกนามสกุลของคุณ!!",
+    "validatbirthday": "กรุณากรอกวันเกิดของคุณ!!",
+    "validatPhone": "กรุณากรอกหมายเลขโทรศัพท์ของคุณ!!",
+    "validateEmail": "กรุณากรอกอีเมลของคุณ!!",
+    "validategender": "กรุณากรอกเพศของคุณ!!",
+    "validatenationality": "กรุณากรอกสัญชาติของคุณ!!",
+    "Validatebank": "กรุณากรอกชื่อธนาคารของคุณ!!",
+    "Validatebank_number": "กรุณากรอกหมายเลขบัญชีธนาคารของคุณ!!"
+  },
+  "Data_Not_Found":{
+    "title":"ไม่พบข้อมูล!!"
   }
+
 }

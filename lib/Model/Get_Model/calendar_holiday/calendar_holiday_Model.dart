@@ -1,75 +1,70 @@
 class calendar_holiday_Model {
-  List<Event>? event;
+  List<Data>? data;
+  int? count;
 
-  calendar_holiday_Model({this.event});
+  calendar_holiday_Model({this.data, this.count});
 
   calendar_holiday_Model.fromJson(Map<String, dynamic> json) {
-    if (json['event'] != null) {
-      event = <Event>[];
-      json['event'].forEach((v) {
-        event!.add(new Event.fromJson(v));
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(new Data.fromJson(v));
       });
     }
+    count = json['count'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.event != null) {
-      data['event'] = this.event!.map((v) => v.toJson()).toList();
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
+    data['count'] = this.count;
     return data;
   }
 }
 
-class Event {
+class Data {
   int? rowId;
-  String? calendarId;
-  String? title;
-  String? start;
-  String? end;
+  String? holidayId;
+  String? holidayName;
   String? color;
-  String? id;
-  String? createAt;
-  String? companyId;
-  bool? allDay;
+  String? description;
+  String? createdAt;
+  String? date;
+  String? calendarId;
 
-  Event(
+  Data(
       {this.rowId,
-      this.calendarId,
-      this.title,
-      this.start,
-      this.end,
+      this.holidayId,
+      this.holidayName,
       this.color,
-      this.id,
-      this.createAt,
-      this.companyId,
-      this.allDay});
+      this.description,
+      this.createdAt,
+      this.date,
+      this.calendarId});
 
-  Event.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     rowId = json['row_id'];
-    calendarId = json['calendar_id'];
-    title = json['title'];
-    start = json['start'];
-    end = json['end'];
+    holidayId = json['holiday_id'];
+    holidayName = json['holiday_name'];
     color = json['color'];
-    id = json['id'];
-    createAt = json['create_at'];
-    companyId = json['company_id'];
-    allDay = json['allDay'];
+    description = json['description'];
+    createdAt = json['created_at'];
+    date = json['date'];
+    calendarId = json['calendar_id'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['row_id'] = this.rowId;
-    data['calendar_id'] = this.calendarId;
-    data['title'] = this.title;
-    data['start'] = this.start;
-    data['end'] = this.end;
+    data['holiday_id'] = this.holidayId;
+    data['holiday_name'] = this.holidayName;
     data['color'] = this.color;
-    data['id'] = this.id;
-    data['create_at'] = this.createAt;
-    data['company_id'] = this.companyId;
-    data['allDay'] = this.allDay;
+    data['description'] = this.description;
+    data['created_at'] = this.createdAt;
+    data['date'] = this.date;
+    data['calendar_id'] = this.calendarId;
     return data;
   }
 }

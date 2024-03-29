@@ -16,9 +16,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
    <application
         android:allowBackup="false"
-        android:label="eztime_app"
+        android:label="HipEztime"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         tools:replace="android:label">
@@ -52,7 +54,11 @@
                 android:resource="@drawable/logo_notification"/> 
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
-              android:resource="@style/NormalTheme"/>  
+              android:resource="@style/NormalTheme"/> 
+            <meta-data
+              android:name="io.flutter.embedding.android.SplashScreenDrawable"
+              android:resource="@drawable/launch_background"
+              /> 
         </activity>
         <meta-data
             android:name="flutterEmbedding"

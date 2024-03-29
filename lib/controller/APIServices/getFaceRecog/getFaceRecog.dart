@@ -11,9 +11,10 @@ class getFaceRecog_Service {
         options: Options(headers: {'Authorization': 'Bearer $token'}));
         if (response.statusCode == 200) {
           getFaceRecog_Model data = getFaceRecog_Model.fromJson(response.data);
-          log(data.count.toString());
+          log('get_Face_Recognizing: ${response.statusCode}');
           return data.count!.toInt();
         } else {
+          log('get_Face_Recognizing: ${response.statusCode}');
           return null;
         }
   }

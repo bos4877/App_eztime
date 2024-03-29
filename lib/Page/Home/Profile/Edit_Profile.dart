@@ -1,52 +1,57 @@
 // ignore_for_file: unused_import
 
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:eztime_app/controller/APIServices/EditService/EditProfileService/EditProfileService.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
-import 'package:eztime_app/Components/CustomTextFormField/CustomTextFormField_EditProfile.dart';
-import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
-import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
+import 'package:eztime_app/Components/Custom/CustomTextFormField/CustomTextFormField_EditProfile.dart';
+import 'package:eztime_app/Components/Dialog/Buttons/Button.dart';
+import 'package:eztime_app/Components/Dialog/alertDialog/alertDialog.dart';
+import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
 import 'package:eztime_app/Components/TextStyle/StyleText.dart';
-import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
+import 'package:eztime_app/Model/Connect_Api.dart';
+import 'package:eztime_app/Model/Get_Model/get_Profile/Edit_Profile_Model.dart';
 import 'package:eztime_app/Page/Home/Profile/Profile_Page.dart';
 import 'package:eztime_app/Page/Home/promble.dart';
+import 'package:eztime_app/controller/APIServices/EditService/EditProfileService/EditProfileService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:retry/retry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GlobalKey<_EditProfileState> editProfileKey =
     GlobalKey<_EditProfileState>();
 
 class edit_profile extends StatefulWidget {
-  final id;
-  final fname;
-  final email;
-  final lastName;
-  final phone;
-  final sex;
-  final nationality;
-  final bankName;
-  final bankNumber;
-  final status;
-  final birthday;
-  edit_profile(
-      {Key? key,
-      this.id,
-      this.fname,
-      this.bankName,
-      this.bankNumber,
-      this.email,
-      this.lastName,
-      this.nationality,
-      this.phone,
-      this.sex,
-      this.birthday,
-      this.status})
-      : super(key: key);
+  String first_name;
+  String last_name;
+  String sex;
+  String nationality;
+  String status;
+  String birth_day;
+  String bank_name;
+  String bank_no;
+  String phone;
+  String email;
+
+  edit_profile({
+    Key? key,
+    required this.first_name,
+    required this.last_name,
+    required this.sex,
+    required this.nationality,
+    required this.status,
+    required this.birth_day,
+    required this.bank_name,
+    required this.bank_no,
+    required this.email,
+    required this.phone,
+  }) : super(key: key);
 
   @override
   _EditProfileState createState() => _EditProfileState();
@@ -62,183 +67,241 @@ class _EditProfileState extends State<edit_profile> {
   TextEditingController? _nationalityController;
   TextEditingController? _bankController;
   TextEditingController? _bankNumberController;
-  TextEditingController? _statusController;
   TextEditingController? _birthdayController;
 
   XFile? pickedImage;
   String? imagePath;
+  String? imagePathname;
+  bool loaddialog = false;
+  Edit_Profile_Model _editList = Edit_Profile_Model();
+  var token;
+  var id;
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePickerHelper.pickImage(ImageSource.gallery, 20);
+    if (pickedFile != null) {
+      setState(() {
+        pickedImage = pickedFile;
+        imagePath = pickedImage!.path;
+        imagePathname = pickedImage!.name;
+      });
+    }
+  }
 
-  // Future<void> _pickImage() async {
-  //   final pickedFile = await ImagePickerHelper.pickImage();
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       pickedImage = pickedFile;
-  //       imagePath = pickedImage!.path;
-  //     });
-  //   }
-  // }
-
-  Future settext() async {
-
-    _nameController = TextEditingController(text: '${widget.fname}');
-    _emailController = TextEditingController(text: '${widget.email}');
-    _lastNameController = TextEditingController(text: '${widget.lastName}');
-    _sexController = TextEditingController(text: '${widget.sex}');
-    _nationalityController =
+  Future _settextedit() async {
+    setState(() {
+      loaddialog = true;
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('_acessToken');
+    _nameController = await TextEditingController(text: '${widget.first_name}');
+    _emailController = await TextEditingController(text: '${widget.email}');
+    _lastNameController = await TextEditingController(text: '${widget.last_name}');
+    _phoneController = await TextEditingController(text: '${widget.phone}');
+    _sexController = await TextEditingController(text: '${widget.sex}');
+    _nationalityController = await
         TextEditingController(text: '${widget.nationality}');
-    _phoneController = TextEditingController(text: '${widget.phone}');
-    _bankController = TextEditingController(text: '${widget.bankName}');
-    _bankNumberController = TextEditingController(text: '${widget.bankNumber}');
-    _statusController = TextEditingController(text: '${widget.status}');
-    _birthdayController =
-        TextEditingController(text: '${widget.birthday.split(' ').first}');
+    _bankController = await TextEditingController(text: '${widget.bank_name}');
+    _bankNumberController = await TextEditingController(text: '${widget.bank_no}');
+    _birthdayController = await
+        TextEditingController(text: '${widget.birth_day.split('T').first}');
+         setState(() {
+      loaddialog = false;
+    });
   }
 
   Future call_Edit_Profile() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var taken = prefs.getString('_acessToken');
-    var service = Edit_Profile_Service();
+    setState(() {
+      loaddialog = true;
+    });
+
     try {
-      var response = await service.model(
-          _nameController!.text,
-          _lastNameController!.text,
-          _nationalityController!.text,
-          _statusController!.text,
-          _birthdayController!.text,
-          _bankController!.text,
-          _bankNumberController!.text,
-          _phoneController!.text,
-          _emailController!.text,
-          taken!,
-          widget.id);
-      if (response == 200) {
-        Dialog_Tang().successdialog(context);
-        log('response_Edit_Profile: ${response}');
-      } else {}
-    } catch (e) {}
+      String url = '${connect_api().domain}/edit_employee';
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      if (imagePath == null ||
+          imagePath!.isEmpty ||
+          imagePathname == null ||
+          imagePathname!.isEmpty) {
+        request.fields['first_name'] = _nameController!.text;
+        request.fields['last_name'] = _lastNameController!.text;
+        request.fields['sex'] = _sexController!.text;
+        request.fields['nationality'] = _nationalityController!.text;
+        request.fields['birth_day'] = _birthdayController!.text;
+        request.fields['bank_name'] = _bankController!.text;
+        request.fields['bank_no'] = _bankNumberController!.text;
+        request.fields['phone'] = _phoneController!.text;
+        request.fields['email'] = _emailController!.text;
+        request.fields['image'] = '';
+        request.headers['Authorization'] = 'Bearer $token';
+      } else {
+        var multipartFile = await http.MultipartFile.fromPath(
+          'image',
+          imagePath!,
+          filename: imagePathname,
+        );
+        request.files.add(multipartFile);
+        request.fields['first_name'] = _nameController!.text;
+        request.fields['last_name'] = _lastNameController!.text;
+        request.fields['sex'] = _sexController!.text;
+        request.fields['nationality'] = _nationalityController!.text;
+        request.fields['birth_day'] = _birthdayController!.text;
+        request.fields['bank_name'] = _bankController!.text;
+        request.fields['bank_no'] = _bankNumberController!.text;
+        request.fields['phone'] = _phoneController!.text;
+        request.fields['email'] = _emailController!.text;
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      setState(() {
+        if (response.statusCode == 200) {
+          loaddialog = false;
+          Dialog_Success.showCustomDialog(context);
+          log('response_Edit_Profile: ${response}');
+          loaddialog = false;
+        } else {
+           Dialog_false.showCustomDialog(context);
+          log(response.body.toString());
+          loaddialog = false;
+        }
+      });
+    } catch (e) {
+      setState(() {
+        log(e.toString());
+        loaddialog = false;
+      });
+    }
   }
 
   @override
   void initState() {
-    InternetConnectionChecker().checker();
-    settext();
+    _settextedit();
     // TODO: implement initState
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _nameController!.dispose();
-    _emailController!.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _nameController!.dispose();
+  //   _emailController!.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('แก้ไขข้อมูล'),
-        ),
-        bottomNavigationBar: Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.3,
-                vertical: MediaQuery.of(context).size.height * 0.01),
-            child: ElevatedButton(
-              child: Text('บันทึก'),
-              onPressed: () {
-                if (_formkey.currentState!.validate()) {
-                  call_Edit_Profile();
-                } else {
-                  return;
-                }
-              },
-            )),
-        body: Form(
-          key: _formkey,
-          child: Card(
-            child: ListView(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        pickedImage != null
-                            ? Center(
-                                child: Image.file(
-                                  File(imagePath!),
-                                  height: 200,
-                                ),
-                              )
-                            : Text('No Image Selected'),
-                        SizedBox(height: 20),
-                        Center(
-                            child: Buttons(
-                                title: 'Pick Image', press: () {
-                                  
-                                },)),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        CustomTextFormField(
-                          section: 'ชื่อ',
-                          hintText: 'กรอกชื่อ',
-                          controller: _nameController!,
-                          validateretrunText: 'กรุณากรอกชื่อ',
-                        ),
-                        CustomTextFormField(
-                            section: 'นามสกุล',
-                            hintText: 'กรอกนามสกุล',
-                            controller: _lastNameController!,
-                            validateretrunText: 'กรุณากรอกนามสกุล'),
-                        CustomTextFormField(
-                            section: 'วันเกิด',
-                            hintText: 'กรอกวันเกิด',
-                            controller: _birthdayController!,
-                            validateretrunText: 'กรุณากรอกวันเกิด'),
-                        CustomTextFormField(
-                            section: 'เบอร์โทร',
-                            hintText: 'กรอกเบอร์โทร',
-                            controller: _phoneController!,
-                            validateretrunText: 'กรุณากรอกเบอร์โทร'),
-                        CustomTextFormField(
-                            section: 'E-Mail',
-                            hintText: 'กรอก E-Mail',
-                            controller: _emailController!,
-                            validateretrunText: 'กรุณากรอก E-Mail'),
-                        CustomTextFormField(
-                            section: 'เพศ',
-                            hintText: 'กรอกเพศ',
-                            controller: _sexController!,
-                            validateretrunText: 'กรุณากรอกเพศ'),
-                        CustomTextFormField(
-                            section: 'สัญชาติ',
-                            hintText: 'กรอกสัญชาติ',
-                            controller: _nationalityController!,
-                            validateretrunText: 'กรุณากรอกสัญชาติ'),
-                        CustomTextFormField(
-                            section: 'ธนาคาร',
-                            hintText: 'กรอกธนาคาร',
-                            controller: _bankController!,
-                            validateretrunText: 'กรุณากรอกธนาคาร'),
-                        CustomTextFormField(
-                            section: 'เลขบัญชี',
-                            hintText: 'กรอกเลขบัญชี',
-                            controller: _bankNumberController!,
-                            validateretrunText: 'กรุณากรอกเลขบัญชี'),
-                        CustomTextFormField(
-                            section: 'สถานภาพ',
-                            hintText: 'กรอกสถานภาพ',
-                            controller: _statusController!,
-                            validateretrunText: 'กรุณากรอกสถานภาพ'),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+    return loaddialog
+        ? LoadingComponent()
+        : Scaffold(
+            appBar: AppBar(
+              title: Text('Edit_profile.title'.tr()),
             ),
-          ),
-        ));
+            bottomNavigationBar: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.3,
+                    vertical: MediaQuery.of(context).size.height * 0.01),
+                child: ElevatedButton(
+                  child: Text('buttons.Save'.tr()),
+                  onPressed: () {
+                    if (_formkey.currentState!.validate()) {
+                      call_Edit_Profile();
+                    } else {
+                      return;
+                    }
+                  },
+                )),
+            body: Form(
+              key: _formkey,
+              child: Card(
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            pickedImage != null
+                                ? Center(
+                                    child: Image.file(
+                                      File(imagePath!),
+                                      height: 200,
+                                    ),
+                                  )
+                                : Center(
+                                    child: Text(
+                                        'Edit_profile.No Image Selected'.tr())),
+                            SizedBox(height: 20),
+                            Center(
+                                child: Buttons(
+                              title: 'Edit_profile.Select Image',
+                              press: () {
+                                _pickImage();
+                              },
+                            )),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            CustomTextFormField(
+                              section: 'Edit_profile.name',
+                              hintText: 'validateEdit.validatName',
+                              controller: _nameController!,
+                              validateretrunText: 'validateEdit.validatName',
+                            ),
+                            CustomTextFormField(
+                                section: 'Edit_profile.lastname',
+                                hintText: 'validateEdit.validatlastName',
+                                controller: _lastNameController!,
+                                validateretrunText:
+                                    'validateEdit.validatlastName'),
+                            CustomTextFormField(
+                                section: 'Edit_profile.birthday',
+                                hintText: 'validateEdit.validatbirthday',
+                                controller: _birthdayController!,
+                                validateretrunText:
+                                    'validateEdit.validatbirthday'),
+                            CustomTextFormField(
+                                section: 'Edit_profile.Phone',
+                                hintText: 'validateEdit.validatPhone',
+                                controller: _phoneController!,
+                                validateretrunText:
+                                    'validateEdit.validatPhone'),
+                            CustomTextFormField(
+                                section: 'Edit_profile.email',
+                                hintText: 'validateEdit.validateEmail',
+                                controller: _emailController!,
+                                validateretrunText:
+                                    'validateEdit.validateEmail'),
+                            CustomTextFormField(
+                                section: 'Edit_profile.gender',
+                                hintText: 'validateEdit.validategender',
+                                controller: _sexController!,
+                                validateretrunText:
+                                    'validateEdit.validategender'),
+                            CustomTextFormField(
+                                section: 'Edit_profile.nationality',
+                                hintText: 'validateEdit.validatenationality',
+                                controller: _nationalityController!,
+                                validateretrunText:
+                                    'validateEdit.validatenationality'),
+                            CustomTextFormField(
+                                section: 'Edit_profile.bank',
+                                hintText: 'validateEdit.Validatebank',
+                                controller: _bankController!,
+                                validateretrunText:
+                                    'validateEdit.Validatebank'),
+                            CustomTextFormField(
+                                section: 'Edit_profile.bank_number',
+                                hintText: 'validateEdit.Validatebank_number',
+                                controller: _bankNumberController!,
+                                validateretrunText:
+                                    'validateEdit.Validatebank_number'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ));
   }
 }

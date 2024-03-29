@@ -5,12 +5,12 @@ import 'package:eztime_app/Model/Get_Model/leave/get_leave/get_leave_Model.dart'
 class get_doc_leave_Service {
   model(var token) async {
     try {
-      String url = '${connect_api().domain}/get_doc_list';
+      String url = '${connect_api().domain}/get_user_leave_list';
       var response = await Dio().get(url,
           options: Options(headers: {'Authorization': 'Bearer $token'}));
       if (response.statusCode == 200) {
-        get_leave_Model json = get_leave_Model.fromJson(response.data);
-        return json.docList;
+        get_leave_Model  json = get_leave_Model .fromJson(response.data);
+        return json.data;
       } else {
         return null;
       }

@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:easy_localization/easy_localization.dart';
+import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
 import 'package:eztime_app/Components/Security/creaetPin/CreaetPin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
@@ -16,9 +15,13 @@ class Security_Page extends StatefulWidget {
 class _Security_PageState extends State<Security_Page> {
   bool isSwitched = false;
   SharedPreferences? prefs;
+  bool loading = false;
   InputController _inputController = InputController();
   var pincode;
   Future _isSwitchedstatus() async {
+     setState(() {
+      loading = true;
+    });
     prefs = await SharedPreferences.getInstance();
    pincode = prefs!.getString('pincode');
    var Switched = prefs!.getBool('isSwitched');
@@ -28,9 +31,12 @@ class _Security_PageState extends State<Security_Page> {
       setState(() {
          isSwitched = Switched!;
          print(isSwitched);
+         loading = false;
       });
-    }
-    
+    };
+    setState(() {
+      loading = false;
+    });
   }
   @override
   void initState() {
@@ -41,7 +47,7 @@ class _Security_PageState extends State<Security_Page> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? LoadingComponent(): Scaffold(
       appBar: AppBar(
         title: Text('security'),
       ),
@@ -52,7 +58,7 @@ class _Security_PageState extends State<Security_Page> {
             SizedBox(height: 20),
             MySwitch(
               title: 'pincode',
-              icon: Icon(Icons.key),
+              icon: Icon(Icons.key_outlined,color: Theme.of(context).primaryColor,),
               content: isSwitched ? 'on'.tr() : 'off'.tr(),
               transform_value: isSwitched,
               onChanged: (value) async {

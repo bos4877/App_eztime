@@ -3,26 +3,28 @@
     "changeLang": "changelanguage",
     "title": "HomePage",
     "username": "username",
-    "Check in-Check out": "check in-check out",
+    "Check in-Check out": "Time Record",
     "Check in": "check in",
     "Check out": "check out",
     "More": "More...",
     "Request leave": "Request leave",
-    "Get approval, Ot": "Get approval, Ot.",
+    "Get approval, Ot": "Request Ot",
     "Watch the Ot log": "Work day approval",
     "Improve Uptime": "Improve Uptime",
     "news information": "news information",
-    "loginSuccess": "LoginSuccess",
+    "loginSuccess": "loginSuccess",
     "loginfailed": "username and password are incorrect",
-    "logout":"LogoutSuccess",
+    "logout":"logoutSuccess",
     "logoutfailed": "Unable to connect",
-    "catch":"Unable to connect"
+    "catch":"Unable to connect",
+    "exit":"Press again to exit"
   },
-  "Login":{
+  "login":{
 "title":"Company",
 "name":"Company Name : ",
-"next":"Next",
-"login":"Login",
+"next":"Confirm",
+"login":"login",
+"check_again":"Examine",
 "username":"username",
 "password":"password"
   },
@@ -38,15 +40,49 @@
     "AddImage": "AddImage"
   },
   "Get approval, Ot": {
-    "title": "Get approval, Ot",
+    "title": "Request Ot",
     "Save": "SAVE",
     "Choose start time": "Choose start time",
     "Choose the end period": "Choose the end period"
   },
-  "Watch the Ot log": {
-    "title": "Watch the Ot log",
-    "Choose a time period": "Choose a time period"
+  "Apporv_Improve_Uptime": {
+    "title": "Apporv Improve Uptime",
+    "employeenum": "Employee ID: ",
+    "Name":"Name: ",
+    "date":"Date: ",
+    "detail":"Details: ",
+    "status":"Status: ",
+    "Approval_authority":"Approval authority: ",
+    "Waiting_for_approval": "Waiting",
+    "Approved": "Approved",
+    "Not_approved": "Not Approved",
+    "Approve":"Approve",
+    "Not Approve":"Not Approve"
   },
+  "Profile": {
+    "title": "Employee Information",
+    "General_information": "General Information",
+    "employeeId": "Employee ID",
+    "employeeIdName": "Name",
+    "employeeIdCard": "ID Card Number",
+    "Mobile_number": "Mobile Number",
+    "Email": "Email",
+    "Gender": "Gender",
+    "nationality": "Nationality",
+    "birthday": "Birthday",
+    "status": "Status",
+    "company": "Company",
+    "department": "Department",
+    "position": "Position",
+    "Employeetype": "Employee Type",
+    "salary": "Salary",
+    "Starting_day": "Starting Day",
+    "Packing_date": "Packing Date",
+    "tax": "Tax",
+    "Not_data": "No information found!",
+    "bank": "Bank",
+    "bank_number": "Account Number"
+    },
   "Improve Uptime": {
     "title": "Improve Uptime",
     "Date": "Date :",
@@ -54,18 +90,30 @@
     "working time": "working time :",
     "Choose a time period": "Choose a time period"
   },
+  "Request_Improve_Uptime":{
+    "title": "Request additional work time",
+    "details":"details: ",
+    "shift_date":"shift date: ",
+    "name":"Name: ",
+    "create_date":"creat date: ",
+    "status":"Status: ",
+    "Approval_authority":"Approval authority: "
+  },
   "Employee Id": {
     "employee Id": "Employee Id : ",
     "Name": "Name : "
   },
   "Drawer": {
     "Edit": "Employee",
+    "Manage_time":"Manage time",
+    "offer_Document":"Offer Document",
+    "Report":"Report",
     "Request leave": "Request leave",
     "Get approval, Ot": "Get approval, Ot",
     "Summarize": "Summarize",
     "salary summary": "salary",
     "setting": "setting",
-    "Logout": "Logout"
+    "logout": "logout"
   },
   "setting": {
     "title": "setting",
@@ -100,7 +148,11 @@
   "Set_work": {
     "title": "work time",
     "position": "current position",
-    "image": "image"
+    "image": "image",
+    "name":"Name: ",
+    "EmployeeNo":"EmployeeNo: ",
+    "Company":"Company: ",
+    "department":"department: "
   },
   "Check in-out":{
     "title": "Work Entry-Exit Information",
@@ -119,8 +171,47 @@
     "details": "Details:",
     "status": "Status:",
     "picture": "Picture:",
-    "Person with approval": "Person with Approval:"
+    "Approval_authority":"Approval authority: ",
+    "Person_With_Approval": "Person with Approval:",
+    "Waiting_for_approval":"Waiting",
+    "Picture_not_found":"Picture not found!!",
+    "Approved":"Approved",
+    "Not_approved":"Not Approved"
+
   },
+  "Approve_leave": {
+    "tapName":"Approve leave",
+    "title": "Approve leave",
+    "name": "Name: ",
+    "starttime": "Start Time: ",
+    "endTime": "End Time: ",
+    "Leavetype": "Leave Type: ",
+    "details": "Details: ",
+    "status": "Status: ",
+    "picture": "Picture: ",
+    "Approval_authority":"Approval authority: ",
+    "Person_With_Approval": "Person with Approval: ",
+    "Waiting_for_approval":"Waiting",
+    "Approved":"Approved",
+    "Not_approved":"Not Approved",
+    "Picture_not_found":"Picture not found!!"
+  },
+  "OT_request_list": {
+    "tapName":"OT Approval",
+    "title": "OT Request List",
+    "name": "Name: ",
+    "starttime": "Start Time: ",
+    "endTime": "End Time: ",
+    "OTtype": "OT type: ",
+    "details": "Details: ",
+    "Notdetails":"No details found",
+    "status": "Status: ",
+    "Approval_authority":"Approval authority: ",
+    "Person with approval": "Person with Approval: ",
+    "Waiting_for_approval":"Waiting",
+    "Approved":"Approved",
+    "Not_approved":"Not Approved"
+    },
   "salary_calculation": {
     "title": "Salary Summary",
     "SelectMount": "Select Month",
@@ -134,7 +225,7 @@
     "Received_Salary": "Received Salary:",
     "Salary slip": "Salary slip"
   },
-  "DiaLog":{
+  "Dialog":{
     "titleinternet":"Notifications",
     "internet":"Please connect to the internet",
     "Allowaccess":"Please Allow access",
@@ -142,5 +233,54 @@
     "opensetting":"Open setting",
     "cancle":"Cancle",
     "connect":"Connected"
+  },
+  "offerDocument":{
+    "title":"Offer Document"
+  },
+  "Document":{
+    "title":"Document"
+  },
+  "Manage_time":{
+"title":"Time Management",
+"working_time": "working time",
+"Calendar": "Calendar",
+"ClockIn/Out": "Clock In/Out"
+  },
+  "setdomain":{
+    "title":"Company",
+    "domain":"domain: ",
+    "select":"select company",
+    "input":"input domain",
+    "btn":"verify",
+    "errordomain":"Please enter domain name!!"
+  },
+  "Edit_profile":{
+    "title":"Edit Profile",
+    "name":"Name:",
+    "lastname":"Lastname:",
+    "birthday":"Birthday:",
+    "Phone":"Phone Number:",
+    "email":"E-Mail:",
+    "gender":"Gender:",
+    "nationality":"Nationality:",
+    "bank":"Bank:",
+    "bank_number":"Bank Number:",
+    "No Image Selected":"No Image Selected",
+    "Select Image":"Select Image",
+    "validateEmail":"Please enter a valid email address"
+  },
+  "validateEdit":{
+    "validatName":"Fill in your name!!",
+    "validatlastName":"Fill in your lastname!!",
+    "validatbirthday":"Fill in your birthday!!",
+    "validatPhone":"Fill in your Phone Number!!",
+    "validateEmail":"Fill in your E-Mail!!",
+    "validategender":"Fill in your gender!!",
+    "validatenationality":"Fill in your nationality!!",
+    "Validatebank":"Fill in your bank!!",
+    "Validatebank_number":"Fill in your bank number!!"
+  },
+  "Data_Not_Found":{
+    "title":"Data not found!!"
   }
 }

@@ -42,13 +42,13 @@ class Drop_Down extends StatelessWidget {
               onChanged:onChang,
               buttonStyleData: ButtonStyleData(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-               decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+               decoration: BoxDecoration(border: Border.all(color: Theme.of(context).primaryColor)),
                 width: 140,
               ),
               menuItemStyleData: MenuItemStyleData(
     
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                overlayColor: MaterialStatePropertyAll(Colors.blue)
+                overlayColor: MaterialStatePropertyAll(Theme.of(context).primaryColor)
                 // height: 40,
               ),
             ),

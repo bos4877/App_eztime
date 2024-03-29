@@ -1,19 +1,20 @@
 // ignore_for_file: unused_import
 import 'dart:developer';
 
-import 'package:eztime_app/controller/APIServices/ProFileServices/ProfileService.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
-import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
-import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
-import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
+import 'package:eztime_app/Components/Dialog/Buttons/Button.dart';
+import 'package:eztime_app/Components/Dialog/alertDialog/alertDialog.dart';
+import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
 import 'package:eztime_app/Components/TextStyle/StyleText.dart';
-import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:eztime_app/Model/Get_Model/get_Profile/Profile_Model.dart';
 import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
 import 'package:eztime_app/Page/Home/HomePage.dart';
 import 'package:eztime_app/Page/Home/Profile/Edit_Profile.dart';
+import 'package:eztime_app/controller/APIServices/ProFileServices/ProfileService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile_Page extends StatefulWidget {
@@ -26,12 +27,7 @@ class Profile_Page extends StatefulWidget {
 class _Profile_PageState extends State<Profile_Page> {
   bool load = false;
   bool _cancel = false;
-  TextEditingController _address = TextEditingController();
-  TextEditingController _email = TextEditingController();
-  TextEditingController _phone = TextEditingController();
-  TextEditingController _apersonnum = TextEditingController();
-  TextEditingController _personStatus = TextEditingController();
-  List<EmployData> _profilelist = [];
+  Profile_Model _profilelist = Profile_Model();
   var service = get_profile_service();
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,13 +42,13 @@ class _Profile_PageState extends State<Profile_Page> {
       setState(() {
         log(response.toString());
         if (response == null) {
-          Dialog_Tang().infodialog(context);
+          Dialog_notdata.showCustomDialog(context);
           log('faile');
           setState(() {
             load = false;
           });
         } else {
-          _profilelist = [response];
+          _profilelist.employData = response;
           log('success');
           setState(() {
             load = false;
@@ -61,6 +57,7 @@ class _Profile_PageState extends State<Profile_Page> {
       });
     } catch (e) {
       load = false;
+
       log(e.toString());
       // Dialog_Tang().dialog(context);
     }
@@ -68,101 +65,114 @@ class _Profile_PageState extends State<Profile_Page> {
 
   @override
   void initState() {
-    InternetConnectionChecker().checker();
     getprofile();
     // TODO: implement initState
     super.initState();
   }
+  onRefresh()async{
+    setState(() {
+      load = true;
+    });
+await getprofile();
+     setState(() {
+      load = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    
-    return load ? Loading() :  Scaffold(
-      
-      appBar: AppBar(
-        title: Text('ข้อมูลพนักงาน'),
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(Icons.arrow_back)),
-      ),
-      floatingActionButton: _cancel
-          ? Material(
-              elevation: 5,
-              color: Colors.transparent,
-              child: Buttons(
-                  title: 'บันทึก',
-                  press: () {
-                    setState(() {
-                      _cancel = false;
-                    });
-                  }),
-            )
-          : Container(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      
-      body: Column(
-        children: [
-          ProfileHeader(
-            coverImage: NetworkImage(
-                'https://www.khaosod.co.th/wpapp/uploads/2022/02/%E0%B8%9E%E0%B8%9B%E0%B8%8A%E0%B8%A3.%E0%B9%80%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD.jpg'),
-            actions: [
-              MaterialButton(
-                color: Colors.blue,
-                shape: CircleBorder(),
-                elevation: 0,
-                child: _cancel
-                    ? Icon(
-                        Icons.cancel,
-                        color: Colors.white,
-                      )
-                    : Icon(
-                        Icons.edit,
-                        color: Colors.white,
-                      ),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => edit_profile(
-                      fname: _profilelist[0].firstName,
-                      bankName: _profilelist[0].bankName,
-                      bankNumber: _profilelist[0].bankNo,
-                      email: _profilelist[0].email,
-                      lastName: _profilelist[0].lastName,
-                      nationality: _profilelist[0].nationality,
-                      phone: _profilelist[0].phone,
-                      sex: _profilelist[0].sex,
-                      status: _profilelist[0].status,
-                      birthday: _profilelist[0].birthDay,
-                      id: _profilelist[0].employeeNo,
-                    ),
-                  ));
-                },
-              )
-            ],
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 8.0, bottom: 4.0),
-            alignment: Alignment.topLeft,
-            child: Text(
-              "ข้อมูลทั่วไป",
-              style: TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.left,
+    return load
+        ? LoadingComponent()
+        : Scaffold(
+            appBar: AppBar(
+              title: Text('Profile.title').tr(),
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(Icons.arrow_back)),
             ),
-          ),
-          Expanded(child: UserInfo()),
-        ],
-      ),
-    );
+            floatingActionButton: _cancel
+                ? Material(
+                    elevation: 5,
+                    color: Colors.transparent,
+                    child: Buttons(
+                        title: 'buttons.Save',
+                        press: () {
+                          setState(() {
+                            _cancel = false;
+                          });
+                        }),
+                  )
+                : Container(),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            body: Center(
+              child: RefreshIndicator(
+                onRefresh: () => onRefresh(),
+                child: Column(
+                  children: [
+                    _profilelist.employData!.image == null || _profilelist.employData!.image!.isEmpty
+                        ? Profile_noimages()
+                        : ProfileHeader(
+                            coverImage: NetworkImage('${_profilelist.employData!.image}'),
+                            actions: [
+                              MaterialButton(
+                                color: Theme.of(context).primaryColor,
+                                shape: CircleBorder(),
+                                elevation: 0,
+                                child: _cancel
+                                    ? Icon(
+                                        Icons.cancel,
+                                        color: Colors.white,
+                                      )
+                                    : Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                      ),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => edit_profile(
+                                      first_name:'${_profilelist.employData!.firstName}',
+                                      last_name:'${_profilelist.employData!.lastName}' ,
+                                      sex:'${_profilelist.employData!.sex}' ,
+                                      phone:'${_profilelist.employData!.phone}' ,
+                                      bank_name:'${_profilelist.employData!.bankName}' ,
+                                      bank_no:'${_profilelist.employData!.bankNo}' ,
+                                      birth_day:'${_profilelist.employData!.birthDay}' ,
+                                      email:'${_profilelist.employData!.email}' ,
+                                      nationality:'${_profilelist.employData!.nationality}' ,
+                                      status:'${_profilelist.employData!.status}' ,
+                                    ),
+                                  ));
+                                },
+                              )
+                            ],
+                          ),
+                    Container(
+                      padding: EdgeInsets.only(left: 8.0, bottom: 4.0),
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Profile.General_information",
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.left,
+                      ).tr(),
+                    ),
+                    Expanded(child: UserInfo()),
+                  ],
+                ),
+              ),
+            ),
+          );
   }
 
   Widget UserInfo() {
     return load
-        ? Loading()
+        ? LoadingComponent()
         : Container(
             padding: EdgeInsets.all(5),
             child: Card(
@@ -171,246 +181,107 @@ class _Profile_PageState extends State<Profile_Page> {
                 child: ListView(
                   children: [
                     colum_tang(
-                        section: 'ชื่อ - นามสกุล',
+                        section: 'Profile.employeeIdName',
                         data:
-                            '${_profilelist[0].firstName} ${_profilelist[0].lastName}'),
+                            '${_profilelist.employData!.firstName} ${_profilelist.employData!.lastName}'),
                     colum_tang(
-                        section: 'รหัสพนักงาน',
-                        data: '${_profilelist[0].employeeNo}'),
+                        section: 'Profile.nickname',
+                        data: '${_profilelist.employData!.nickname}'),
+                    // colum_tang(
+                    //     section: 'Profile.employeeId',
+                    //     data: '${_profilelist.idCard}'),
                     colum_tang(
-                        section: 'เลขประจำตัวประชาชน',
-                        data: '${_profilelist[0].personalId}'),
+                        section: 'Profile.employeeIdCard',
+                        data: '${_profilelist.employData!.idCard}'),
                     colum_tang(
-                        section: 'มือถือ', data: '${_profilelist[0].phone}'),
+                        section: 'Profile.Mobile_number',
+                        data: '${_profilelist.employData!.phone}'),
                     colum_tang(
-                        section: 'E-Mail', data: '${_profilelist[0].email}'),
-                    colum_tang(section: 'เพศ', data: '${_profilelist[0].sex}'),
-                    colum_tang(
-                        section: 'สัญชาติ',
-                        data: '${_profilelist[0].nationality}'),
-                    colum_tang(
-                        section: 'วันเกิด',
-                        data: '${_profilelist[0].birthDay!.split(' ').first}'),
-                    colum_tang(
-                        section: 'สถานะ', data: '${_profilelist[0].status}'),
-                    colum_tang(
-                        section: 'บริษัท',
-                        data: '${_profilelist[0].branchOffice}'),
-                    colum_tang(
-                        section: 'แผนก', data: '${_profilelist[0].department}'),
-                    colum_tang(
-                        section: 'ตำแหน่ง',
-                        data: '${_profilelist[0].department}'),
-                    colum_tang(
+                        section: 'Profile.Email',
+                        data: '${_profilelist.employData!.email}'),
+                         colum_tang(
+                        section: 'วันที่บรรจุ',
+                        data: '${_profilelist.employData!.passedDate}'),
+                        colum_tang(
                         section: 'ประเภทพนักงาน',
-                        data: '${_profilelist[0].employeeType}'),
+                        data: '${_profilelist.employData!.employeeType}'),
                     colum_tang(
-                        section: 'เงินเดือน',
-                        data: '${_profilelist[0].salary}'),
+                        section: 'Profile.Gender', data: '${_profilelist.employData!.sex}'),
                     colum_tang(
-                        section: 'วันเริ่มทำงาน',
-                        data:
-                            '${_profilelist[0].startedDate!.split('T').first}'),
-                    colum_tang(section: 'วันที่บรรจุ', data: ''),
+                        section: 'Profile.nationality',
+                        data: '${_profilelist.employData!.nationality}'),
                     colum_tang(
-                        section: 'ภาษี',
-                        data: _profilelist[0].vatId == null
-                            ? 'ไม่มีข้อมูล'
-                            : '${_profilelist[0].vatId}'),
-                    //  colum_tang(section: 'ช่องทางชำระเงิน', data: _profilelist[0].finger == null ? 'ไม่มีข้อมูล':'${_profilelist[0].}'),
+                        section: 'Profile.birthday',
+                        data: '${_profilelist.employData!.birthDay!.split(' ').first}'),
                     colum_tang(
-                        section: 'ธนาคาร', data: '${_profilelist[0].bankName}'),
+                        section: 'Profile.status',
+                        data: '${_profilelist.employData!.status}'),
+                        
                     colum_tang(
-                        section: 'เลขบัญชี', data: '${_profilelist[0].bankNo}'),
+                        section: 'Profile.salary',
+                        data: '${_profilelist.employData!.salary}'),
+                    colum_tang(
+                        section: 'Profile.Starting_day',
+                        data: '${_profilelist.employData!.startedDate!.split('T').first}'),
+                    colum_tang(
+                        section: 'Profile.tax',
+                        data: _profilelist.employData!.vatId == null
+                            ? 'Profile.Not_data'
+                            : '${_profilelist.employData!.vatId}'),
+                    colum_tang(
+                        section: 'Profile.bank',
+                        data: '${_profilelist.employData!.bankName}'),
+                    colum_tang(
+                        section: 'Profile.bank_number',
+                        data: '${_profilelist.employData!.bankNo}'),
+                        
                   ],
                 ),
               ),
             ));
   }
 
-  Widget EditUserInfo() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Column(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(left: 8.0, bottom: 4.0),
-            alignment: Alignment.topLeft,
-            child: Text(
-              "ข้อมูลส่วนบุคคล",
-              style: TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
+  Widget Profile_noimages() {
+    return ProfileHeader(
+      coverImage: AssetImage('assets/images/unknown_images.png'),
+      actions: [
+        MaterialButton(
+          color: Theme.of(context).primaryColor,
+          shape: CircleBorder(),
+          elevation: 0,
+          child: _cancel
+              ? Icon(
+                  Icons.cancel,
+                  color: Colors.white,
+                )
+              : Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => edit_profile(
+                  first_name:'${_profilelist.employData!.firstName}',
+                                      last_name:'${_profilelist.employData!.lastName}' ,
+                                      sex:'${_profilelist.employData!.sex}' ,
+                                      phone:'${_profilelist.employData!.phone}' ,
+                                      bank_name:'${_profilelist.employData!.bankName}' ,
+                                      bank_no:'${_profilelist.employData!.bankNo}' ,
+                                      birth_day:'${_profilelist.employData!.birthDay}' ,
+                                      email:'${_profilelist.employData!.email}' ,
+                                      nationality:'${_profilelist.employData!.nationality}' ,
+                                      status:'${_profilelist.employData!.status}' ,
               ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Card(
-            child: Container(
-              alignment: Alignment.topLeft,
-              padding: EdgeInsets.all(15),
-              child: Column(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      ...ListTile.divideTiles(
-                        color: Colors.grey,
-                        tiles: [
-                          TextField(
-                            controller: _address,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.my_location,
-                              ),
-                              labelText: "ที่อยู่",
-                              labelStyle: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                          TextField(
-                            controller: _email,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.email,
-                              ),
-                              labelText: "Email",
-                              labelStyle: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                          TextField(
-                            controller: _phone,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.phone,
-                              ),
-                              labelText: "เบอร์โทร",
-                              labelStyle: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                          TextField(
-                            controller: _apersonnum,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.person,
-                              ),
-                              labelText: "รหัสพนักงาน",
-                              labelStyle: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+            ));
+          },
+        )
+      ],
     );
-  }
-
-  Widget more() {
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: Container(
-        color: Colors.grey[200],
-        // shape: RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.circular(10.0),
-        // ),
-        child: ExpansionTile(
-          // shape: RoundedRectangleBorder(
-          //   borderRadius: BorderRadius.circular(10.0),
-          // ),
-          backgroundColor: Colors.grey[200],
-          title: Row(
-            children: [
-              SvgPicture.asset(
-                'assets/icons/align-left-svgrepo.svg',
-                color: Colors.grey,
-              ),
-              // Image.asset('assets/icons/align-left-svgrepo.svg'),
-              SizedBox(
-                width: 5,
-              ),
-              Text(
-                'ข้อมูลทั้งหมด',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-          // onExpansionChanged: (expanded) {
-          //   setState(() {
-          //     expanded = false;
-          //   });
-          // },
-          children: [
-            TextFormField(
-              controller: _personStatus,
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.align_horizontal_left_sharp,
-                ),
-                labelText: "สถานะพนักงาน",
-                labelStyle: TextStyle(fontSize: 14),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _Editmore() {
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: Container(
-        color: Colors.grey[200],
-        child: ExpansionTile(
-          backgroundColor: Colors.grey[200],
-          title: Row(
-            children: [
-              SvgPicture.asset(
-                'assets/icons/align-left-svgrepo.svg',
-                color: Colors.grey,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Text(
-                'ข้อมูลทั้งหมด',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-          children: [
-            TextField(
-              controller: _personStatus,
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.align_horizontal_left_sharp,
-                ),
-                labelText: "สถานะพนักงาน",
-                labelStyle: TextStyle(fontSize: 16),
-              ),
-            ),
-          ],
-          
-        ),
-        
-      ),
-      
-    );
-    
   }
 }
 
 class ProfileHeader extends StatelessWidget {
-  final ImageProvider<dynamic> coverImage;
+  final ImageProvider coverImage;
   final Color borderColor;
   final List<Widget>? actions;
   final Color? backgroundColor;
@@ -424,7 +295,7 @@ class ProfileHeader extends StatelessWidget {
       this.borderColor = Colors.grey,
       this.backgroundColor,
       this.radius = 100,
-      this.borderWidth = 5})
+      this.borderWidth = 2.5})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -438,12 +309,9 @@ class ProfileHeader extends StatelessWidget {
           radius: radius + borderWidth,
           backgroundColor: borderColor,
           child: CircleAvatar(
-            radius: radius,
-            backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
-            child: CircleAvatar(
-              radius: radius - borderWidth,
-              backgroundImage: coverImage as ImageProvider<Object>?,
-            ),
+            backgroundColor: borderColor,
+            radius: radius - borderWidth,
+            backgroundImage: coverImage,
           ),
         )),
         if (actions != null)
@@ -468,15 +336,15 @@ class colum_tang extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children:[
+      children: [
         Text(
           section,
           style: TextStyles.pro_file_textStyle,
-        ),
+        ).tr(),
         Text(
-          data,
+         data == null || data.isEmpty ? 'ไม่พบข้อมูล' : data,
           style: TextStyles.pro_file_Style,
         ),
         Divider(),

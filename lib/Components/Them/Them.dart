@@ -24,6 +24,7 @@ ThemeData mytheme() {
         TargetPlatform.android: ZoomPageTransitionsBuilder()
       },
     ),
+    
     primarySwatch: MaterialColor(0xFF0D47A1, color),
     primaryColor: Color(0xFF0D47A1),
     // accentColor: Colors.transparent, //? Scroll Colors

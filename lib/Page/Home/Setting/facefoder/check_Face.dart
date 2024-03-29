@@ -1,0 +1,194 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
+import 'package:eztime_app/Components/Dialog/Buttons/Button.dart';
+import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
+import 'package:eztime_app/Model/Connect_Api.dart';
+import 'package:eztime_app/Model/Get_Model/face/check_face_one/check_face_one_Model.dart';
+import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
+import 'package:eztime_app/Page/work/Set_work.dart';
+import 'package:eztime_app/controller/APIServices/ProFileServices/ProfileService.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Check_face_Page extends StatefulWidget {
+  final image;
+  final latitude;
+  final longitude;
+  final radius;
+  const Check_face_Page({
+    super.key,
+    this.image,
+    this.latitude,
+    this.longitude,
+    this.radius,
+  });
+
+  @override
+  State<Check_face_Page> createState() => _Check_face_PageState();
+}
+
+class _Check_face_PageState extends State<Check_face_Page> {
+  bool loading = false;
+  var status;
+  // List<EmployData> _profileList = [];
+  List<Results> _faceList = [];
+  var latitude;
+  var longitude;
+  var radius;
+  _getprofile() async {
+    setState(() {
+      loading = true;
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('_acessToken');
+    var service = get_profile_service();
+    var response = await service.getprofile(token);
+    if (response == null) {
+      loading = false;
+    } else {
+      // _profileList = [response];
+      loading = false;
+    }
+  }
+
+  Future _checkface(XFile file) async {
+    try {
+      setState(() {
+        loading = true;
+      });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('_acessToken');
+      FormData formData = FormData.fromMap({
+        'image': await MultipartFile.fromFile(
+          file.path,
+          filename: file.name,
+        ),
+      });
+      String url = '${connect_api().domain}/check_face_one';
+      var response = await Dio().post(url,
+          data: formData,
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+      if (response.statusCode == 200) {
+        setState(() {
+          status = response.statusCode.toString();
+        });
+      } else {
+        log('faild');
+        log('responseCheck_face_Page: ${response}');
+        // Dialog_Tang().checkFacedFaildialog(context);
+      }
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    _checkface(widget.image);
+    _getprofile();
+    latitude = widget.latitude;
+    longitude = widget.longitude;
+    radius = widget.radius;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return loading
+        ? LoadingComponent()
+        : Scaffold(
+            appBar: AppBar(title: Text('ตรวจสอบใบหน้า')),
+            body: loading
+                ? Center(
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 5.0,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  )
+                : Center(
+
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              status == '200'
+                                  ? Center(
+                                    child: Icon(Icons.check_circle_outlined,
+                                        size: 200, color: Colors.green),
+                                  )
+                                  : Center(
+                                    child: Icon(
+                                        Icons.close_rounded,
+                                        color: Colors.red,
+                                        size: 200,
+                                      ),
+                                  ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              // status == '200'
+                              //     ? Text(
+                              //         'รหัสพนักงาน : ${_profileList[0].employeeNo}')
+                              //     : Container(),
+                              // status == '200'
+                              //     ? Text('ชื่อ - สกุล : ${_profileList[0].firstName} ${_profileList[0].lastName}')
+                              //     : Container(),
+                              // status == '200'
+                              //     ? Text('บริษัท : ${_profileList[0].branchOffice}')
+                              //     : Container(),
+                              // status == '200'
+                              //     ? Text('ตำแหน่ง : ${_profileList[0].department}')
+                              //     : Center(
+                              //         child: Text('ไม่พบข้อมูลใบหน้า'),
+                                    // ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              status == '200'
+                                  ? Center(
+                                    child: Buttons(
+                                        title: 'ลงเวลา',
+                                        press: () async {
+                                          log('$latitude');
+                                          log('$longitude');
+                                          // var name =
+                                          //     '${_profileList[0].firstName} ${_profileList[0].lastName}';
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                            builder: (context) => Set_work(
+                                              // name: name,
+                                              latitude: latitude,
+                                              longitude: longitude,
+                                              radius: radius,
+                                            ),
+                                          ));
+                                        },
+                                      ),
+                                  )
+                                  : Buttons(
+                                      title: 'กลับ',
+                                      press: () {
+                                        Navigator.of(context).pop(MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigationBar_Page(),
+                                        ));
+                                      },
+                                    ),
+                              loading ? LoadingComponent() : Container()
+                            ]),
+                      ),
+                 
+          );
+  }
+}

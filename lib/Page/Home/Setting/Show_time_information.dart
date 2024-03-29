@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
+import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
-import 'package:eztime_app/Model/Get_Model/gettimeattendent/get_attendent_employee_month_shift.dart';
+import 'package:eztime_app/Model/Get_Model/get_checkin_out_model/get_checkin_out_time_month_model.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,7 +17,7 @@ class Information_login extends StatefulWidget {
 
 class _Information_loginState extends State<Information_login> {
   List<String> _months = DateFormat.MMMM().dateSymbols.MONTHS.toList();
-  List<AttendanceData> attendanceData = [];
+  List<Data> _getTimeStampData = [];
   List _itemstatusIn = [];
   int _selectedYear = DateTime.now().year;
   bool loading = false;
@@ -30,8 +30,12 @@ class _Information_loginState extends State<Information_login> {
     shareprefs();
     // TODO: implement initState
     _selectedMonth = DateTime.now().month;
-    mounText = _months[_selectedMonth! - 1];
+    // mounText = _months[_selectedMonth! - 1];
     super.initState();
+  }
+
+  String formatMonth(String month) {
+    return month.padLeft(2, '0');
   }
 
   Future shareprefs() async {
@@ -41,8 +45,15 @@ class _Information_loginState extends State<Information_login> {
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
       token = prefs.getString('_acessToken');
-      await get_checkin_one_employee();
+
+      setState(() {
+        get_checkin_one_employee();
+        loading = false;
+      });
     } catch (e) {
+      setState(() {
+        loading = false;
+      });
       log(e.toString());
     } finally {
       setState(() {
@@ -56,15 +67,29 @@ class _Information_loginState extends State<Information_login> {
       setState(() {
         loading = true;
       });
-      String url = '${connect_api().domain}/get_attendent_employee_month_shift';
+      var _mon = _selectedMonth.toString();
+      var formate = formatMonth(_mon);
+      String url = '${connect_api().domain}/GetTimeStampData';
       var response = await Dio().post(url,
+          data: {"month": "$formate", "year": "$_selectedYear"},
           options: Options(headers: {'Authorization': 'Bearer $token'}));
+          print("${response.statusCode}");
       if (response.statusCode == 200) {
-        get_attendent_employee_month_Modedl json =
-            get_attendent_employee_month_Modedl.fromJson(response.data);
-        attendanceData = json.attendanceData!;
-      } else {}
+        setState(() {
+           get_checkin_out_time_month_model json =
+            get_checkin_out_time_month_model.fromJson(response.data);
+        _getTimeStampData = json.data!;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
+      }
     } catch (e) {
+      setState(() {
+        loading = false;
+      });
     } finally {
       setState(() {
         loading = false;
@@ -79,23 +104,29 @@ class _Information_loginState extends State<Information_login> {
   @override
   Widget build(BuildContext context) {
     return loading
-        ? Loading()
+        ? LoadingComponent()
         : Scaffold(
             appBar: AppBar(title: Text('Check in-out.title').tr()),
             body: RefreshIndicator(
                 onRefresh: () => _onRefresh(),
                 child: ListView.builder(
-                  itemCount: attendanceData.length,
+                  itemCount: _getTimeStampData.length,
                   itemBuilder: (context, index) {
-                    attendanceData.any((element) =>
-                        element.createAt!.split('T').first ==
-                        element.createAt!.split('T').first);
+                    Color _color = Colors.grey;
+                    var checkin = _getTimeStampData[index].checkinTime;
+                    var checkout = _getTimeStampData[index].checkoutTime;
+                    var _now =
+                        _getTimeStampData[index].shiftDate?.split('T').first;
+                    var _datetime_now = DateTime.now().toString();
+                    var formate_datetime_now = _datetime_now.split(' ').first;
+   
                     return Card(
-                      margin: EdgeInsets.all(16),
+                      color: Colors.red,
+                      margin: EdgeInsets.all(5),
                       child: Column(
                         children: [
                           Container(
-                            // color: attendanceData[index]. Colors.white,
+                            // color: _getTimeStampData[index]. Colors.white,
                             width: double.infinity,
                             padding: EdgeInsets.all(8),
                             child: Column(
@@ -106,44 +137,23 @@ class _Information_loginState extends State<Information_login> {
                                   children: [
                                     Text('Check in-out.workingday').tr(),
                                     Text(
-                                        ' ${attendanceData[index].createAt!.split('T').first}')
+                                        ' ${_getTimeStampData[index].shiftDate!.split('T').first}')
                                   ],
                                 ),
-                                attendanceData[index].status == 'in'
-                                    ? Wrap(
-                                        children: [
-                                          Text('Check in-out.Timetowork')
-                                              .tr(),
-                                          Text(' ${attendanceData[index].timeInput}')
-                                        ],
-                                      )
-                                    : Container(),
                                 Wrap(
                                   children: [
-                                    Text('Check in-out.Lateforwork')
-                                        .tr(),
-                                        Text(' ${attendanceData[index].late} '),
-                                        Text('Check in-out.min').tr()
+                                    Text('Check in-out.Timetowork').tr(),
+                                    Text(
+                                        ' ${_getTimeStampData[index].checkinTime!.split('T').first}')
                                   ],
                                 ),
-                                attendanceData[index].status == 'out'
-                                    ? Row(
-                                      children: [
-                                        Text('Check in-out.Timeoffwork')
-                                            .tr(),
-                                            Text(' ${attendanceData[index].timeInput}')
-                                      ],
-                                    )
-                                    : Container()
-                                // ListView.builder(
-                                //   itemCount: attendanceData.length,
-                                //   itemBuilder: (context, index) {
-                                //     return attendanceData[index].status ==
-                                //             'out'
-                                //         ? Container()
-                                //         :
-                                //   },
-                                // )
+                                Row(
+                                  children: [
+                                    Text('Check in-out.Timeoffwork').tr(),
+                                    Text(
+                                        ' ${_getTimeStampData[index].checkoutTime!.split('T').first}')
+                                  ],
+                                )
                               ],
                             ),
                           ),
@@ -161,7 +171,7 @@ class _Information_loginState extends State<Information_login> {
       underline: Container(
         // Customize the underline
         height: 1,
-        color: Colors.blue,
+        color: Theme.of(context).primaryColor,
       ),
       elevation: 5,
       style: TextStyle(fontSize: 13, color: Colors.black),
@@ -193,7 +203,7 @@ class _Information_loginState extends State<Information_login> {
       underline: Container(
         // Customize the underline
         height: 1,
-        color: Colors.blue,
+        color: Theme.of(context).primaryColor,
       ),
       style: TextStyle(fontSize: 13, color: Colors.black),
       value: _selectedYear,

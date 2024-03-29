@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
-import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
+import 'package:eztime_app/Components/Dialog/Buttons/Button.dart';
 import 'package:flutter/material.dart';
 
 class reset_password extends StatefulWidget {
@@ -21,7 +20,6 @@ class _reset_passwordState extends State<reset_password> {
 
   @override
   void initState() {
-    InternetConnectionChecker().checker();
     super.initState();
   }
 
@@ -55,16 +53,16 @@ class _reset_passwordState extends State<reset_password> {
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.zero,
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       prefixIcon: Icon(
                         Icons.key_rounded,
-                        color: Colors.blue,
+                        color: Theme.of(context).primaryColor,
                       ),
                       suffixIcon: IconButton(
                           onPressed: () {
@@ -75,14 +73,14 @@ class _reset_passwordState extends State<reset_password> {
                           icon: _obscureText
                               ? Icon(
                                   Icons.visibility_off_outlined,
-                                  color: Colors.blue,
+                                  color: Theme.of(context).primaryColor,
                                 )
                               : Icon(
                                   Icons.visibility,
-                                  color: Colors.blue,
+                                  color: Theme.of(context).primaryColor,
                                 )),
                       labelText: "รหัสผ่านเดิม",
-                      labelStyle: TextStyle(color: Colors.blue, fontSize: 12),
+                      labelStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 12),
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -104,16 +102,16 @@ class _reset_passwordState extends State<reset_password> {
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.zero,
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       prefixIcon: Icon(
                         Icons.key_rounded,
-                        color: Colors.blue,
+                        color: Theme.of(context).primaryColor,
                       ),
                       suffixIcon: IconButton(
                           onPressed: () {
@@ -124,14 +122,14 @@ class _reset_passwordState extends State<reset_password> {
                           icon: _obscureText1
                               ? Icon(
                                   Icons.visibility_off_outlined,
-                                  color: Colors.blue,
+                                  color: Theme.of(context).primaryColor,
                                 )
                               : Icon(
                                   Icons.visibility,
-                                  color: Colors.blue,
+                                  color: Theme.of(context).primaryColor,
                                 )),
                       labelText: "รหัสผ่านใหม่",
-                      labelStyle: TextStyle(color: Colors.blue, fontSize: 12),
+                      labelStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 12),
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -153,16 +151,16 @@ class _reset_passwordState extends State<reset_password> {
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.zero,
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       prefixIcon: Icon(
                         Icons.key_rounded,
-                        color: Colors.blue,
+                        color: Theme.of(context).primaryColor,
                       ),
                       suffixIcon: IconButton(
                           onPressed: () {
@@ -173,14 +171,14 @@ class _reset_passwordState extends State<reset_password> {
                           icon: _obscureText2
                               ? Icon(
                                   Icons.visibility_off_outlined,
-                                  color: Colors.blue,
+                                  color: Theme.of(context).primaryColor,
                                 )
                               : Icon(
                                   Icons.visibility,
-                                  color: Colors.blue,
+                                  color: Theme.of(context).primaryColor,
                                 )),
                       labelText: "ยืนยันรหัสผ่านใหม่",
-                      labelStyle: TextStyle(color: Colors.blue, fontSize: 12),
+                      labelStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 12),
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {

@@ -4,30 +4,28 @@ import 'dart:convert' as convert;
 import 'dart:developer';
 
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
-import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
-import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
-import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
+import 'package:eztime_app/Components/Dialog/Buttons/Button.dart';
+import 'package:eztime_app/Components/Dialog/alertDialog/alertDialog.dart';
+import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
 import 'package:eztime_app/Components/Security/Pin_Code.dart';
-import 'package:eztime_app/Components/internet_connection_checker_plus.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
 import 'package:eztime_app/Model/Get_Model/face/getFaceRecog_Model/getFaceRecog_Model.dart';
 import 'package:eztime_app/Model/Get_Model/get_Profile/Profile_Model.dart';
-import 'package:eztime_app/Model/Login/Login_Model.dart';
+import 'package:eztime_app/Model/login/login_Model.dart';
 import 'package:eztime_app/Page/Home/Drawer/Drawer.dart';
 import 'package:eztime_app/Page/Home/HomePage.dart';
 import 'package:eztime_app/Page/Home/Setting/Show_time_information.dart';
+import 'package:eztime_app/Page/Home/Setting/facefoder/Face_data_Page.dart';
 import 'package:eztime_app/Page/Home/promble.dart';
-import 'package:eztime_app/Page/Login/Login_Page.dart';
 import 'package:eztime_app/Page/NotiFications/NotiFications_Detail.dart';
-import 'package:eztime_app/Page/Splasscreen/Face_data_Page.dart';
+import 'package:eztime_app/Page/login/login_Page.dart';
 import 'package:eztime_app/Page/work/Set_work.dart';
-import 'package:eztime_app/controller/APIServices/LoginServices/LoginApiService.dart';
 import 'package:eztime_app/controller/APIServices/ProFileServices/ProfileService.dart';
 import 'package:eztime_app/controller/APIServices/getFaceRecog/getFaceRecog.dart';
+import 'package:eztime_app/controller/APIServices/loginServices/loginApiService.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,7 +35,8 @@ import 'package:permission_handler/permission_handler.dart%20';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomNavigationBar_Page extends StatefulWidget {
-  const BottomNavigationBar_Page({super.key});
+  final btpindex;
+  const BottomNavigationBar_Page({super.key, this.btpindex});
 
   @override
   BottomNavigationBar_PageState createState() =>
@@ -50,7 +49,7 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
   int coutMessage = 0;
   var image;
   bool? serviceEnabled;
-  List<EmployData> _profilelist = [];
+  // List<> _profilelist = [];
   LocationPermission? permission;
   getFaceRecog_Model member = getFaceRecog_Model();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -73,13 +72,16 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
     NotiFications_Detail_Page(),
     Container()
   ];
-  //    void _navigateToNotificationScreen(BuildContext context, RemoteMessage message) {
-  //   // เปลี่ยนหน้าจอเมื่อมีการคลิกที่ Notification
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => NotiFications_Detail_Page(notificationData: message,)),
-  //   );
-  // }
+
+  setpageindex() async {
+    var index = widget.btpindex;
+    setState(() {
+      if (index != null) {
+        _bottomNavIndex = index;
+      }
+    });
+  }
+
   var _profileService = get_profile_service();
   Future getprofile() async {
     setState(() {
@@ -90,15 +92,14 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
       var token = prefs.getString('_acessToken');
       var response = await _profileService.getprofile(token);
       setState(() {
-        log(response.toString());
         if (response == null) {
-          Dialog_Tang().infodialog(context);
+          // //Dialog_internetError.showCustomDialog(context);
           log('faile');
           setState(() {
             loading = false;
           });
         } else {
-          _profilelist = [response];
+          // _profilelist = [response];
           log('success');
           setState(() {
             loading = false;
@@ -116,7 +117,6 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
     setState(() {
       loading = true;
     });
-    await Future.delayed(Duration(milliseconds: 300));
     if (pin_number == null) {
       setState(() {
         loading = false;
@@ -124,8 +124,8 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
       });
     } else {
       setState(() {
-        loading = false;
         Pin_code().sceenlog(context);
+        loading = false;
       });
     }
   }
@@ -133,6 +133,7 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
   var service;
   shareprefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await loginApiService().fetchData();
     setState(() {
       username = prefs.getString('username');
       password = prefs.getString('password');
@@ -140,19 +141,25 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
       ip = prefs.getString('ip');
       pin_number = prefs.getString('pincode');
       token = prefs.getString('_acessToken');
-      getprofile();
+      // getprofile();
       _OnStartpin();
     });
   }
 
-
-
- 
+  onRefresh() async {
+    setState(() {
+      loading = true;
+    });
+    await Future.delayed(Duration(milliseconds: 800));
+    setState(() {
+      loading = false;
+    });
+  }
 
   @override
   void initState() {
-    InternetConnectionChecker().checker();
-    _OnStartpin();
+    loading = true;
+    setpageindex();
     shareprefs();
     super.initState();
   }
@@ -160,7 +167,7 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
   @override
   Widget build(BuildContext context) {
     return loading
-        ? Loading()
+        ? LoadingComponent()
         : Scaffold(
             key: _scaffoldKey,
             endDrawer: MyDrawer(),
@@ -168,7 +175,6 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
             bottomNavigationBar: AnimatedBottomNavigationBar.builder(
                 activeIndex: _bottomNavIndex,
                 itemCount: iconList.length,
-
                 gapLocation: GapLocation.none,
                 notchSmoothness: NotchSmoothness.defaultEdge,
                 onTap: (index) {
@@ -177,12 +183,11 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
                       : setState(() {
                           log('index:${index}');
                           if (index == 1) {
-                            if (_profilelist
-                             [0].role == '') {
-                              index = 1;
-                            } else {
-                              _bottomNavIndex = index;
-                            }
+                            // if (_profilelist[0].role == '') {
+                            //   index = 1;
+                            // } else {
+                            //   _bottomNavIndex = index;
+                            // }
                           }
                           _bottomNavIndex = index;
                         });
@@ -191,13 +196,18 @@ class BottomNavigationBar_PageState extends State<BottomNavigationBar_Page> {
                   return Icon(
                     iconList[index],
                     size: 24,
-                    color: isActive ? Colors.blue : Colors.grey,
+                    color:
+                        isActive ? Theme.of(context).primaryColor : Colors.grey,
                   );
                   //other params
-                }),
-            // floatingActionButtonLocation:
-            //     FloatingActionButtonLocation.miniCenterDocked,
+                })
             // floatingActionButton:
-          );
+            //     FloatingActionButton(onPressed: () {
+
+            //     }, child: Icon(Icons.camera_alt_outlined),
+            //     ),
+            //     floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            // // floatingActionButton:
+            );
   }
 }

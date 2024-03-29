@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ButtonTwoAppprove extends StatelessWidget {
@@ -20,9 +21,9 @@ class ButtonTwoAppprove extends StatelessWidget {
               onPressed: onPressBtSucess,
               icon: Icon(Icons.check_circle_rounded, size: 12),
               label: Text(
-                'อนุมัติ',
+                'Apporv_Improve_Uptime.Approve',
                 style: TextStyle(fontSize: 9),
-              )),
+              ).tr()),
         ),
         SizedBox(width: 10),
         Container(
@@ -33,8 +34,8 @@ class ButtonTwoAppprove extends StatelessWidget {
                   backgroundColor: MaterialStatePropertyAll(Colors.red)),
               onPressed: onPressBtNotsuc,
               icon: Icon(Icons.close, size: 12),
-              label: Text('ไม่อนุมัติ',
-                style: TextStyle(fontSize: 9),)),
+              label: Text('Apporv_Improve_Uptime.Not Approve',
+                style: TextStyle(fontSize: 9),).tr()),
         ),
 
       ],

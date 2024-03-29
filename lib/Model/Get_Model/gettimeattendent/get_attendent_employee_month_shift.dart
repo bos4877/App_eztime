@@ -34,6 +34,14 @@ class AttendanceData {
   String? lat;
   String? lng;
   String? companyId;
+  String? timeId;
+  String? timeOut;
+  String? checkinTime;
+  String? checkoutTime;
+  String? latIn;
+  String? latOut;
+  String? lngIn;
+  String? lngOut;
 
   AttendanceData(
       {this.rowId,
@@ -46,7 +54,15 @@ class AttendanceData {
       this.reslatitude,
       this.lat,
       this.lng,
-      this.companyId});
+      this.companyId,
+      this.timeId,
+      this.timeOut,
+      this.checkinTime,
+      this.checkoutTime,
+      this.latIn,
+      this.latOut,
+      this.lngIn,
+      this.lngOut});
 
   AttendanceData.fromJson(Map<String, dynamic> json) {
     rowId = json['row_id'];
@@ -60,6 +76,14 @@ class AttendanceData {
     lat = json['lat'];
     lng = json['lng'];
     companyId = json['company_id'];
+    timeId = json['time_id'];
+    timeOut = json['time_out'];
+    checkinTime = json['checkin_time'];
+    checkoutTime = json['checkout_time'];
+    latIn = json['lat_in'];
+    latOut = json['lat_out'];
+    lngIn = json['lng_in'];
+    lngOut = json['lng_out'];
   }
 
   Map<String, dynamic> toJson() {
@@ -75,6 +99,14 @@ class AttendanceData {
     data['lat'] = this.lat;
     data['lng'] = this.lng;
     data['company_id'] = this.companyId;
+    data['time_id'] = this.timeId;
+    data['time_out'] = this.timeOut;
+    data['checkin_time'] = this.checkinTime;
+    data['checkout_time'] = this.checkoutTime;
+    data['lat_in'] = this.latIn;
+    data['lat_out'] = this.latOut;
+    data['lng_in'] = this.lngIn;
+    data['lng_out'] = this.lngOut;
     return data;
   }
 }

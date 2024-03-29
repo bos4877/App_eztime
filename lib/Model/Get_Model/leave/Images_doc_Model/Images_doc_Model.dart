@@ -1,9 +1,9 @@
-class Images_doc_Model {
+class Images_doc_Model_leavelist {
   String? img;
 
-  Images_doc_Model({this.img});
+  Images_doc_Model_leavelist({this.img});
 
-  Images_doc_Model.fromJson(Map<String, dynamic> json) {
+  Images_doc_Model_leavelist.fromJson(Map<String, dynamic> json) {
     img = json['img'];
   }
 

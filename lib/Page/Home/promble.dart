@@ -10,10 +10,10 @@
 // import 'package:eztime_app/Components/APIServices/RequestleaveService/approve_doc/approve.dart';
 // import 'package:eztime_app/Components/APIServices/RequestleaveService/get_DocOne/get_DocOne.dart';
 // import 'package:eztime_app/Components/APIServices/RequestleaveService/get_pic_doc/get_pic_doc.dart';
-// import 'package:eztime_app/Components/DiaLog/ButtonApprov/ButtonsTwoApprov.dart';
-// import 'package:eztime_app/Components/DiaLog/Buttons/Button.dart';
-// import 'package:eztime_app/Components/DiaLog/awesome_dialog/awesome_dialog.dart';
-// import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
+// import 'package:eztime_app/Components/Dialog/ButtonApprov/ButtonsTwoApprov.dart';
+// import 'package:eztime_app/Components/Dialog/Buttons/Button.dart';
+// import 'package:eztime_app/Components/Dialog/awesome_dialog/awesome_dialog.dart';
+// import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
 // import 'package:eztime_app/Components/TextStyle/StyleText.dart';
 // import 'package:eztime_app/Model/Get_Model/Ot/get_doc_Ot_list_one/get_doc_Ot_list_one_model.dart';
 // import 'package:eztime_app/Model/Get_Model/get_Profile/Profile_Model.dart';

@@ -1,174 +1,109 @@
 class get_doc_Ot_list_one_model {
-  List<DocList>? docList;
+  List<Data>? data;
 
-  get_doc_Ot_list_one_model({this.docList});
+  get_doc_Ot_list_one_model({this.data});
 
   get_doc_Ot_list_one_model.fromJson(Map<String, dynamic> json) {
-    if (json['doc_list'] != null) {
-      docList = <DocList>[];
-      json['doc_list'].forEach((v) {
-        docList!.add(new DocList.fromJson(v));
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(new Data.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.docList != null) {
-      data['doc_list'] = this.docList!.map((v) => v.toJson()).toList();
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class DocList {
-  String? docOtId;
-  String? otId;
+class Data {
+  String? docId;
+  String? description;
+  String? statusApprove;
   String? startDate;
   String? endDate;
-  String? startTime;
-  String? endTime;
-  String? employeeNo;
-  String? companyId;
-  String? description;
-  String? createAt;
-  String? status;
-  Ot? ot;
+  String? otType;
+  String? otId;
+  String? shiftDate;
+  String? employeeName;
+  String? createDate;
   List<DocOtApprove>? docOtApprove;
-  Employee? employee;
 
-  DocList(
-      {this.docOtId,
-      this.otId,
+  Data(
+      {this.docId,
+      this.description,
+      this.statusApprove,
       this.startDate,
       this.endDate,
-      this.startTime,
-      this.endTime,
-      this.employeeNo,
-      this.companyId,
-      this.description,
-      this.createAt,
-      this.status,
-      this.ot,
-      this.docOtApprove,
-      this.employee});
+      this.otType,
+      this.otId,
+      this.shiftDate,
+      this.employeeName,
+      this.createDate,
+      this.docOtApprove});
 
-  DocList.fromJson(Map<String, dynamic> json) {
-    docOtId = json['doc_ot_id'];
-    otId = json['ot_id'];
+  Data.fromJson(Map<String, dynamic> json) {
+    docId = json['doc_id'];
+    description = json['description'];
+    statusApprove = json['status_approve'];
     startDate = json['start_date'];
     endDate = json['end_date'];
-    startTime = json['start_time'];
-    endTime = json['end_time'];
-    employeeNo = json['employee_no'];
-    companyId = json['company_id'];
-    description = json['description'];
-    createAt = json['create_at'];
-    status = json['status'];
-    ot = json['Ot'] != null ? new Ot.fromJson(json['Ot']) : null;
+    otType = json['ot_type'];
+    otId = json['ot_id'];
+    shiftDate = json['shift_date'];
+    employeeName = json['employee_name'];
+    createDate = json['create_date'];
     if (json['Doc_Ot_Approve'] != null) {
       docOtApprove = <DocOtApprove>[];
       json['Doc_Ot_Approve'].forEach((v) {
         docOtApprove!.add(new DocOtApprove.fromJson(v));
       });
     }
-    employee = json['Employee'] != null
-        ? new Employee.fromJson(json['Employee'])
-        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['doc_ot_id'] = this.docOtId;
-    data['ot_id'] = this.otId;
+    data['doc_id'] = this.docId;
+    data['description'] = this.description;
+    data['status_approve'] = this.statusApprove;
     data['start_date'] = this.startDate;
     data['end_date'] = this.endDate;
-    data['start_time'] = this.startTime;
-    data['end_time'] = this.endTime;
-    data['employee_no'] = this.employeeNo;
-    data['company_id'] = this.companyId;
-    data['description'] = this.description;
-    data['create_at'] = this.createAt;
-    data['status'] = this.status;
-    if (this.ot != null) {
-      data['Ot'] = this.ot!.toJson();
-    }
+    data['ot_type'] = this.otType;
+    data['ot_id'] = this.otId;
+    data['shift_date'] = this.shiftDate;
+    data['employee_name'] = this.employeeName;
+    data['create_date'] = this.createDate;
     if (this.docOtApprove != null) {
       data['Doc_Ot_Approve'] =
           this.docOtApprove!.map((v) => v.toJson()).toList();
     }
-    if (this.employee != null) {
-      data['Employee'] = this.employee!.toJson();
-    }
-    return data;
-  }
-}
-
-class Ot {
-  int? rowId;
-  String? otId;
-  String? otName;
-  String? rate;
-  String? companyId;
-
-  Ot({this.rowId, this.otId, this.otName, this.rate, this.companyId});
-
-  Ot.fromJson(Map<String, dynamic> json) {
-    rowId = json['row_id'];
-    otId = json['ot_id'];
-    otName = json['ot_name'];
-    rate = json['rate'];
-    companyId = json['company_id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['row_id'] = this.rowId;
-    data['ot_id'] = this.otId;
-    data['ot_name'] = this.otName;
-    data['rate'] = this.rate;
-    data['company_id'] = this.companyId;
     return data;
   }
 }
 
 class DocOtApprove {
-  String? approveFname;
-  String? approveLname;
   String? status;
+  String? employeeName;
+  String? updateDate;
 
-  DocOtApprove({this.approveFname, this.approveLname, this.status});
+  DocOtApprove({this.status, this.employeeName, this.updateDate});
 
   DocOtApprove.fromJson(Map<String, dynamic> json) {
-    approveFname = json['approve_fname'];
-    approveLname = json['approve_lname'];
     status = json['status'];
+    employeeName = json['employee_name'];
+    updateDate = json['update_date'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['approve_fname'] = this.approveFname;
-    data['approve_lname'] = this.approveLname;
     data['status'] = this.status;
-    return data;
-  }
-}
-
-class Employee {
-  String? firstName;
-  String? lastName;
-
-  Employee({this.firstName, this.lastName});
-
-  Employee.fromJson(Map<String, dynamic> json) {
-    firstName = json['first_name'];
-    lastName = json['last_name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
+    data['employee_name'] = this.employeeName;
+    data['update_date'] = this.updateDate;
     return data;
   }
 }

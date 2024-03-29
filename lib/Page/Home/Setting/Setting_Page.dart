@@ -1,15 +1,21 @@
 // ignore_for_file: unused_element, unused_local_variable, unused_import, body_might_complete_normally_nullable
 import 'dart:developer';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:eztime_app/Components/Dialog/alertDialog/alertDialog.dart';
+import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
 import 'package:eztime_app/Components/TextStyle/StyleText.dart';
-import 'package:eztime_app/Components/DiaLog/load/loaddialog.dart';
+import 'package:eztime_app/Components/setting_Components/card_component.dart';
 import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
 import 'package:eztime_app/Page/Home/HomePage.dart';
 import 'package:eztime_app/Page/Home/Setting/Security/security.dart';
+import 'package:eztime_app/Page/Home/Setting/pincode/pincodePage.dart';
 import 'package:eztime_app/Page/Home/Setting/reset_password.dart';
 import 'package:eztime_app/main.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class setting_page extends StatefulWidget {
@@ -48,10 +54,16 @@ class _setting_pageState extends State<setting_page> {
     await Future.delayed(Duration(milliseconds: 500));
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('selectedLanguage', selectedLanguage);
-    setState(() {
+    if (selectedLanguage != '') {
       _getSelectedLanguage();
-      load = false;
-    });
+
+      await Future.delayed(Duration(seconds: 5)).then((value) {
+        Restart.restartApp();
+        setState(() {
+          load = false;
+        });
+      });
+    }
   }
 
   Future<String?> _getSelectedLanguage() async {
@@ -61,8 +73,10 @@ class _setting_pageState extends State<setting_page> {
       print(_selectedName);
       if (_selectedName == 'ENG') {
         context.setLocale(Locale('en'));
+        load = false;
       } else {
         context.setLocale(Locale('th'));
+        load = false;
       }
     });
   }
@@ -77,77 +91,39 @@ class _setting_pageState extends State<setting_page> {
 
   @override
   Widget build(BuildContext context) {
+    _getSelectedLanguage();
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'setting.title',
         ).tr(),
         leading: IconButton(
-            onPressed: () =>
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
+            onPressed: () => Navigator.of(context).pop(MaterialPageRoute(
                   builder: (context) => BottomNavigationBar_Page(),
                 )),
             icon: Icon(Icons.arrow_back_outlined)),
       ),
       body: load
-          ? Loading()
+          ? LoadingComponent()
           : Container(
               child: Column(
                 children: [
                   SizedBox(
                     height: 10,
                   ),
-                  Container(
-                    width: double.infinity,
-                    child: Card(
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => reset_password(),
-                          ));
-                        },
-                        icon: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'setting.ChangePassword',
-                              style: TextStyles.setting_Style,
-                            ).tr(),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.grey,
-                              size: 17,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  card_cpn(
+                    press: () {
+                      Get.to(() => reset_password());
+                    },
+                    title: 'setting.ChangePassword',
+                    icon: Icons.key_outlined,
                   ),
-                  Container(
-                    width: double.infinity,
-                    child: Card(
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => Security_Page(),
-                          ));
-                        },
-                        icon: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'setting.SecuritySettings',
-                              style: TextStyles.setting_Style,
-                            ).tr(),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.grey,
-                              size: 17,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  card_cpn(
+                    press: () {
+                      Get.to(() => Security_Page());
+                    },
+                    title: 'setting.SecuritySettings',
+                    icon: Icons.security_rounded,
                   ),
                   Container(
                     width: double.infinity,
@@ -157,10 +133,23 @@ class _setting_pageState extends State<setting_page> {
                         icon: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'setting.changeLang',
-                              style: TextStyles.setting_Style,
-                            ).tr(),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Icon(
+                                  Icons.language,
+                                  size: 18,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'setting.changeLang',
+                                  style: TextStyles.setting_Style,
+                                ).tr(),
+                              ],
+                            ),
                             _lang()
                           ],
                         ),
@@ -184,7 +173,7 @@ class _setting_pageState extends State<setting_page> {
                                   Image.asset(
                                     'assets/icon_easytime/1x/icon_alert_available.png',
                                     scale: 30,
-                                    color: Colors.blue,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                   SizedBox(width: 5),
                                   Text(
@@ -233,8 +222,6 @@ class _setting_pageState extends State<setting_page> {
                       ),
                     ),
                   ),
-                  
-                  
                 ],
               ),
             ),
@@ -291,43 +278,6 @@ class _setting_pageState extends State<setting_page> {
   }
 }
 
-class CustomCard extends StatelessWidget {
-  final String title;
-  final String description;
-
-  CustomCard({required this.title, required this.description});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 4, // ความสูงของเงาของการ์ด
-      margin: EdgeInsets.all(10), // ระยะห่างของการ์ดจากขอบ
-      child: Padding(
-        padding: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              description,
-              style: TextStyle(
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class MySwitch extends StatelessWidget {
   final String title;
   final Icon icon;
@@ -358,7 +308,7 @@ class MySwitch extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                   icon,
+                    icon,
                     SizedBox(width: 5),
                     Text(
                       title,
@@ -384,8 +334,7 @@ class MySwitch extends StatelessWidget {
               child: Switch(
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   value: transform_value,
-                  onChanged: onChanged
-                  ),
+                  onChanged: onChanged),
             ),
           ],
         ),

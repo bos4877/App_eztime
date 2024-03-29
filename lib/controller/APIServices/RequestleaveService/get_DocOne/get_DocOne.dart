@@ -7,13 +7,13 @@ import 'package:eztime_app/Model/Get_Model/leave/get_DocOne_Model/get_DocOne_Mod
 class get_DocOne_Service {
   model(var token) async {
     try {
-          String url = '${connect_api().domain}/get_doc_list_one';
+          String url = '${connect_api().domain}/get_user_leave_list';
     var response = await Dio().get(url,
         options: Options(headers: {'Authorization': 'Bearer $token'}));
         if (response.statusCode == 200) {
-          get_doc_leavelist_one_Model json = get_doc_leavelist_one_Model.fromJson(response.data);
+          get_leavelist_one_Model json = get_leavelist_one_Model.fromJson(response.data);
           log('get_DocOne_Service: ${response.statusCode}');
-          return json.docList;
+          return json.data;
         } else {
           return null;
         }

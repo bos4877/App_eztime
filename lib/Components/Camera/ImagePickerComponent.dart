@@ -6,64 +6,53 @@ String? imagePath;
 XFile? pickedImage;
 String? imagePathname;
 Future gallery() async {
-  final pickedFile = await ImagePickerHelper.pickImage(ImageSource.gallery);
+  final pickedFile = await ImagePickerHelper.pickImage(ImageSource.gallery,20);
   if (pickedFile != null) {
     pickedImage = pickedFile;
     imagePath = pickedImage!.path;
     imagePathname = pickedImage!.name;
-    return imagePath;
+    return pickedImage;
   } else {
     return null;
   }
 }
 
 Future camera() async {
-  final pickedFile = await ImagePickerHelper.pickImage(ImageSource.camera);
+  final pickedFile = await ImagePickerHelper.pickImage(ImageSource.camera,20);
   if (pickedFile != null) {
     pickedImage = pickedFile;
     imagePath = pickedImage!.path;
     imagePathname = pickedImage!.name;
     log(imagePath!);
-    return imagePath;
+    return pickedImage;
   } else {
     return null;
   }
 }
 
-// Widget showImage() {
-//   // ที่อยู่ของรูปภาพ
-//   String image = '${imagePath}';
 
-//   // ตรวจสอบว่ารูปภาพมีหรือไม่
-//   File imageFile = File(image);
-//   if (!imageFile.existsSync()) {
-//     return null;
-//   }
-//   // แสดงรูปภาพ
-//   return Image.file(imageFile);
-// }
 
 class ImagePickerHelper {
-  static Future<XFile?> pickImage(ImageSource _type) async {
+  static Future<XFile?> pickImage(ImageSource _type,int imageQuality) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
         source: _type,
         maxWidth: 640,
         maxHeight: 480,
-        imageQuality: 20,
+        imageQuality: imageQuality,
         preferredCameraDevice: CameraDevice.front);
 
     return pickedFile;
   }
 }
 
-Future faceCamera() async {
-  final pickedFile = await ImagePickerHelper.pickImage(ImageSource.camera);
+Future<XFile?> faceCamera() async {
+  final pickedFile = await ImagePickerHelper.pickImage(ImageSource.camera,80);
   if (pickedFile != null) {
     pickedImage = pickedFile;
     imagePath = pickedImage!.path;
     imagePathname = pickedImage!.name;
-    log(imagePath!);
+    log('faceCamera: ${imagePath!}');
     return pickedImage;
   } else {
     return null;

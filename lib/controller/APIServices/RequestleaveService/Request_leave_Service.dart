@@ -5,14 +5,12 @@ import 'package:eztime_app/Model/Get_Model/leave/Request_leave/Request_leave_Mod
 class Request_leave_Service {
   Future model(var token) async {
     try {
-          String url = '${connect_api().domain}/get_leave';
+          String url = '${connect_api().domain}/Get_Leave_Dropdown_m';
     var response = await Dio().get(url,
         options: Options(headers: {'Authorization': 'Bearer $token'}));
         if (response.statusCode == 200) {
           Request_leave_Model json = Request_leave_Model.fromJson(response.data);
-          List<Leave> leaves = json.leave!;
-          List<Leave> individualLeaves = leaves.map((leave) => leave).toList();
-          return individualLeaves;
+          return json.data;
         } else {
           return null;
         }

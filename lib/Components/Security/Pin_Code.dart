@@ -1,4 +1,3 @@
-import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,6 +36,6 @@ class Pin_code extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar_Page();
+    return Scaffold();
   }
 }
