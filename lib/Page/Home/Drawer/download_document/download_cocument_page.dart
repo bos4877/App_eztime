@@ -1,11 +1,12 @@
 import 'dart:developer';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/Dialog/SnackBar/Sanckbar.dart';
-import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
+import 'package:eztime_app/Components/DiaLog/alertDialog/alertDialog.dart';
+import 'package:eztime_app/Components/DiaLog/load/LoadingComponent.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,6 +23,7 @@ class _document_download_pageState extends State<document_download_page> {
       'https://fitsmallbusiness.com/wp-content/uploads/2022/03/FitSmallBusiness-EXCEL-TEST-TEST.xlsx';
   bool loading = false;
   bool open = false;
+  String? idfile;
   @override
   void initState() {
     // TODO: implement initState
@@ -40,17 +42,15 @@ class _document_download_pageState extends State<document_download_page> {
     await Permission.storage.request();
     PermissionStatus status = await Permission.storage.status;
     if (status.isDenied) {
-      Snack_Bar(
-        snackBarColor: Colors.red,
-        snackBarIcon: Icons.info,
-        snackBarText: 'กรุณาอนุญาติการเข้าถึงที่เก็บข้อมูล',
-      ).showSnackBar(context);
-      await Permission.storage.request();
+      Dialog_allow_access dialogInstance = Dialog_allow_access(
+        desc: 'salary_calculation.noti',
+      );
+      dialogInstance.showCustomDialog(context);
+      // await Permission.storage.request();
     } else {
       setState(() {
         loading = true;
       });
-
       final savePath = await _getFilePath();
       String? taskId = await FlutterDownloader.enqueue(
         url: _url,
@@ -62,12 +62,12 @@ class _document_download_pageState extends State<document_download_page> {
       );
       await Future.delayed(Duration(milliseconds: 800));
       setState(() {
+        idfile = taskId;
         open = true;
         loading = false;
       });
     }
   }
-
   void _pickFile() async {
     // opens storage to pick files and the picked file or files
     // are assigned into result and if no file is chosen result is null.
@@ -94,6 +94,7 @@ class _document_download_pageState extends State<document_download_page> {
       loading = false;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,13 +112,13 @@ class _document_download_pageState extends State<document_download_page> {
                         Card(
                           child: ListTile(
                             trailing: open
-                                ? Icon(Icons.open_in_browser_outlined)
+                                ? Icon(Bootstrap.folder_symlink)
                                 : Icon(Icons.download),
                             minLeadingWidth: 4.0,
                             title: Text(
-                              'เอกสาร',
+                              'Document.title',
                               style: TextStyle(fontSize: 14),
-                            ),
+                            ).tr(),
                             iconColor: Theme.of(context).primaryColor,
                             leading: Icon(Icons.description_outlined),
                             onTap: () {

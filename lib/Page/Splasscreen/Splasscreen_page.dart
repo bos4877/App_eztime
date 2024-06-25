@@ -62,7 +62,7 @@ class _splass_screenState extends State<splass_screen> {
                 onLastPage
                     ? GestureDetector(
                         onTap: () {
-                          Navigator.pushReplacement(
+                          Navigator.removeRoute(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Domain_Set_Page(),

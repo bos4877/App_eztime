@@ -26,7 +26,7 @@ class DocList {
   String? shiftDate;
   String? description;
   String? employeeName;
-  String? statusAprrove;
+  String? statusApprove;
   String? createDate;
 
   DocList(
@@ -34,7 +34,7 @@ class DocList {
       this.shiftDate,
       this.description,
       this.employeeName,
-      this.statusAprrove,
+      this.statusApprove,
       this.createDate});
 
   DocList.fromJson(Map<String, dynamic> json) {
@@ -42,7 +42,7 @@ class DocList {
     shiftDate = json['shift_date'];
     description = json['description'];
     employeeName = json['employee_name'];
-    statusAprrove = json['status_aprrove'];
+    statusApprove = json['status_approve'];
     createDate = json['create_date'];
   }
 
@@ -52,7 +52,7 @@ class DocList {
     data['shift_date'] = this.shiftDate;
     data['description'] = this.description;
     data['employee_name'] = this.employeeName;
-    data['status_aprrove'] = this.statusAprrove;
+    data['status_approve'] = this.statusApprove;
     data['create_date'] = this.createDate;
     return data;
   }

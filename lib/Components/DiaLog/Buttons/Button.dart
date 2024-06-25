@@ -11,17 +11,15 @@ class Buttons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // width: MediaQuery.of(context).size.width * 0.35,
+      width: MediaQuery.of(context).size.width * 0.35,
       height: 40,
       child: ElevatedButton(
           style: TextButton.styleFrom(
-            side: BorderSide(color: Color(0xFF0D47A1)),
-            backgroundColor: Color(0xFF0D47A1),
+            side: BorderSide(color: Theme.of(context).primaryColor),
+            backgroundColor: Theme.of(context).primaryColor,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             elevation: 3,
-            primary: Colors.black,
-            foregroundColor: Color(0xFF0D47A1),
-            // surfaceTintColor: Colors.amber,
+            foregroundColor:  Theme.of(context).primaryColor,
           ),
           child: Text(
             title.tr(),

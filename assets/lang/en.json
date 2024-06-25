@@ -1,37 +1,45 @@
 {
   "homepage": {
+    "appname": "HIP EZTIME",
     "changeLang": "changelanguage",
     "title": "HomePage",
     "username": "username",
     "Check in-Check out": "Time Record",
-    "Check in": "check in",
-    "Check out": "check out",
+    "Check_in": "check in",
+    "Check_out": "check out",
     "More": "More...",
-    "Request leave": "Request leave",
-    "Get approval, Ot": "Request Ot",
+    "Request_leave": "Request leave",
+    "Get_approval_Ot": "Request Ot",
     "Watch the Ot log": "Work day approval",
-    "Improve Uptime": "Improve Uptime",
+    "Improve_Uptime": "Improve Uptime",
     "news information": "news information",
     "loginSuccess": "loginSuccess",
     "loginfailed": "username and password are incorrect",
-    "logout":"logoutSuccess",
+    "logout": "logoutSuccess",
     "logoutfailed": "Unable to connect",
-    "catch":"Unable to connect",
-    "exit":"Press again to exit"
+    "catch": "Unable to connect",
+    "exit": "Press again to exit",
+    "Document_list": "Requested documents",
+    "Push": "Push",
+    "Skip": "Skip",
+    "detail_coach": "Add a picture of your face before entering work",
+    "cameraAccess": "Allow camera access",
+    "locationAccess": "Allow location access",
+    "send_Document": "Send Document"
   },
-  "login":{
-"title":"Company",
-"name":"Company Name : ",
-"next":"Confirm",
-"login":"login",
-"check_again":"Examine",
-"username":"username",
-"password":"password"
+  "login": {
+    "title": "Company",
+    "name": "Company Name : ",
+    "next": "Confirm",
+    "login": "login",
+    "check_again": "Examine",
+    "username": "username",
+    "password": "password"
   },
-  "Request leave": {
-    "title": "Request leave",
+  "Request_leave": {
+    "title": "Leaves",
     "Save": "SAVE",
-    "select": "select",
+    "select": "select leave",
     "list": "waiting list",
     "Start Choose a time period": "Start Choose a time period",
     "End Choose a time period": "End Choose a time period",
@@ -39,25 +47,28 @@
     "Details": "Details",
     "AddImage": "AddImage"
   },
-  "Get approval, Ot": {
+  "ot_request": {
     "title": "Request Ot",
     "Save": "SAVE",
-    "Choose start time": "Choose start time",
-    "Choose the end period": "Choose the end period"
+    "Choose": "select day and time",
+    "Choose_a_day": "select",
+    "selectOt": "Select Ot",
+    "detail":"detail",
+    "success":"Add Document Successfully"
   },
   "Apporv_Improve_Uptime": {
     "title": "Apporv Improve Uptime",
     "employeenum": "Employee ID: ",
-    "Name":"Name: ",
-    "date":"Date: ",
-    "detail":"Details: ",
-    "status":"Status: ",
-    "Approval_authority":"Approval authority: ",
+    "Name": "Name: ",
+    "date": "Date: ",
+    "detail": "Details: ",
+    "status": "Status: ",
+    "Approval_authority": "Approval authority: ",
     "Waiting_for_approval": "Waiting",
     "Approved": "Approved",
-    "Not_approved": "Not Approved",
-    "Approve":"Approve",
-    "Not Approve":"Not Approve"
+    "cancelled": "Not Approved",
+    "Approve": "Approve",
+    "Not Approve": "Not Approve"
   },
   "Profile": {
     "title": "Employee Information",
@@ -81,23 +92,42 @@
     "tax": "Tax",
     "Not_data": "No information found!",
     "bank": "Bank",
-    "bank_number": "Account Number"
-    },
-  "Improve Uptime": {
+    "bank_number": "Account Number",
+    "nickname": "Nickname",
+    "Job_placement": "Date of Employment",
+    "Employee_type": "Employee Type"
+  },
+  "Improve_Uptime": {
     "title": "Improve Uptime",
     "Date": "Date :",
     "Status": "Status :",
     "working time": "working time :",
-    "Choose a time period": "Choose a time period"
+    "Choose a time period": "Choose a time period",
+    "detail": "detail: "
   },
-  "Request_Improve_Uptime":{
+  "Approve_documents": {
+    "title": "Approve documents"
+  },
+  "Request_Improve_Uptime": {
     "title": "Request additional work time",
-    "details":"details: ",
-    "shift_date":"shift date: ",
-    "name":"Name: ",
-    "create_date":"creat date: ",
-    "status":"Status: ",
-    "Approval_authority":"Approval authority: "
+    "details": "details: ",
+    "shift_date": "shift date: ",
+    "name": "Name: ",
+    "create_date": "creat date: ",
+    "shipdate":"shipdate: ",
+    "status": "Status: ",
+    "Approval_authority": "Approval authority: "
+  },
+  "editleave":{
+"title":"Edite leaves",
+"choose":"selest leaves",
+"datetime":"select date and time",
+"selectimages":"select images",
+"not_images":"not images",
+"camera":"camera",
+"gallery":"gallery",
+"detail":"detail",
+"selectdate":"select date"
   },
   "Employee Id": {
     "employee Id": "Employee Id : ",
@@ -105,14 +135,15 @@
   },
   "Drawer": {
     "Edit": "Employee",
-    "Manage_time":"Manage time",
-    "offer_Document":"Offer Document",
-    "Report":"Report",
-    "Request leave": "Request leave",
-    "Get approval, Ot": "Get approval, Ot",
+    "Manage_time": "Time Management",
+    "offer_Document": "Offer Document",
+    "Report": "Report",
+    "Request_leave": "Request_leave",
+    "Get_approval_Ot": "Get_approval_Ot",
     "Summarize": "Summarize",
     "salary summary": "salary",
     "setting": "setting",
+    "Menu": "Menu",
     "logout": "logout"
   },
   "setting": {
@@ -132,10 +163,14 @@
     "ConfirmPassword": "ConfirmPassword"
   },
   "buttons": {
+    "close":"close",
     "Save": "Save",
+    "approve":"Approve",
     "out": "Out",
-    "in":"In",
-    "cancle":"Cancle"
+    "in": "In",
+    "cancle": "Cancle",
+    "edite": "Edite",
+    "login": "login"
   },
   "Notification": {
     "title": "Notification",
@@ -149,18 +184,23 @@
     "title": "work time",
     "position": "current position",
     "image": "image",
-    "name":"Name: ",
-    "EmployeeNo":"EmployeeNo: ",
-    "Company":"Company: ",
-    "department":"department: "
+    "name": "Name: ",
+    "EmployeeNo": "EmployeeNo: ",
+    "Company": "Company: ",
+    "department": "department: "
   },
-  "Check in-out":{
+  "Check in-out": {
     "title": "Work Entry-Exit Information",
     "workingday": "Working Day:",
-    "Timetowork": "Time to Start Work:",
-    "Lateforwork": "Late for Work:",
-    "Timeoffwork": "Time to Finish Work:",
-    "min":"Min"
+    "Timetowork": "StartTime:",
+    "Lateforwork": "Late:",
+    "Timeoffwork": "OutTime:",
+    "status": "Status: ",
+    "time": "StatusTime: ",
+    "min": "Min"
+  },
+  "Annual_holidays": {
+    "title": "Annual holidays"
   },
   "Leaverequestlist": {
     "title": "Leave Request List",
@@ -171,47 +211,47 @@
     "details": "Details:",
     "status": "Status:",
     "picture": "Picture:",
-    "Approval_authority":"Approval authority: ",
+    "Approval_authority": "Approval authority: ",
     "Person_With_Approval": "Person with Approval:",
-    "Waiting_for_approval":"Waiting",
-    "Picture_not_found":"Picture not found!!",
-    "Approved":"Approved",
-    "Not_approved":"Not Approved"
-
+    "Waiting_for_approval": "waiting",
+    "Picture_not_found": "Picture not found!!",
+    "Approved": "approved",
+    "cancelled": "cancelled"
   },
   "Approve_leave": {
-    "tapName":"Approve leave",
+    "tapName": "Approve leave",
     "title": "Approve leave",
     "name": "Name: ",
     "starttime": "Start Time: ",
     "endTime": "End Time: ",
+    "create":"create doc: ",
     "Leavetype": "Leave Type: ",
     "details": "Details: ",
     "status": "Status: ",
     "picture": "Picture: ",
-    "Approval_authority":"Approval authority: ",
+    "Approval_authority": "Approval authority: ",
     "Person_With_Approval": "Person with Approval: ",
-    "Waiting_for_approval":"Waiting",
-    "Approved":"Approved",
-    "Not_approved":"Not Approved",
-    "Picture_not_found":"Picture not found!!"
+    "Waiting_for_approval": "Waiting",
+    "Approved": "Approved",
+    "cancelled": "Not Approved",
+    "Picture_not_found": "Picture not found!!"
   },
   "OT_request_list": {
-    "tapName":"OT Approval",
+    "tapName": "OT Approval",
     "title": "OT Request List",
     "name": "Name: ",
     "starttime": "Start Time: ",
     "endTime": "End Time: ",
     "OTtype": "OT type: ",
     "details": "Details: ",
-    "Notdetails":"No details found",
+    "Notdetails": "No details found",
     "status": "Status: ",
-    "Approval_authority":"Approval authority: ",
+    "Approval_authority": "Approval authority: ",
     "Person with approval": "Person with Approval: ",
-    "Waiting_for_approval":"Waiting",
-    "Approved":"Approved",
-    "Not_approved":"Not Approved"
-    },
+    "Waiting_for_approval": "Waiting",
+    "Approved": "Approved",
+    "cancelled": "Not Approved"
+  },
   "salary_calculation": {
     "title": "Salary Summary",
     "SelectMount": "Select Month",
@@ -223,64 +263,127 @@
     "Absenteeism": "Absenteeism :",
     "Social_Security": "Social Security :",
     "Received_Salary": "Received Salary:",
-    "Salary slip": "Salary slip"
+    "Salary slip": "Salary slip",
+    "open": "open",
+    "noti": "Please allow access to photos and media"
   },
-  "Dialog":{
-    "titleinternet":"Notifications",
-    "internet":"Please connect to the internet",
-    "Allowaccess":"Please Allow access",
-    "location":"Allow access to your location",
-    "opensetting":"Open setting",
-    "cancle":"Cancle",
-    "connect":"Connected"
+  "Dialog": {
+    "titleinternet": "Notifications",
+    "internet": "Please connect to the internet",
+    "Allowaccess": "Please Allow access",
+    "location": "Allow access to your location",
+    "opensetting": "Open setting",
+    "cancle": "Cancle",
+    "connect": "Connected"
   },
-  "offerDocument":{
-    "title":"Offer Document"
+  "offerDocument": {
+    "title": "Offer Document"
   },
-  "Document":{
-    "title":"Document"
+  "Document": {
+    "title": "Document"
   },
-  "Manage_time":{
-"title":"Time Management",
-"working_time": "working time",
-"Calendar": "Calendar",
-"ClockIn/Out": "Clock In/Out"
+  "Manage_time": {
+    "title": "Time Management",
+    "working_time": "working time",
+    "holidays": "Annual holidays",
+    "ClockIn/Out": "Clock In Out",
+    "leavequota": "Leave quota"
   },
-  "setdomain":{
-    "title":"Company",
-    "domain":"domain: ",
-    "select":"select company",
-    "input":"input domain",
-    "btn":"verify",
-    "errordomain":"Please enter domain name!!"
+  "setdomain": {
+    "title": "Company",
+    "domain": "domain: ",
+    "select": "select company",
+    "input": "input domain",
+    "btn": "verify",
+    "errordomain": "Please enter domain name!!"
   },
-  "Edit_profile":{
-    "title":"Edit Profile",
-    "name":"Name:",
-    "lastname":"Lastname:",
-    "birthday":"Birthday:",
-    "Phone":"Phone Number:",
-    "email":"E-Mail:",
-    "gender":"Gender:",
-    "nationality":"Nationality:",
-    "bank":"Bank:",
-    "bank_number":"Bank Number:",
-    "No Image Selected":"No Image Selected",
-    "Select Image":"Select Image",
-    "validateEmail":"Please enter a valid email address"
+  "Edit_profile": {
+    "title": "Edit Profile",
+    "name": "Name:",
+    "lastname": "Lastname:",
+    "birthday": "Birthday:",
+    "Phone": "Phone Number:",
+    "email": "E-Mail:",
+    "gender": "Gender:",
+    "nationality": "Nationality:",
+    "bank": "Bank:",
+    "bank_number": "Bank Number:",
+    "No Image Selected": "No Image Selected",
+    "Select Image": "Select Image",
+    "validateEmail": "Please enter a valid email address"
   },
-  "validateEdit":{
-    "validatName":"Fill in your name!!",
-    "validatlastName":"Fill in your lastname!!",
-    "validatbirthday":"Fill in your birthday!!",
-    "validatPhone":"Fill in your Phone Number!!",
-    "validateEmail":"Fill in your E-Mail!!",
-    "validategender":"Fill in your gender!!",
-    "validatenationality":"Fill in your nationality!!",
-    "Validatebank":"Fill in your bank!!",
-    "Validatebank_number":"Fill in your bank number!!"
+  "validateEdit": {
+    "validatName": "Fill in your name!!",
+    "validatlastName": "Fill in your lastname!!",
+    "validatbirthday": "Fill in your birthday!!",
+    "validatPhone": "Fill in your Phone Number!!",
+    "validateEmail": "Fill in your E-Mail!!",
+    "validategender": "Fill in your gender!!",
+    "validatenationality": "Fill in your nationality!!",
+    "Validatebank": "Fill in your bank!!",
+    "Validatebank_number": "Fill in your bank number!!"
   },
-  "Data_Not_Found":{
-    "title":"Data not found!!"
+  "Approve_addtime": {
+    "title": "Edit Addtime"
+  },
+  "alertdialog_lg": {
+    "not_session":"Your session has expired\nPlease log in again to continue using the app",
+    "internetError": "Connection error",
+    "save_Success": "successfully",
+    "success": "Success",
+    "notdata": "No data found",
+    "save_false": "failed",
+    "allow_access": "Allow access",
+    "restart_app": "Restarting application",
+    "datealert": "Please select date and time",
+    "logout":"logout"
+  },
+  "alert_image": {
+    "not_access": "You do not have access to the menu!!",
+    "data_Not_Found":"Data not found!!"
+  },
+  "error_debug": {
+    "title": "Sorry!!",
+      "1": "Unable to proceed",
+      "2": "Please disable USB Debugging and",
+      "3": "Wireless Debugging on your Android device before using",
+      "4": "the HIP EZTIME app",
+      "5": "by following these steps:",
+      "6": "1. Go to your device settings menu",
+      "7": "2. Select Developer Options",
+      "8": "(If Developer Options does not appear,",
+      "9": "go to About Phone",
+      "10": "and tap Build Number",
+      "11": "seven times to enable it)",
+      "12": "3. Turn off USB Debugging and",
+      "13": "Wireless Debugging",
+      "14": "4. Select OK to confirm",
+      "but":"Close the app"
+  },
+  "list_day": {
+    "Sunday": "Sunday",
+    "Monday": "Monday",
+    "Tuesday": "Tuesday",
+    "Wednesday": "Wednesday",
+    "Thursday": "Thursday",
+    "Friday": "Friday",
+    "Saturday": "Saturday"
+  },
+  "loading": {
+    "title": "loading..."
+  },
+  "edit_ot": {
+    "title": "edit ot",
+    "subtitle": "select ot",
+    "select_clock": "select day and time",
+    "detail": "Detail",
+    "success":"Save Success"
+  },
+  "edit_uptime": {
+    "title": "edit uptime",
+    "annotation": "annotation",
+    "*": " *",
+    "note":"Enter a note",
+    "error": "Please include a note, such as forgetting to leave work!!"
   }
 }

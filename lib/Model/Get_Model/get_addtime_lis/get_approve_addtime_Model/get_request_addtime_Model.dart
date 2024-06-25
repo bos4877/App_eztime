@@ -24,32 +24,34 @@ class get_addtime_Model {
 class Data {
   String? docId;
   String? description;
-  String? statusApprove;
+  String? status;
   String? shiftDate;
-  String? employeeName;
-  String? createDate;
-  List<DocAddtimeApprove>? docAddtimeApprove;
+  String? createAt;
+  Employee? employee;
+  List<DocApprove>? docApprove;
 
   Data(
       {this.docId,
       this.description,
-      this.statusApprove,
+      this.status,
       this.shiftDate,
-      this.employeeName,
-      this.createDate,
-      this.docAddtimeApprove});
+      this.createAt,
+      this.employee,
+      this.docApprove});
 
   Data.fromJson(Map<String, dynamic> json) {
     docId = json['doc_id'];
     description = json['description'];
-    statusApprove = json['status_approve'];
+    status = json['status'];
     shiftDate = json['shift_date'];
-    employeeName = json['employee_name'];
-    createDate = json['create_date'];
-    if (json['Doc_Addtime_Approve'] != null) {
-      docAddtimeApprove = <DocAddtimeApprove>[];
-      json['Doc_Addtime_Approve'].forEach((v) {
-        docAddtimeApprove!.add(new DocAddtimeApprove.fromJson(v));
+    createAt = json['create_at'];
+    employee = json['Employee'] != null
+        ? new Employee.fromJson(json['Employee'])
+        : null;
+    if (json['Doc_Approve'] != null) {
+      docApprove = <DocApprove>[];
+      json['Doc_Approve'].forEach((v) {
+        docApprove!.add(new DocApprove.fromJson(v));
       });
     }
   }
@@ -58,36 +60,59 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['doc_id'] = this.docId;
     data['description'] = this.description;
-    data['status_approve'] = this.statusApprove;
+    data['status'] = this.status;
     data['shift_date'] = this.shiftDate;
-    data['employee_name'] = this.employeeName;
-    data['create_date'] = this.createDate;
-    if (this.docAddtimeApprove != null) {
-      data['Doc_Addtime_Approve'] =
-          this.docAddtimeApprove!.map((v) => v.toJson()).toList();
+    data['create_at'] = this.createAt;
+    if (this.employee != null) {
+      data['Employee'] = this.employee!.toJson();
+    }
+    if (this.docApprove != null) {
+      data['Doc_Approve'] = this.docApprove!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class DocAddtimeApprove {
-  String? status;
-  String? employeeName;
-  String? updateDate;
+class Employee {
+  String? firstName;
+  String? lastName;
 
-  DocAddtimeApprove({this.status, this.employeeName, this.updateDate});
+  Employee({this.firstName, this.lastName});
 
-  DocAddtimeApprove.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    employeeName = json['employee_name'];
-    updateDate = json['update_date'];
+  Employee.fromJson(Map<String, dynamic> json) {
+    firstName = json['first_name'];
+    lastName = json['last_name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['first_name'] = this.firstName;
+    data['last_name'] = this.lastName;
+    return data;
+  }
+}
+
+class DocApprove {
+  String? docId;
+  String? updateDate;
+  String? status;
+  String? employeeName;
+
+  DocApprove({this.docId, this.updateDate, this.status, this.employeeName});
+
+  DocApprove.fromJson(Map<String, dynamic> json) {
+    docId = json['doc_id'];
+    updateDate = json['update_date'];
+    status = json['status'];
+    employeeName = json['employee_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['doc_id'] = this.docId;
+    data['update_date'] = this.updateDate;
     data['status'] = this.status;
     data['employee_name'] = this.employeeName;
-    data['update_date'] = this.updateDate;
     return data;
   }
 }

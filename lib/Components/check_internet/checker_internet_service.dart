@@ -1,34 +1,13 @@
-// ignore_for_file: prefer_conditional_assignment
-import 'package:connectivity_plus/connectivity_plus.dart';
+// import 'dart:async';
 
-class Utility {
+// import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-  static Utility? utility;
+// class ConnectivityService {
+//   StreamController<bool> connectivityStreamController = StreamController<bool>();
 
-  static Utility? getInstance() {
-    if(utility == null){
-      utility = Utility();
-    }
-
-    return utility;
-  }
-
-  // สร้างฟังก์ชันสำหรับเช็คการเชื่อมต่อ Network
-  Future<String> checkNetwork() async {
-    // เช็คว่ามีการเชื่อมต่อ Internet ไว้หรือไม่
-    var checkNetwork = await Connectivity().checkConnectivity();
-    
-    if(checkNetwork == ConnectivityResult.mobile){
-      return 'mobile';
-    }else if(checkNetwork == ConnectivityResult.wifi){
-      return 'wifi';
-    }else if(checkNetwork == ConnectivityResult.ethernet){
-      return 'ethernet';
-    }else if(checkNetwork == ConnectivityResult.none){
-      return 'none';
-    }else{
-      return 'none';
-    }
-  }
-
-}
+//   ConnectivityService() {
+//     InternetConnectionChecker().onStatusChange.listen((status) {
+//       connectivityStreamController.add(status == InternetConnectionStatus.connected);
+//     });
+//   }
+// }

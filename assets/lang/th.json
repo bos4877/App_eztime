@@ -1,15 +1,16 @@
 {
   "homepage": {
+    "appname": "HIP EZTIME",
     "title": "หน้าหลัก",
     "username": "ชื่อผู้ใช้งาน",
     "Check in-Check out": "บันทึกเวลา",
-    "Check in": "เข้างาน",
-    "Check out": "ออกงาน",
+    "Check_in": "เวลาเข้างาน",
+    "Check_out": "เวลาออกงาน",
     "More": "เพิ่มเติม...",
-    "Request leave": "ขออนุมัติลา",
-    "Get approval, Ot": "ขออนุมัติโอที",
+    "Request_leave": "ขออนุมัติลา",
+    "Get_approval_Ot": "ขออนุมัติโอที",
     "Watch the Ot log": "อนุมัติวันทำงาน",
-    "Improve Uptime": "ปรับปรุงเวลาทำงาน(ลืมแสกน)",
+    "Improve_Uptime": "ปรับปรุงเวลาทำงาน",
     "news information": "แจ้งเตือน",
     "loginSuccess": "เข้าสู่ระบบสำเร็จ",
     "loginfailed": "ชื่อผู้ใช้งานเเละรหัสผ่านไม่ถูกต้อง",
@@ -17,7 +18,14 @@
     "logoutfailed": "ออกจากระบบไม่สำเร็จ : ไม่สามารถเชื่อมต่อได้",
     "catch": "ไม่สามารถเชื่อมต่อได้",
     "errorDivice": "กรุณาออกจากระบบบนอุปกรณ์อื่น",
-    "exit": "กดอีกครั้งเพื่อออก"
+    "exit": "กดอีกครั้งเพื่อออก",
+    "Document_list": "รายการเอกสาร",
+    "Push": "เปิด",
+    "Skip": "ข้าม",
+    "detail_coach": "เพิ่มรูปหน้าก่อนเข้างาน",
+    "cameraAcess": "อนุญาตเข้าถึงกล้อง",
+    "locationAccess": "อนุญาตเข้าถึงตำแหน่ง",
+    "send_Document": "ยื่นเอกสาร"
   },
   "login": {
     "title": "บริษัท",
@@ -50,25 +58,30 @@
     "tax": "ภาษี",
     "Not_data": "ไม่พบข้อมูล",
     "bank": "ธนาคาร",
-    "bank_number": "เลขบัญชี"
+    "bank_number": "เลขบัญชี",
+    "nickname": "ชื่อเล่น",
+    "Job_placement": "วันที่บรรจุงาน",
+    "Employee_type": "ประเภทพนักงาน"
   },
   "Drawer": {
     "Edit": "จัดการข้อมูลพนักงาน",
     "Report": "รายงาน",
     "Manage_time": "จัดการเวลา",
-    "offer_Document": "ยื่นเอกสาร",
-    "Request leave": "ขออนุมัติลา",
-    "Get approval, Ot": "ขออนุมัติโอที",
+    "offer_Document": "รายการเอกสาร",
+    "Request_leave": "ขออนุมัติลา",
+    "Get_approval_Ot": "ขออนุมัติโอที",
     "Summarize": "สรปุข้อมูล เข้า-ออกงาน",
     "salary summary": "สรุปเงินเดือน",
     "setting": "ตั้งค่า",
+    "Menu": "เมนู",
     "logout": "ออกจากระบบ"
   },
   "Manage_time": {
     "title": "จัดการเวลา",
     "working_time": "เวลาการทำงาน",
-    "Calendar": "ปฎิทิน",
-    "ClockIn/Out": "เวลาเข้าออกงาน"
+    "holidays": "วันหยุดประจำปี",
+    "ClockIn/Out": "เวลาเข้าออกงาน",
+    "leavequota": "โควต้า การลา"
   },
   "Dialog": {
     "titleinternet": "เเจ้งเตือน",
@@ -79,16 +92,27 @@
     "cancle": "ยกเลิก",
     "connect": "เชื่อมต่อ"
   },
-  "Request leave": {
-    "title": "ขออนุมัติลา",
+  "Request_leave": {
+    "title": "ขอลา",
     "Save": "บันทึก",
-    "select": "เลือกหัวข้อการลา",
+    "select": "หัวข้อการลา",
     "list": "รายการที่รอ",
     "Start Choose a time period": "เลือกช่วงเวลาเริ่มต้น",
     "End Choose a time period": "เลือกช่วงเวลาสิ้นสุด",
     "Pending Items": "รายการที่รออนุมัติ",
     "Details": "รายละเอียด",
     "AddImage": "เพิ่มรูปภาพ"
+  },
+  "editleave":{
+"title":"แก้ไขเอกสาร",
+"choose":"เลือกหัวข้อการลา",
+"datetime":"เลือกวันที่เเละเวลา",
+"selectimages":"เลือกรูปภาพ",
+"not_images":"ไม่พบรูปภาพ",
+"camera":"กล้อง",
+"gallery":"คลังภาพ",
+"detail":"รายละเอียด",
+"selectdate":"เลือกวันที่"
   },
   "Apporv_Improve_Uptime": {
     "title": "อนุมัติวันทำงาน",
@@ -101,22 +125,26 @@
     "Approval_authority": "ผู้มีสิทธิ์อนุมัติ",
     "Waiting_for_approval": "รออนุมัติ",
     "Approved": "อนุมัติเเล้ว",
-    "Not_approved": "ไม่อนุมัติ",
+    "cancelled": "ไม่อนุมัติ",
     "Approve": "อนุมัติ",
     "Not Approve": "ไม่อนุมัติ"
   },
-  "Get approval, Ot": {
-    "title": "ขออนุมัติโอที",
+  "ot_request": {
+    "title": "เอกสารขอโอที",
     "Save": "บันทึก",
-    "Choose start time": "เลือกช่วงเวลาเริ่มต้น",
-    "Choose the end period": "เลือกช่วงเวลาสิ้นสุด"
+    "Choose": "เลือกวันที่เเละเวลา",
+    "Choose_a_day": "เลือกวันที่เเละเวลา",
+    "selectOt": "เลือกประเภท โอที",
+    "detail": "รายละเอียด",
+    "success":"ยื่นเอกสารขอโอทีสำเร็จ"
   },
-  "Improve Uptime": {
-    "title": "ปรับปรุงเวลาทำงาน(ลืมแสกน)",
+  "Improve_Uptime": {
+    "title": "แก้ไขเวลาทำงาน",
     "Date": "วันที่",
     "Status": "สถานะ",
     "working time": "เวลาการทำงาน",
-    "Choose a time period": "เลือกช่วงเวลา"
+    "Choose a time period": "เลือกช่วงเวลา",
+    "detail": "รายละเอียด: "
   },
   "setting": {
     "title": "ตั้งค่า",
@@ -135,10 +163,14 @@
     "ConfirmPassword": "ยืนยันรหัสผ่านใหม่"
   },
   "buttons": {
+    "close":"ปิด",
+    "approve":"อนุมัติ",
     "Save": "บันทึก",
     "out": "ออกงาน",
     "in": "เข้างาน",
-    "cancle": "ยกเลิก"
+    "cancle": "ยกเลิก",
+    "edite": "แก้ไข",
+    "login": "เข้าสู่ระบบ"
   },
   "Notification": {
     "title": "การเเจ้งเตือน"
@@ -156,7 +188,7 @@
     "department": "ตำแหน่ง: "
   },
   "Leaverequestlist": {
-    "title": "รายการขอลา",
+    "title": "เอกสารขอลางาน",
     "name": "ชื่อ - สกุล:",
     "starttime": "เวลาเริ่มต้น:",
     "endTime": "เวลาสิ้นสุด:",
@@ -168,24 +200,26 @@
     "Person_With_Approval": "ผู้มีสิทธิอนุมัติ:",
     "Waiting_for_approval": "รออนุมัติ",
     "Approved": "อนุมัติเเล้ว",
-    "Not_approved": "ไม่อนุมัติ",
+    "cancelled": "ไม่อนุมัติ",
     "Picture_not_found": "ไม่พบรูปภาพ"
   },
-  "Request_Improve_Uptime":{
+  "Request_Improve_Uptime": {
     "title": "ขอเพิ่มเวลางาน",
-    "details":"รายละเอียด: ",
-    "shift_date":"กะ: ",
-    "name":"ชื่อ: ",
-    "create_date":"วันที่ขอ: ",
-    "status":"สถานะ: ",
-    "Approval_authority":"ผู้มีสิทธิ์อนุมัติ: "
+    "details": "รายละเอียด: ",
+    "shift_date": "กะ: ",
+    "name": "ชื่อ: ",
+    "create_date": "วันขอเอกสาร: ",
+    "shipdate":"วันที่ต้องการแก้ไข: ",
+    "status": "สถานะ: ",
+    "Approval_authority": "ผู้มีสิทธิ์อนุมัติ: "
   },
   "Approve_leave": {
     "tapName": "อนุมัติลา",
     "title": "รายการขอลา",
     "name": "ชื่อ - สกุล: ",
-    "starttime": "วันที่ขอ: ",
-    "endTime": "เวลาสิ้นสุด: ",
+    "starttime": "วันเริ่มต้น: ",
+    "endTime": "วันสิ้นสุด: ",
+    "create":"วันที่ขอเอกสาร: ",
     "Leavetype": "ประเภทการลา: ",
     "details": "รายละเอียด: ",
     "status": "สถานะ: ",
@@ -194,7 +228,7 @@
     "Person_With_Approval": "ผู้มีสิทธิอนุมัติ: ",
     "Waiting_for_approval": "รออนุมัติ",
     "Approved": "อนุมัติเเล้ว",
-    "Not_approved": "ไม่อนุมัติ",
+    "cancelled": "ไม่อนุมัติ",
     "Picture_not_found": "ไม่พบรูปภาพ"
   },
   "OT_request_list": {
@@ -211,7 +245,7 @@
     "Person with approval": "ผู้มีสิทธิอนุมัติ:",
     "Waiting_for_approval": "รออนุมัติ",
     "Approved": "อนุมัติเเล้ว",
-    "Not_approved": "ไม่อนุมัติ"
+    "cancelled": "ไม่อนุมัติ"
   },
   "Check in-out": {
     "title": "ข้อมูลการเข้า-ออกงาน",
@@ -219,6 +253,8 @@
     "Timetowork": "เวลาเข้างาน:",
     "Lateforwork": "เข้างานสาย:",
     "Timeoffwork": "เวลาออกงาน:",
+    "status": "สถานะ: ",
+    "time": "เวลา: ",
     "min": "นาที"
   },
   "salary_calculation": {
@@ -232,10 +268,12 @@
     "Absenteeism": "ขาดงาน :",
     "Social_Security": "ประกันสังคม :",
     "Received_Salary": "เงินเดือนที่ได้รับ :",
-    "Salary slip": "สลิปเงินเดือน"
+    "Salary slip": "สลิปเงินเดือน",
+    "open": "เปิดเอกสาร",
+    "noti": "กรุณาอนุญาตเข้าถึงรูปภาพเเละสื่อ"
   },
   "offerDocument": {
-    "title": "ยื่นเอกสาร"
+    "title": "รายการเอกสาร"
   },
   "Document": {
     "title": "เอกสาร"
@@ -248,22 +286,22 @@
     "errordomain": "กรุณากรอกโดเมนเนม!!",
     "btn": "ตรวจสอบ"
   },
-  "Edit_profile":{
-    "title":"แก้ไขข้อมูล",
-    "name":"ชื่อ:",
-    "lastname":"สกุล:",
-    "birthday":"วันเกิด:",
-    "Phone":"เบอร์มือถือ:",
-    "email":"อีเมล:",
-    "gender":"เพศ:",
-    "nationality":"สัญชาติ:",
-    "bank":"ธนาคาร:",
-    "bank_number":"เลขบัญชี:",
-    "No Image Selected":"ไม่ได้เลือกรูปภาพ",
-    "Select Image":"เลือกรูปภาพ",
-    "validateEmail":"กรุณาใส่อีเมล์ที่ถูกต้อง"
+  "Edit_profile": {
+    "title": "แก้ไขข้อมูล",
+    "name": "ชื่อ:",
+    "lastname": "สกุล:",
+    "birthday": "วันเกิด:",
+    "Phone": "เบอร์มือถือ:",
+    "email": "อีเมล:",
+    "gender": "เพศ:",
+    "nationality": "สัญชาติ:",
+    "bank": "ธนาคาร:",
+    "bank_number": "เลขบัญชี:",
+    "No Image Selected": "ไม่ได้เลือกรูปภาพ",
+    "Select Image": "เลือกรูปภาพ",
+    "validateEmail": "กรุณาใส่อีเมล์ที่ถูกต้อง"
   },
-  "validateEdit":{
+  "validateEdit": {
     "validatName": "กรุณากรอกชื่อของคุณ!!",
     "validatlastName": "กรุณากรอกนามสกุลของคุณ!!",
     "validatbirthday": "กรุณากรอกวันเกิดของคุณ!!",
@@ -274,8 +312,78 @@
     "Validatebank": "กรุณากรอกชื่อธนาคารของคุณ!!",
     "Validatebank_number": "กรุณากรอกหมายเลขบัญชีธนาคารของคุณ!!"
   },
-  "Data_Not_Found":{
-    "title":"ไม่พบข้อมูล!!"
+  "Annual_holidays": {
+    "title": "วันหยุดประจำปี"
+  },
+  "Approve_documents": {
+    "title": "อนุมัติเอกสาร"
+  },
+  "Approve_addtime": {
+    "title": "แก้ไขขออนุมัติวันทำงาน"
+  },
+  "alertdialog_lg": {
+    "not_session":"เซสชันของคุณหมดอายุแล้ว\nโปรดเข้าสู่ระบบอีกครั้งเพื่อใช้แอปต่อไป",
+    "internetError": "การเชื่อมต่อข้อมูลผิดพลาด",
+    "Timeout":"เชื่อมต่อไม่สำเร็จ",
+    "save_Success": "บันทึกสำเร็จ",
+    "success": "สำเร็จ",
+    "notdata": "ไม่พบข้อมูล",
+    "save_false": "ไม่สำเร็จ",
+    "allow_access": "อนุญาติการเข้าถึง",
+    "restart_app": "กำลังรีสตาร์แอปพลิเคชัน",
+    "datealert": "กรุณาเลือกวันที่เเละเวลา",
+    "logout":"ออกจากระบบ"
+  },
+  "alert_image": {
+    "not_access": "คุณไม่มีสิทธิ์เข้าถึงเมนู",
+    "data_Not_Found": "ไม่พบข้อมูล!!"
+  },
+  "error_debug": {
+    "title": "ขออภัย!!",
+    "1":"ไม่สามารถดำเนินการต่อได้",
+    "2":"กรุณาปิดใช้งาน USB Debugging เเละ",
+    "3":"Wireless Debugging บนอุปกรณ์ Android ก่อนใช้",
+    "4":"แอป HIP EZTIME",
+    "5":"ตามขั้นตอนด้านล่างดังนี้:",
+    "6":"1. ไปที่เมนูตั้งค่าอุปกรณ์ของคุณ",
+    "7":"2. เลือกตัวเลือกนักพัฒนา (Developer Options)",
+    "8":"(หากตัวเลือกนักพัฒนา(Developer Options)ไม่",
+    "9":"ปรากฏ ให้ไปที่ เกี่ยวกับโทรศัพท์ (About Phone)",
+    "10":"เเละกดเลือก เวอร์ชันอุปกรณ์ (Build Number)",
+    "11":"จำนวน 7 ครั้งเพื่อเปิดใช้งานฟังชันดังกล่าว",
+    "12":"3. กดปิด การใช้งาน USB Debugging เเละ ",
+    "13":"Wireless Debugging",
+    "14":"4. เลือก ตกลง เพื่อยืนยันรายการ",
+    "but":"ปิดแอป HIP EZTIME"
+  },
+  "list_day": {
+    "Sunday": "วันอาทิตย์",
+    "Monday": "วันจันทร์",
+    "Tuesday": "วันอังคาร",
+    "Wednesday": "วันพุธ",
+    "Thursday": "วันพฤหัสบดี",
+    "Friday": "วันศุกร์",
+    "Saturday": "วันเสาร์"
+  },
+  "loading": {
+    "title": "กำลังโหลด..."
+  },
+  "edit_ot": {
+    "title": "แก้ไขเอกสารโอที",
+    "subtitle": "หัวข้อเอกสาร",
+    "select_clock": "เลือกวันที่เเละเวลา",
+    "detail": "รายละเอียด",
+    "success":"แก้ไขสำเร็จ"
+  },
+  "edit_uptime": {
+    "title": "แก้ไขเวลาทำงาน",
+    "annotation": "หมายเหตุ",
+    "*": " *",
+    "note": "ใส่หมายเหต",
+    "error": "**กรุณาใส่หมายเหตุ เช่น ลืมออกงาน!!"
+  },
+  "dio_error":{
+    "error_internent":"ตรวจสอบการเชื่อมต่อ อินเทอร์เน็ต",
+    "error_time_out":"เชื่อมต่อ เชิร์ฟเวอร์ล้มเหลว"
   }
-
 }

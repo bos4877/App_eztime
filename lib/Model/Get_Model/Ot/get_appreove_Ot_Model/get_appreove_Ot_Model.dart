@@ -26,7 +26,7 @@ class DocList {
   String? shiftDate;
   String? description;
   String? employeeName;
-  String? statusAprrove;
+  String? statusApprove;
   String? otType;
   String? createDate;
 
@@ -35,7 +35,7 @@ class DocList {
       this.shiftDate,
       this.description,
       this.employeeName,
-      this.statusAprrove,
+      this.statusApprove,
       this.otType,
       this.createDate});
 
@@ -44,7 +44,7 @@ class DocList {
     shiftDate = json['shift_date'];
     description = json['description'];
     employeeName = json['employee_name'];
-    statusAprrove = json['status_aprrove'];
+    statusApprove = json['status_approve'];
     otType = json['ot_type'];
     createDate = json['create_date'];
   }
@@ -55,7 +55,7 @@ class DocList {
     data['shift_date'] = this.shiftDate;
     data['description'] = this.description;
     data['employee_name'] = this.employeeName;
-    data['status_aprrove'] = this.statusAprrove;
+    data['status_approve'] = this.statusApprove;
     data['ot_type'] = this.otType;
     data['create_date'] = this.createDate;
     return data;

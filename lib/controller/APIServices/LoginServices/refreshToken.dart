@@ -1,34 +1,39 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
 import 'package:eztime_app/Model/ResetToken/ResetToken_Model.dart';
+import 'package:eztime_app/controller/APIServices/LoginServices/LoginApiService.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class refreshToken {
-  var resetToken;
-  var token;
-  shareprefs() async {
+  model() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    resetToken = prefs.getString('_resetToken');
-    token = prefs.getString('_acessToken');
-   await model(resetToken, token);
-  }
-
-  model(String resetToken, String original_token) async {
-    String url = '${connect_api().domain}/refreshTokenenduser';
-    var response = await Dio().post(url,
-        data: {"refreshToken":resetToken},
-        options: Options(headers: {'Authorization': 'Bearer $original_token'}));
-
-    if (response.statusCode == 200) {
-      // log('refresh:${response.data}');
-      refreshToken_Model model = refreshToken_Model.fromJson(response.data);
-      if (model.token!.isNotEmpty) {
-        return model.token;
+   var resetToken = await prefs.getString('_resetToken');
+   var token = prefs.getString('_acessToken');
+    debugPrint('checkresetToken ${resetToken}');
+    debugPrint('Tokenrefresh: ${token}');
+    var service = await loginApiService();
+    try {
+      String url = '${connect_api().domain}/refreshTokenMobile';
+      var response = await Dio().post(url,
+          data: {"refreshToken": resetToken},
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+      if (response.statusCode == 200) {
+        refreshToken_Model model = refreshToken_Model.fromJson(response.data);
+        prefs.setString('_acessToken', "${model.token}");
+        prefs.setString('_resetToken', "${model.refreshToken}");
+        if (model.token!.isNotEmpty) {
+          return model.token;
+        } else {
+          service.fetchData();
+        }
       } else {
-        return null;
+        await service.fetchData();
       }
-    } else {
-      return null;
+    } on DioError catch (e) {
+      await service.fetchData();
     }
   }
 }

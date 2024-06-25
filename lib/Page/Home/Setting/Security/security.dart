@@ -1,8 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
+import 'package:eztime_app/Components/DiaLog/load/LoadingComponent.dart';
 import 'package:eztime_app/Components/Security/creaetPin/CreaetPin.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Security_Page extends StatefulWidget {
@@ -13,78 +12,99 @@ class Security_Page extends StatefulWidget {
 }
 
 class _Security_PageState extends State<Security_Page> {
-  bool isSwitched = false;
+  bool? isSwitched;
   SharedPreferences? prefs;
   bool loading = false;
-  InputController _inputController = InputController();
-  var pincode;
-  Future _isSwitchedstatus() async {
-     setState(() {
-      loading = true;
-    });
-    prefs = await SharedPreferences.getInstance();
-   pincode = prefs!.getString('pincode');
-   var Switched = prefs!.getBool('isSwitched');
-   print(pincode.toString());
-    if (pincode != null) {
-      print(pincode);
-      setState(() {
-         isSwitched = Switched!;
-         print(isSwitched);
-         loading = false;
-      });
-    };
-    setState(() {
-      loading = false;
-    });
-  }
+  String pincode = '';
+
   @override
   void initState() {
+    // loading = true;
+    if (isSwitched == null) {
+      isSwitched = false;
+    }
     _isSwitchedstatus();
     // TODO: implement initState
     super.initState();
   }
 
+  Future _isSwitchedstatus() async {
+    setState(() {
+      loading = true;
+    });
+    prefs = await SharedPreferences.getInstance();
+    pincode = await prefs!.getString('pincode').toString();
+    var Switched = await prefs!.getBool('isSwitched');
+    if (isSwitched == null) {
+      isSwitched = false;
+    } else {
+      debugPrint('pincode: ${pincode}');
+      debugPrint('isSwitched: ${isSwitched}');
+      if (pincode != null || pincode.isNotEmpty) {
+        debugPrint('pincode: ${pincode}');
+        setState(() {
+          isSwitched = Switched!;
+          debugPrint('isSwitched: ${isSwitched}');
+          loading = false;
+        });
+      }
+      ;
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return loading ? LoadingComponent(): Scaffold(
-      appBar: AppBar(
-        title: Text('security'),
-      ),
-      body: Container(
-        padding: EdgeInsets.all(6),
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            MySwitch(
-              title: 'pincode',
-              icon: Icon(Icons.key_outlined,color: Theme.of(context).primaryColor,),
-              content: isSwitched ? 'on'.tr() : 'off'.tr(),
-              transform_value: isSwitched,
-              onChanged: (value) async {
-                if (pincode == null && !isSwitched) {
-                  await Pin_code_Compl().picode(context);
-                  prefs!.setBool('isSwitched', true);
-                  setState(() {
-                    isSwitched = true;
-                  });
-                } else {
-                  setState(() {
-                    isSwitched = false;
-                    prefs!.remove("pincode");
-                  });
-                }
-                // setState(
-                //   () {
-                //     isSwitched = value;
-                //     print('valueSecurity : ${value}');
-                //   },
-                // );
-              },
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: Text('security'),
+          ),
+          body: Container(
+            padding: EdgeInsets.all(6),
+            child: Column(
+              children: [
+                SizedBox(height: 20),
+                MySwitch(
+                  title: 'pincode',
+                  icon: Icon(
+                    Icons.key_outlined,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  content: isSwitched! ? 'on'.tr() : 'off'.tr(),
+                  transform_value: isSwitched,
+                  onChanged: (value) async {
+                    setState(() {
+                      debugPrint('value: ${value}');
+                      if (value) {
+                        isSwitched = value;
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                          builder: (context) => create_pincode(),
+                        ))
+                            .then((value) {
+                          if (value == null) {
+                            _isSwitchedstatus();
+                          } else {
+                            _isSwitchedstatus();
+                          }
+                        });
+                      } else {
+                        isSwitched = value;
+                        prefs?.setBool('isSwitched', value);
+                      }
+                    });
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        loading ? LoadingComponent() : SizedBox()
+      ],
     );
   }
 }

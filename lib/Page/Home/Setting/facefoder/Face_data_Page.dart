@@ -3,10 +3,13 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:eztime_app/Components/Camera/ImagePickerComponent.dart';
+import 'package:eztime_app/Components/DiaLog/load/LoadingComponent.dart';
 import 'package:eztime_app/Components/Dialog/Buttons/Button.dart';
 import 'package:eztime_app/Components/Dialog/alertDialog/alertDialog.dart';
-import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
+import 'package:eztime_app/Components/alert_image/not_informations/information_not_found/When_information_is_not_found.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
+import 'package:eztime_app/Model/face_model/check_face_message_model.dart';
+import 'package:eztime_app/Page/work/Set_work.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,8 +37,11 @@ class _testDecestionState extends State<testDecestion> {
       log(firstName.toString());
       _capturedImage = await faceCamera();
       log('_capturedImage: ${_capturedImage}');
-    } catch (e) {
-      log(e.toString());
+    } on DioError catch (e) {
+      var data = e.response!.data.toString();
+      var message = data.split(':').last.split('}').first;
+      log(message);
+      Dialog_Error_responseStatus.showCustomDialog(context, '${message}');
     } finally {
       setState(() {
         loading = false;
@@ -58,17 +64,21 @@ class _testDecestionState extends State<testDecestion> {
       var response = await Dio().post("${connect_api().domain}/faces",
           data: formData,
           options: Options(headers: {'Authorization': 'Bearer $token'}));
-      // log('response.data: ${response.data}');
       if (response.statusCode == 200) {
-        Dialog_save_Success.showCustomDialog(context);
-        log('เพิ่มรูป: ${response.statusCode}');
-        return 200;
-      } else {
-        log('เพิ่มรูป: ${response.statusCode}');
-        return response.statusCode;
+        check_face_message_model jsonmessage =
+            check_face_message_model.fromJson(response.data);
+        if (jsonmessage.message == 'Face not found') {
+          Dialog_Error_responseStatus.showCustomDialog(context, '${jsonmessage.message}');
+        } else {
+          Dialog_setwork_Success.showCustomDialog(context);
+          log('เพิ่มรูป: ${response.statusCode}');
+        }
       }
-    } catch (e) {
-      log(e.toString());
+    } on DioError catch (e) {
+      var data = e.response!.data.toString();
+      var message = data.split(':').last.split('}').first;
+      log(message);
+      Dialog_Error_responseStatus.showCustomDialog(context, '${message}');
     } finally {
       setState(() {
         loading = false;
@@ -93,25 +103,13 @@ class _testDecestionState extends State<testDecestion> {
             ),
             body: Center(
                 child: _capturedImage == null
-                    ? Container(
-                        child: Text(
-                          'ไม่พบรูปภาพ',
-                          style: TextStyle(color: Colors.black, fontSize: 20),
-                        ),
-                      )
+                    ? information_not_found()
                     : Container(
                         padding: EdgeInsets.all(8),
                         width: 400,
                         height: 500,
                         color: Colors.white,
                         child: showImage())),
-            //   ],
-            // ) :Container(
-            //   color: Colors.red,
-            //   width: 400,
-            //   height: 500,
-            //   child:  showImage(),
-            // ),
             floatingActionButton: _capturedImage == null
                 ? Container()
                 : Buttons(

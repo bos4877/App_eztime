@@ -3,15 +3,14 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:eztime_app/Components/DiaLog/load/LoadingComponent.dart';
 import 'package:eztime_app/Components/Dialog/Buttons/Button.dart';
 import 'package:eztime_app/Components/Dialog/SnackBar/Sanckbar.dart';
 import 'package:eztime_app/Components/Dialog/alertDialog/alertDialog.dart';
-import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
 import 'package:eztime_app/Model/Get_Model/Company/Company_Model.dart';
 import 'package:eztime_app/Page/login/login_Page.dart';
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Domain_Set_Page extends StatefulWidget {
@@ -23,14 +22,13 @@ class Domain_Set_Page extends StatefulWidget {
 
 class _Domain_Set_PageState extends State<Domain_Set_Page> {
   final _fromkey = GlobalKey<FormState>();
-  bool _loading = false;
+  bool loading = false;
   bool _status = false;
   String? selectedValue;
   List<Results> _data = [];
   List<Domain> _domainList = [];
   List _conpanyName = [];
   List<String> _ipcompany = [];
-  InternetConnectionStatus? _connectionStatus;
   TextEditingController _domainName = TextEditingController();
   var _checkIn;
   @override
@@ -43,7 +41,7 @@ class _Domain_Set_PageState extends State<Domain_Set_Page> {
   Future _gethttpsCompany(String _domainName) async {
     if (_fromkey.currentState!.validate()) {
       setState(() {
-        _loading = true;
+        loading = true;
       });
 //http://hipglobal/
       log('messagedomain: ${_domainName}');
@@ -61,7 +59,7 @@ class _Domain_Set_PageState extends State<Domain_Set_Page> {
               _data = member.results!;
               var newvalue = _data.single.domain!;
               _domainList = newvalue;
-              _loading = false;
+              loading = false;
             });
           } else {
             Dialog_cath().showCustomDialog(context);
@@ -69,7 +67,7 @@ class _Domain_Set_PageState extends State<Domain_Set_Page> {
         } else {
           Dialog_cath().showCustomDialog(context);
           setState(() {
-            _loading = false;
+            loading = false;
             print('Error: ${response.statusCode}');
           });
         }
@@ -77,13 +75,13 @@ class _Domain_Set_PageState extends State<Domain_Set_Page> {
         setState(() {
           _data = [];
 
-          _loading = false;
+          loading = false;
         });
         Dialog_cath().showCustomDialog(context);
         print("เกิดข้อผิดพลาดในการเชื่อมต่อ: ${e}");
       } finally {
         setState(() {
-          _loading = false;
+          loading = false;
         });
       }
     }
@@ -113,12 +111,12 @@ class _Domain_Set_PageState extends State<Domain_Set_Page> {
 
   onRefresh() async {
     setState(() {
-      _loading = true;
+      loading = true;
     });
     await Future.delayed(Duration(milliseconds: 800));
     _gethttpsCompany(_domainName.text);
     setState(() {
-      _loading = false;
+      loading = false;
     });
   }
 
@@ -131,12 +129,11 @@ class _Domain_Set_PageState extends State<Domain_Set_Page> {
 
   @override
   Widget build(BuildContext context) {
-    return _loading
+    return loading
         ? LoadingComponent()
         : Scaffold(
             appBar: AppBar(title: Text('setdomain.title').tr()),
             body: SingleChildScrollView(
-              // controller: controller,
               child: Form(
                 key: _fromkey,
                 child: RefreshIndicator(
@@ -156,7 +153,7 @@ class _Domain_Set_PageState extends State<Domain_Set_Page> {
                                     fontSize: 18, fontWeight: FontWeight.bold)),
                             suffixIcon: _domainName.text.isEmpty
                                 ? Icon(Icons.info_outline)
-                                : _loading == true
+                                : loading == true
                                     ? CircularProgressIndicator(
                                         strokeWidth: 3.0,
                                         color: Theme.of(context).primaryColor,
@@ -214,8 +211,6 @@ class _Domain_Set_PageState extends State<Domain_Set_Page> {
                             ? Buttons(
                                 title: 'login.check_again',
                                 press: () {
-                                  // log('message');
-                                  // Alert_Dialog(content: 'content');
                                   _gethttpsCompany(_domainName.text);
                                 },
                               )
@@ -244,15 +239,8 @@ class _Domain_Set_PageState extends State<Domain_Set_Page> {
                                               .showSnackBar(context);
                                         });
                                       } else {
-                                        // Get.offAll(() => login_Page());
-                                        // Navigator.of(context)
-                                        // .pushAndRemoveUntil(
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) =>
-                                        //             login_Page()),
-                                        //     (route) => false);
                                         Navigator.of(context)
-                                            .pushReplacement(MaterialPageRoute(
+                                            .removeRoute(MaterialPageRoute(
                                           builder: (context) => login_Page(),
                                         ));
                                       }

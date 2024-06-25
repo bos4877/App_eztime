@@ -1,20 +1,51 @@
 // ignore_for_file: unused_import
 import 'dart:developer';
-
-import 'package:eztime_app/Components/NavigationService/NavigationService.dart';
 import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
+import 'package:eztime_app/Page/Home/HomePage.dart';
 import 'package:eztime_app/Page/NotiFications/NotiFications_Detail.dart';
 import 'package:eztime_app/controller/APIServices/loginServices/loginApiService.dart';
+import 'package:eztime_app/controller/GexController/countController/count.dart';
+import 'package:eztime_app/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  log("handleBackgroundMessage : ${"Title : ${message.notification?.title}, \n" "Body : ${message.notification?.body}, \n" "Data : ${message.data}"}");
-  
-  // NavigationService.pushReplacement(NotiFications_Detail_Page());
+Future handleBackgroundMessage(RemoteMessage messaged) async {
+  log('messaged: ${messaged}');
+  BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
+    '${messaged.notification?.body}',
+    htmlFormatBigText: true,
+    contentTitle: '${messaged.notification?.title}',
+    htmlFormatContentTitle: true,
+  );
+  AndroidNotificationDetails androidChannel = AndroidNotificationDetails(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    importance: Importance.max,
+    priority: Priority.high,
+    ticker: 'ticker',
+    icon: 'eztime_icon_white',
+    channelShowBadge: true,
+    styleInformation: bigTextStyleInformation,
+  );
+  DarwinNotificationDetails iosChannel = const DarwinNotificationDetails(
+    presentAlert: true,
+    presentBadge: true,
+    presentSound: true,
+  );
+  NotificationDetails platformChannel =
+      NotificationDetails(android: androidChannel, iOS: iosChannel);
+
+  await flutterLocalNotificationsPlugin.show(1, messaged.notification?.title,
+      messaged.notification?.body, platformChannel,
+      payload: messaged.data['body']);
+  countController _count = Get.put(countController());
+  Get.find<countController>().incrementCount();
+  log("handleBackgroundmessaged : ${"Title : ${messaged.notification?.title}, \n" "Body : ${messaged.notification?.body}, \n" "Data : ${messaged.data}"}");
+
+  // NavigationService.removeRoute(NotiFications_Detail_Page());
 }
 
 class NotificationService {
@@ -37,12 +68,9 @@ class NotificationService {
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
-      icon: 'hip_logo',
+      icon: 'eztime_icon_white',
       channelShowBadge: true,
       styleInformation: bigTextStyleInformation,
-      // color: Theme.of(context).primaryColor,
-
-      // largeIcon: DrawableResourceAndroidBitmap('logo_notification'),
     );
     DarwinNotificationDetails iosChannel = const DarwinNotificationDetails(
       presentAlert: true,
@@ -55,7 +83,8 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.show(1, message.notification?.title,
         message.notification?.body, platformChannel,
         payload: message.data['body']);
-        
+    countController _count = Get.put(countController());
+    Get.find<countController>().incrementCount();
     log("ForegroundMessage : ${"Title : ${message.notification?.title}, \n" "Body : ${message.notification?.body}, \n" "Data : ${message.data}"}");
   }
 
@@ -66,9 +95,10 @@ class NotificationService {
       sound: true,
     );
     final fCMToken = await messaging.getToken();
-    log("Token : ${fCMToken}");
+    log("fCMToken : ${fCMToken}");
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("notifyToken", fCMToken!);
+
+    await prefs.setString('notifyToken', fCMToken!);
 
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
@@ -95,23 +125,14 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
-        // NavigationService.pushReplacement(NotiFications_Detail_Page());
-        Get.offAll(BottomNavigationBar_Page(btpindex: 2,));
+        // NavigationService.removeRoute(NotiFications_Detail_Page());
+        Get.offAll(Home_Page());
         log('notificationResponseType: ${details.notificationResponseType}');
       },
     );
 
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
-    FirebaseMessaging.onMessage.listen(handleMessage);
-  }
-
-  stopNoti() async {
-    await messaging.requestPermission(
-      alert: false,
-      badge: true,
-      sound: true,
-      announcement: true,
-    );
+    FirebaseMessaging.onMessage.listen(handleBackgroundMessage);
   }
 }

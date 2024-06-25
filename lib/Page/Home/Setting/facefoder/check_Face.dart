@@ -1,28 +1,27 @@
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
-import 'package:eztime_app/Components/Dialog/Buttons/Button.dart';
-import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
+import 'package:dio/dio.dart' as dioname;
+import 'package:eztime_app/Components/DiaLog/alertDialog/Error_dialog/logout_error_dialog.dart';
+import 'package:eztime_app/Components/DiaLog/load/LoadingComponent.dart';
+import 'package:eztime_app/Components/menu_page/MyAppbar.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
 import 'package:eztime_app/Model/Get_Model/face/check_face_one/check_face_one_Model.dart';
-import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
+import 'package:eztime_app/Model/Get_Model/get_Profile/Profile_Model.dart';
+import 'package:eztime_app/Page/Home/HomePage.dart';
 import 'package:eztime_app/Page/work/Set_work.dart';
 import 'package:eztime_app/controller/APIServices/ProFileServices/ProfileService.dart';
+import 'package:eztime_app/controller/APIServices/getDevice_Token/getDevice.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Check_face_Page extends StatefulWidget {
   final image;
-  final latitude;
-  final longitude;
-  final radius;
   const Check_face_Page({
     super.key,
     this.image,
-    this.latitude,
-    this.longitude,
-    this.radius,
   });
 
   @override
@@ -32,24 +31,30 @@ class Check_face_Page extends StatefulWidget {
 class _Check_face_PageState extends State<Check_face_Page> {
   bool loading = false;
   var status;
-  // List<EmployData> _profileList = [];
+  var images;
+  Profile_Model _profileList = Profile_Model();
   List<Results> _faceList = [];
   var latitude;
   var longitude;
   var radius;
+  var token;
+  var message;
   _getprofile() async {
     setState(() {
       loading = true;
     });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('_acessToken');
     var service = get_profile_service();
     var response = await service.getprofile(token);
     if (response == null) {
-      loading = false;
+      log('message');
+      setState(() {
+        loading = false;
+      });
     } else {
-      // _profileList = [response];
-      loading = false;
+      _profileList.employData = response;
+      setState(() {
+        loading = false;
+      });
     }
   }
 
@@ -58,29 +63,35 @@ class _Check_face_PageState extends State<Check_face_Page> {
       setState(() {
         loading = true;
       });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var token = prefs.getString('_acessToken');
-      FormData formData = FormData.fromMap({
-        'image': await MultipartFile.fromFile(
+      dioname.FormData formData = dioname.FormData.fromMap(
+        {
+        'image': await dioname.MultipartFile.fromFile(
           file.path,
           filename: file.name,
         ),
-      });
+      }
+      );
       String url = '${connect_api().domain}/check_face_one';
-      var response = await Dio().post(url,
+      var response = await dioname.Dio().post(url,
           data: formData,
-          options: Options(headers: {'Authorization': 'Bearer $token'}));
+          options:
+              dioname.Options(headers: {'Authorization': 'Bearer $token'}));
       if (response.statusCode == 200) {
         setState(() {
+          log('success');
           status = response.statusCode.toString();
+          log(status);
+          loading = false;
         });
-      } else {
-        log('faild');
-        log('responseCheck_face_Page: ${response}');
-        // Dialog_Tang().checkFacedFaildialog(context);
       }
-    } catch (e) {
-      log(e.toString());
+    } on dioname.DioError catch (e) {
+      var data = e.response!.data.toString();
+      message = data.split(':').last.split('}').first;
+      log(message);
+      setState(() {
+        loading = false;
+      });
+      // Dialog_Error_responseStatus.show(context, '${message}');
     } finally {
       setState(() {
         loading = false;
@@ -88,25 +99,30 @@ class _Check_face_PageState extends State<Check_face_Page> {
     }
   }
 
+  Future _oncheck() async {
+    images = widget.image;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('_acessToken');
+    await _checkface(images);
+    await _getprofile();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
-
-    _checkface(widget.image);
-    _getprofile();
-    latitude = widget.latitude;
-    longitude = widget.longitude;
-    radius = widget.radius;
+    _oncheck();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? LoadingComponent()
-        : Scaffold(
-            appBar: AppBar(title: Text('ตรวจสอบใบหน้า')),
-            body: loading
+    return Stack(
+      children: [
+        Scaffold(
+            body: Stack(
+          children: [
+            MyAppBar(pagename: 'ตรวจสอบใบหน้า'),
+            loading
                 ? Center(
                     child: Container(
                       alignment: Alignment.center,
@@ -117,78 +133,161 @@ class _Check_face_PageState extends State<Check_face_Page> {
                     ),
                   )
                 : Center(
-
+                    child: Container(
+                      width: 340,
+                      height: 500,
+                      child: Card(
+                        elevation: 20,
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               status == '200'
-                                  ? Center(
-                                    child: Icon(Icons.check_circle_outlined,
-                                        size: 200, color: Colors.green),
-                                  )
-                                  : Center(
-                                    child: Icon(
-                                        Icons.close_rounded,
+                                  ? Card(
+                                      elevation: 50,
+                                      shape: CircleBorder(),
+                                      child: Icon(Bootstrap.check2,
+                                          size: 150, color: Colors.green),
+                                    )
+                                  : Card(
+                                      elevation: 50,
+                                      shape: CircleBorder(),
+                                      child: Icon(
+                                        Bootstrap.x,
                                         color: Colors.red,
-                                        size: 200,
+                                        size: 150,
                                       ),
-                                  ),
+                                    ),
+                              SizedBox(
+                                height: 70,
+                              ),
+                              status == '200'
+                                  ? Text(
+                                      'ค้นหาใบหน้าสำเร็จ',
+                                      style: TextStyle(
+                                          color: Colors.green, fontSize: 20),
+                                    )
+                                  : SizedBox(),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              status == '200'
+                                  ? Text(
+                                      'รหัสพนักงาน : ${_profileList.employData!.employeeNo}')
+                                  : Container(),
+                              status == '200'
+                                  ? Text(
+                                      'ชื่อ - สกุล : ${_profileList.employData!.firstName} ${_profileList.employData!.lastName}')
+                                  : Container(),
+                              status == '200'
+                                  ? Text(
+                                      'เวลาทำงาน : ${_profileList.employData!.employeeType}')
+                                  : Center(
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            '$message',
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 20),
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Text(
+                                            'ไม่พบข้อมูลใบหน้า!!',
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 20),
+                                          )
+                                        ],
+                                      ),
+                                    ),
                               SizedBox(
                                 height: 20,
                               ),
-                              // status == '200'
-                              //     ? Text(
-                              //         'รหัสพนักงาน : ${_profileList[0].employeeNo}')
-                              //     : Container(),
-                              // status == '200'
-                              //     ? Text('ชื่อ - สกุล : ${_profileList[0].firstName} ${_profileList[0].lastName}')
-                              //     : Container(),
-                              // status == '200'
-                              //     ? Text('บริษัท : ${_profileList[0].branchOffice}')
-                              //     : Container(),
-                              // status == '200'
-                              //     ? Text('ตำแหน่ง : ${_profileList[0].department}')
-                              //     : Center(
-                              //         child: Text('ไม่พบข้อมูลใบหน้า'),
-                                    // ),
-                              SizedBox(
-                                height: 30,
-                              ),
                               status == '200'
-                                  ? Center(
-                                    child: Buttons(
-                                        title: 'ลงเวลา',
-                                        press: () async {
-                                          log('$latitude');
-                                          log('$longitude');
-                                          // var name =
-                                          //     '${_profileList[0].firstName} ${_profileList[0].lastName}';
-                                          Navigator.of(context)
-                                              .push(MaterialPageRoute(
-                                            builder: (context) => Set_work(
-                                              // name: name,
-                                              latitude: latitude,
-                                              longitude: longitude,
-                                              radius: radius,
-                                            ),
-                                          ));
+                                  ? Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.35,
+                                      height: 40,
+                                      child: ElevatedButton(
+                                        style: TextButton.styleFrom(
+                                          side: BorderSide(color: Colors.green),
+                                          backgroundColor: Colors.green,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          elevation: 3,
+                                          foregroundColor: Colors.green,
+                                        ),
+                                        child: Text(
+                                          'บันทึกเวลา',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        onPressed: () {
+                                          get_Device_token_service()
+                                              .model(token)
+                                              .then((value) {
+                                            if (value != '') {
+                                              Get.to(() => Set_work())?.then((value) {
+                                                  if (value == null) {
+                                                    _oncheck();
+                                                  } else {
+                                                    _oncheck();
+                                                  }
+                                              });
+                                            } else {
+                                              logout_error_dialog().show(context);
+                                             
+                                            }
+                                          });
                                         },
                                       ),
-                                  )
-                                  : Buttons(
-                                      title: 'กลับ',
-                                      press: () {
-                                        Navigator.of(context).pop(MaterialPageRoute(
-                                          builder: (context) =>
-                                              BottomNavigationBar_Page(),
-                                        ));
-                                      },
+                                    )
+                                  : Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.35,
+                                      height: 40,
+                                      child: ElevatedButton(
+                                        style: TextButton.styleFrom(
+                                          side: BorderSide(
+                                              color: Theme.of(context)
+                                                  .secondaryHeaderColor),
+                                          backgroundColor: Theme.of(context)
+                                              .secondaryHeaderColor,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          elevation: 3,
+                                          foregroundColor: Theme.of(context)
+                                              .secondaryHeaderColor,
+                                        ),
+                                        child: Text(
+                                          'กลับ',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Home_Page(),
+                                                  ),
+                                                  ((route) => false));
+                                        },
+                                      ),
                                     ),
-                              loading ? LoadingComponent() : Container()
                             ]),
                       ),
-                 
-          );
+                    ),
+                  ),
+          ],
+        )),
+        loading
+        ? LoadingComponent()
+        : SizedBox()
+      ],
+    );
   }
 }

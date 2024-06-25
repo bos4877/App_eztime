@@ -19,6 +19,8 @@ class Profile_Model {
 }
 
 class EmployData {
+  String? employeeRole;
+  String? employeeNo;
   String? nickname;
   String? idCard;
   String? firstName;
@@ -39,7 +41,9 @@ class EmployData {
   String? image;
 
   EmployData(
-      {this.nickname,
+      {this.employeeRole,
+      this.employeeNo,
+      this.nickname,
       this.idCard,
       this.firstName,
       this.lastName,
@@ -59,6 +63,8 @@ class EmployData {
       this.image});
 
   EmployData.fromJson(Map<String, dynamic> json) {
+    employeeRole = json['employee_role'];
+    employeeNo = json['employee_no'];
     nickname = json['nickname'];
     idCard = json['idCard'];
     firstName = json['first_name'];
@@ -81,6 +87,8 @@ class EmployData {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['employee_role'] = this.employeeRole;
+    data['employee_no'] = this.employeeNo;
     data['nickname'] = this.nickname;
     data['idCard'] = this.idCard;
     data['first_name'] = this.firstName;

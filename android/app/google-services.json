@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:608496849243:android:45031a99b5b18c9f1a8a7e",
+        "mobilesdk_app_id": "1:608496849243:android:7d335d790c69db7f1a8a7e",
         "android_client_info": {
-          "package_name": "com.example.eztime_app"
+          "package_name": "com.hip.appeztime"
         }
       },
       "oauth_client": [],

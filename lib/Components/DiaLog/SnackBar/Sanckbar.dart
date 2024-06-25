@@ -19,7 +19,6 @@ class Snack_Bar extends StatelessWidget {
 
       content: Row(
         crossAxisAlignment:  CrossAxisAlignment.end,
-        // mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Icon(snackBarIcon,color: Colors.white,size: 23,),
           SizedBox(width: 5,),

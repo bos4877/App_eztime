@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
+import 'package:eztime_app/Components/DiaLog/load/LoadingComponent.dart';
 import 'package:flutter/material.dart';
 
 class NotiFications_Detail_Page extends StatefulWidget {
@@ -14,14 +14,6 @@ class NotiFications_Detail_Page extends StatefulWidget {
 
 class _NotiFications_Detail_PageState extends State<NotiFications_Detail_Page> {
   bool loaddialog = false;
-//   String? title;
-//   String? body;
-//   String? data;
-// Future  get_noti(RemoteMessage message) async {
-//     title = message.notification?.title.toString();
-//     body = message.notification?.body.toString();
-//     data = message.data.toString();
-//   }
 
   @override
   void initState() {

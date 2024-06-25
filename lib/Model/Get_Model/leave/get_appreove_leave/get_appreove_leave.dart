@@ -25,28 +25,34 @@ class DocList {
   String? docId;
   String? description;
   String? employeeName;
-  String? statusAprrove;
+  String? statusApprove;
   String? leaveType;
   String? createDate;
   String? leaveDescription;
+  String? startDate;
+  String? endDate;
 
   DocList(
       {this.docId,
       this.description,
       this.employeeName,
-      this.statusAprrove,
+      this.statusApprove,
       this.leaveType,
       this.createDate,
-      this.leaveDescription});
+      this.leaveDescription,
+      this.startDate,
+      this.endDate});
 
   DocList.fromJson(Map<String, dynamic> json) {
     docId = json['doc_id'];
     description = json['description'];
     employeeName = json['employee_name'];
-    statusAprrove = json['status_aprrove'];
+    statusApprove = json['status_approve'];
     leaveType = json['leave_type'];
     createDate = json['create_date'];
     leaveDescription = json['leave_description'];
+    startDate = json['startDate'];
+    endDate = json['endDate'];
   }
 
   Map<String, dynamic> toJson() {
@@ -54,10 +60,12 @@ class DocList {
     data['doc_id'] = this.docId;
     data['description'] = this.description;
     data['employee_name'] = this.employeeName;
-    data['status_aprrove'] = this.statusAprrove;
+    data['status_approve'] = this.statusApprove;
     data['leave_type'] = this.leaveType;
     data['create_date'] = this.createDate;
     data['leave_description'] = this.leaveDescription;
+    data['startDate'] = this.startDate;
+    data['endDate'] = this.endDate;
     return data;
   }
 }

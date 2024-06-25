@@ -17,10 +17,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-
    <application
         android:allowBackup="false"
-        android:label="HipEztime"
+        android:label="HIP EZTIME"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         tools:replace="android:label">
@@ -50,6 +49,9 @@
             <!-- <meta-data android:name="com.google.android.geo.API_KEY" 
                 android:value="AIzaSyAOxzWiH7VbF21a-iPYaK3JJ_3SbmsS4ec"/>  -->
             <meta-data
+                android:name="com.google.firebase.messaging.default_notification_channel_id"
+                android:value="high_importance_channel" />
+            <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
                 android:resource="@drawable/logo_notification"/> 
             <meta-data
@@ -60,6 +62,8 @@
               android:resource="@drawable/launch_background"
               /> 
         </activity>
+        <activity android:name=".LockScreenActivity"
+                android:showOnLockScreen="true"/>
         <meta-data
             android:name="flutterEmbedding"
             android:value="2"/>

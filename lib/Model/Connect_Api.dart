@@ -9,6 +9,6 @@ ipshare() async {
 class connect_api {
   String? domain;
   connect_api() {
-    domain = 'http://192.168.9.231:7310';
+    domain = 'http://119.59.97.193:7311';
   }
 }

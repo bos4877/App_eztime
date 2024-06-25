@@ -24,7 +24,7 @@ class get_leave_Model {
 class Data {
   String? docId;
   String? description;
-  String? statusAprrove;
+  String? statusApprove;
   String? startDate;
   String? endDate;
   String? leaveType;
@@ -36,7 +36,7 @@ class Data {
   Data(
       {this.docId,
       this.description,
-      this.statusAprrove,
+      this.statusApprove,
       this.startDate,
       this.endDate,
       this.leaveType,
@@ -48,7 +48,7 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     docId = json['doc_id'];
     description = json['description'];
-    statusAprrove = json['status_aprrove'];
+    statusApprove = json['status_aprrove'];
     startDate = json['start_date'];
     endDate = json['end_date'];
     leaveType = json['Leave_type'];
@@ -67,7 +67,7 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['doc_id'] = this.docId;
     data['description'] = this.description;
-    data['status_aprrove'] = this.statusAprrove;
+    data['status_aprrove'] = this.statusApprove;
     data['start_date'] = this.startDate;
     data['end_date'] = this.endDate;
     data['Leave_type'] = this.leaveType;

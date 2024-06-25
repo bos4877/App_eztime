@@ -3,14 +3,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 ThemeData mytheme() {
   Map<int, Color> color = {
-     50: Color(0xFFE3F2FD),
+    50: Color(0xFFE3F2FD),
     100: Color(0xFFBBDEFB),
     200: Color(0xFF90CAF9),
     300: Color(0xFF64B5F6),
     400: Color(0xFF42A5F5),
-    500: Color(0xFF2196F3),
+    500: Color(0xFF0392cf),
     600: Color(0xFF1E88E5),
     700: Color(0xFF1976D2),
     800: Color(0xFF1565C0),
@@ -24,18 +25,45 @@ ThemeData mytheme() {
         TargetPlatform.android: ZoomPageTransitionsBuilder()
       },
     ),
-    
+    useMaterial3: false,
     primarySwatch: MaterialColor(0xFF0D47A1, color),
-    primaryColor: Color(0xFF0D47A1),
-    // accentColor: Colors.transparent, //? Scroll Colors
+    primaryColor: Color(0xFF1976D2),
+    secondaryHeaderColor: Color(0xFFCC0000),
+    // backgroundColor: Color(0xFFFFFFFF),
+    scaffoldBackgroundColor: Colors.grey[200],
     textTheme: TextTheme(
-      bodyText2: TextStyle(
-        fontSize: 16,
-        letterSpacing: 0.5,
+      displaySmall: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 16),
+      displayLarge: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 20),
+      
+      // bodyMedium: TextStyle(color: Colors.black,fontSize: 30)
+      // subtitle1: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 16),
+      // displaySmall: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 20)
       ),
-    ),
     drawerTheme: DrawerThemeData(
       backgroundColor: Color(0xFF0D47A1),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      outlineBorder: BorderSide(color: Colors.grey),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
     ),
     dialogTheme: DialogTheme(
         titleTextStyle: TextStyle(
@@ -49,20 +77,22 @@ ThemeData mytheme() {
         selectedLabelStyle:
             TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         unselectedLabelStyle: TextStyle(fontSize: 14)),
-    scaffoldBackgroundColor: Colors.grey[200],
     appBarTheme: AppBarTheme(
-      toolbarHeight: 60,
-      elevation: 10,
-        backgroundColor: Color(0xFF0D47A1),
-        centerTitle: true,
-        iconTheme: IconThemeData(size: 30, color: Colors.white),
-        titleTextStyle: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Sarabun',
-          fontSize: 18,
-          letterSpacing: 1,
-        ),),
+      titleSpacing: 20.0,
+      toolbarHeight: 80,
+      elevation: 15,
+      shadowColor: Colors.black,
+      backgroundColor: Color(0xFF1976D2),
+      // centerTitle: true,
+      iconTheme: IconThemeData(size: 30, color: Colors.white),
+      titleTextStyle: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Sarabun',
+        fontSize: 20,
+        letterSpacing: 1,
+      ),
+    ),
     fontFamily: 'Sarabun',
   );
 }
@@ -87,4 +117,3 @@ Widget myScrollScreen(BuildContext context, Widget? child) {
     child: child!,
   );
 }
-

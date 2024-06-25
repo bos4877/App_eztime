@@ -3,18 +3,20 @@ import 'dart:developer';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:eztime_app/Components/DiaLog/load/LoadingComponent.dart';
 import 'package:eztime_app/Components/Dialog/alertDialog/alertDialog.dart';
-import 'package:eztime_app/Components/Dialog/load/loaddialog.dart';
 import 'package:eztime_app/Components/TextStyle/StyleText.dart';
 import 'package:eztime_app/Components/setting_Components/card_component.dart';
 import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
 import 'package:eztime_app/Page/Home/HomePage.dart';
 import 'package:eztime_app/Page/Home/Setting/Security/security.dart';
-import 'package:eztime_app/Page/Home/Setting/pincode/pincodePage.dart';
 import 'package:eztime_app/Page/Home/Setting/reset_password.dart';
 import 'package:eztime_app/main.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:open_app_settings/open_app_settings.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,10 +40,12 @@ class _setting_pageState extends State<setting_page> {
     print(isSwitched);
     if (isSwitched == false) {
       setState(() {
+        // OpenAppSettings.openNotificationSettings();
         isSwitched = false;
       });
     } else {
       setState(() {
+        // OpenAppSettings.openNotificationSettings();
         isSwitched = true;
       });
     }
@@ -56,7 +60,7 @@ class _setting_pageState extends State<setting_page> {
     await prefs.setString('selectedLanguage', selectedLanguage);
     if (selectedLanguage != '') {
       _getSelectedLanguage();
-
+      selectedLanguage_dialog.showCustomDialog(context);
       await Future.delayed(Duration(seconds: 5)).then((value) {
         Restart.restartApp();
         setState(() {
@@ -65,7 +69,6 @@ class _setting_pageState extends State<setting_page> {
       });
     }
   }
-
   Future<String?> _getSelectedLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _selectedName = prefs.getString('selectedLanguage') ?? 'TH';
@@ -74,6 +77,7 @@ class _setting_pageState extends State<setting_page> {
       if (_selectedName == 'ENG') {
         context.setLocale(Locale('en'));
         load = false;
+        // Navigator.removeRoute(context, route)
       } else {
         context.setLocale(Locale('th'));
         load = false;
@@ -99,7 +103,7 @@ class _setting_pageState extends State<setting_page> {
         ).tr(),
         leading: IconButton(
             onPressed: () => Navigator.of(context).pop(MaterialPageRoute(
-                  builder: (context) => BottomNavigationBar_Page(),
+                  builder: (context) => Home_Page(),
                 )),
             icon: Icon(Icons.arrow_back_outlined)),
       ),

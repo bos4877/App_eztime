@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:eztime_app/Model/Connect_Api.dart';
 import 'package:eztime_app/Model/Get_Model/leave/get_DocOne_Model/get_DocOne_Model.dart';
+import 'package:flutter/material.dart';
 
 class get_DocOne_Service {
   model(var token) async {
@@ -12,13 +11,13 @@ class get_DocOne_Service {
         options: Options(headers: {'Authorization': 'Bearer $token'}));
         if (response.statusCode == 200) {
           get_leavelist_one_Model json = get_leavelist_one_Model.fromJson(response.data);
-          log('get_DocOne_Service: ${response.statusCode}');
+          debugPrint('get_DocOne_Service: ${response.statusCode}');
           return json.data;
         } else {
           return null;
         }
     } catch (e) {
-      log(e.toString());
+      debugPrint('get_DocOne_Service_catch: ${e}');
     }
 
   }

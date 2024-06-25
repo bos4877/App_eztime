@@ -1,23 +1,19 @@
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:eztime_app/Page/Home/BottomNavigationBar.dart';
+import 'package:eztime_app/Page/Home/HomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:restart_app/restart_app.dart';
+import 'package:open_app_settings/open_app_settings.dart';
 
-String internetError = 'การเชื่อมต่อผิดพลาด';
-String save_Success = 'บันทึกสำเร็จ';
-String success = 'สำเร็จ';
-String notdata = 'ไม่พบข้อมูล';
-String save_false = 'บันทึกไม่สำเร็จ';
-String allow_access = 'อนุญาติการเข้าถึง';
-String restart_app = 'เปลี่ยนภาษาต้องรีสตาร์ทแอป';
-String datealert = 'กรุณาเลือกวันที่เเละเวลา';
-// String catch_err = '';
-
-
+String internetError = 'alertdialog_lg.internetError';
+String save_Success = 'alertdialog_lg.save_Success';
+String success = 'alertdialog_lg.success';
+String notdata = 'alertdialog_lg.notdata';
+String save_false = 'alertdialog_lg.save_false';
+String allow_access = 'alertdialog_lg.allow_access';
+String restart_app = 'alertdialog_lg.restart_app';
+String datealert = 'alertdialog_lg.datealert';
 class Dialog_cath extends StatelessWidget {
   Dialog_cath();
 
@@ -33,9 +29,14 @@ class Dialog_cath extends StatelessWidget {
         ).tr(),
       ),
       actions: [
-        TextButton(onPressed: () {
-          Navigator.of(context).pop(); 
-        }, child: Text('ปิด',style: TextStyle(color: Colors.red),))
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'ปิด',
+              style: TextStyle(color: Colors.red),
+            ))
       ],
       content: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -51,7 +52,7 @@ class Dialog_cath extends StatelessWidget {
           Text(
             notdata,
             style: TextStyle(fontSize: 16),
-          ),
+          ).tr(),
         ],
       ),
     );
@@ -63,8 +64,7 @@ class Dialog_cath extends StatelessWidget {
       barrierColor: Colors.transparent.withOpacity(0.3),
       context: context,
       builder: (BuildContext context) {
-        return Dialog_cath(
-        );
+        return Dialog_cath();
       },
     );
   }
@@ -85,9 +85,11 @@ class Dialog_date_alert extends StatelessWidget {
         ).tr(),
       ),
       actions: [
-        TextButton(onPressed: () {
-          Get.back();
-        }, child: Text('ปิด'))
+        TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: Text('ปิด'))
       ],
       content: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -103,7 +105,7 @@ class Dialog_date_alert extends StatelessWidget {
           Text(
             datealert,
             style: TextStyle(fontSize: 16),
-          ),
+          ).tr(),
         ],
       ),
     );
@@ -115,8 +117,7 @@ class Dialog_date_alert extends StatelessWidget {
       barrierColor: Colors.transparent,
       context: context,
       builder: (BuildContext context) {
-        return Dialog_date_alert(
-        );
+        return Dialog_date_alert();
       },
     );
   }
@@ -151,13 +152,14 @@ class Dialog_allow_access extends StatelessWidget {
           Text(
             desc,
             style: TextStyle(fontSize: 16),
-          ),
+          ).tr(),
         ],
       ),
       actions: [
         TextButton(
           onPressed: () {
-            openAppSettings();
+            Navigator.pop(context);
+            OpenAppSettings.openAppSettings();
           },
           child: Text('opensetting', style: TextStyle(color: Colors.red)),
         ),
@@ -166,9 +168,7 @@ class Dialog_allow_access extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => BottomNavigationBar_Page(),
-            )); // Close the dialog
+            Navigator.pop(context);
           },
           child: Text('Close', style: TextStyle(color: Colors.red)),
         ),
@@ -179,7 +179,7 @@ class Dialog_allow_access extends StatelessWidget {
   void showCustomDialog(BuildContext context) {
     showDialog(
       barrierDismissible: false,
-      barrierColor: Colors.white,
+      barrierColor: Colors.black26,
       context: context,
       builder: (BuildContext context) {
         return Dialog_allow_access(
@@ -216,7 +216,7 @@ class Dialog_internetError extends StatelessWidget {
           Text(
             internetError,
             style: TextStyle(fontSize: 16),
-          ),
+          ).tr(),
         ],
       ),
       actions: [
@@ -230,24 +230,24 @@ class Dialog_internetError extends StatelessWidget {
     );
   }
 
-  // static  showCustomDialog(BuildContext context) {
-  //   showDialog(
-  //     barrierDismissible: false,
-  //     barrierColor: Colors.white,
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Dialog_internetError();
-  //     },
-  //   );
-  // }
+  static showCustomDialog(BuildContext context) {
+    showDialog(
+      barrierDismissible: false,
+      barrierColor: Colors.white,
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog_internetError();
+      },
+    );
+  }
 }
 
-class Dialog_save_Success extends StatelessWidget {
-  Dialog_save_Success();
+class Dialog_cancel_Success extends StatelessWidget {
+  Dialog_cancel_Success();
 
   _onPop(context) {
     Timer(Duration(seconds: 2), () {
-      Navigator.of(context).pop();
+      Navigator.pop(context);
     });
   }
 
@@ -276,7 +276,7 @@ class Dialog_save_Success extends StatelessWidget {
           Text(
             save_Success,
             style: TextStyle(fontSize: 16),
-          ),
+          ).tr(),
         ],
       ),
       icon: _onPop(context),
@@ -285,16 +285,12 @@ class Dialog_save_Success extends StatelessWidget {
 
   static void showCustomDialog(BuildContext context) {
     showDialog(
-      barrierColor: Colors.white,
+      barrierColor: Colors.black26,
       context: context,
       builder: (BuildContext context) {
-        return Dialog_save_Success();
+        return Dialog_cancel_Success();
       },
-    ).then((value) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => BottomNavigationBar_Page(),
-      ));
-    });
+    );
   }
 }
 
@@ -307,13 +303,13 @@ class Dialog_notdata extends StatelessWidget {
       title: Text(
         'Notification.title',
       ).tr(),
-      content: Text(notdata),
+      content: Text(notdata).tr(),
       actions: [
         TextButton(
           onPressed: () {
             Navigator.pop(context);
             // Navigator.of(context).pushReplacement(MaterialPageRoute(
-            //   builder: (context) => BottomNavigationBar_Page(),
+            //   builder: (context) => Home_Page(),
             // )); // Close the dialog
           },
           child: Text('Close'),
@@ -325,8 +321,7 @@ class Dialog_notdata extends StatelessWidget {
   static void showCustomDialog(BuildContext context) {
     showDialog(
       barrierDismissible: false,
-      barrierColor: Colors.grey.shade300
-      ,
+      barrierColor: Colors.grey.shade300,
       context: context,
       builder: (BuildContext context) {
         return Dialog_notdata();
@@ -351,7 +346,7 @@ class Dialog_false extends StatelessWidget {
             color: Colors.red,
             size: 20,
           ),
-          Text(save_false),
+          Text(save_false).tr(),
         ],
       ),
       actions: [
@@ -404,7 +399,7 @@ class Dialog_approveSuccess extends StatelessWidget {
           Text(
             success,
             style: TextStyle(fontSize: 16),
-          ),
+          ).tr(),
         ],
       ),
       icon: _pop(context),
@@ -445,14 +440,19 @@ class Dialog_worktimefaild extends StatelessWidget {
           SizedBox(
             width: 5,
           ),
-          Text(worktimefaild),
+          Text(worktimefaild).tr(),
         ],
       ),
       actions: <Widget>[
         TextButton(
             onPressed: () {
+              Navigator.removeRoute(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Home_Page(),
+                  ));
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => BottomNavigationBar_Page(),
+                builder: (context) => Home_Page(),
               ));
             },
             child: Text(
@@ -508,7 +508,7 @@ class Dialog_Success extends StatelessWidget {
           Text(
             save_Success,
             style: TextStyle(fontSize: 16),
-          ),
+          ).tr(),
         ],
       ),
       icon: _onPop(context),
@@ -517,13 +517,13 @@ class Dialog_Success extends StatelessWidget {
 
   static void showCustomDialog(BuildContext context) {
     showDialog(
-      barrierColor: Colors.white,
+      barrierColor: Colors.black26,
       context: context,
       builder: (BuildContext context) {
         return Dialog_Success();
       },
     ).then((value) {
-     Navigator.pop(context);
+      Navigator.pop(context);
     });
   }
 }
@@ -531,35 +531,11 @@ class Dialog_Success extends StatelessWidget {
 class selectedLanguage_dialog extends StatelessWidget {
   selectedLanguage_dialog();
 
-  // _onPop(context) {
-  //   Timer(Duration(seconds: 2), () {
-  //     Navigator.of(context).pop();
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.white,
       elevation: 5,
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextButton(
-                onPressed: () {
-                  Restart.restartApp();
-                },
-                child: Text('รีสตาร์ท',style: TextStyle(color: Colors.yellow),)),
-            TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: Text('กลับ',style: TextStyle(color: Colors.red),)),
-          ],
-        )
-      ],
       title: Center(
         child: Text(
           'Notification.title',
@@ -580,7 +556,7 @@ class selectedLanguage_dialog extends StatelessWidget {
           Text(
             restart_app,
             style: TextStyle(fontSize: 16),
-          ),
+          ).tr(),
         ],
       ),
     );
@@ -597,5 +573,62 @@ class selectedLanguage_dialog extends StatelessWidget {
   }
 }
 
+class Dialog_Error_responseStatus extends StatelessWidget {
+  final title;
+  final VoidCallback press;
+  Dialog_Error_responseStatus({required this.title, required this.press});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+        backgroundColor: Colors.white,
+        elevation: 5,
+        title: Center(
+          child: Text(
+            'Notification.title',
+            style: TextStyle(fontSize: 16, color: Colors.red),
+          ).tr(),
+        ),
+        actions: [
+          TextButton(
+              onPressed: press,
+              child: Text(
+                'close',
+                style: TextStyle(color: Colors.red),
+              ))
+        ],
+        content: RichText(
+            text: TextSpan(children: [
+          WidgetSpan(
+            child: Icon(
+              Icons.warning_rounded,
+              color: Colors.red,
+              size: 20,
+            ),
+          ),
+          TextSpan(
+              text: title, style: TextStyle(fontSize: 16, color: Colors.black))
+        ])));
+  }
+
+  static void showCustomDialog(BuildContext context, String title) {
+    showDialog(
+      barrierColor: Colors.black26,
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog_Error_responseStatus(
+          press: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => Home_Page()),
+              (Route<dynamic> route) => false,
+            );
+          },
+          title: title,
+        );
+      },
+    );
+  }
+}
 // Example usage:
 // CustomDialog.showCustomDialog(context, 'Dialog Title', 'This is the content of the dialog.');

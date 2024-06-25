@@ -24,7 +24,7 @@ Future camera() async {
     imagePath = pickedImage!.path;
     imagePathname = pickedImage!.name;
     log(imagePath!);
-    return pickedImage;
+    return imagePath;
   } else {
     return null;
   }
@@ -35,6 +35,7 @@ Future camera() async {
 class ImagePickerHelper {
   static Future<XFile?> pickImage(ImageSource _type,int imageQuality) async {
     final picker = ImagePicker();
+    log('picker: ${picker}');
     final pickedFile = await picker.pickImage(
         source: _type,
         maxWidth: 640,
